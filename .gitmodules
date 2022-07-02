@@ -1,0 +1,6 @@
+[submodule "py_env_lib"]
+	path = py_env_lib
+	url = https://github.com/Preponderous-Software/py_env_lib
+[submodule "graphik"]
+	path = graphik
+	url = https://github.com/Preponderous-Software/graphik
