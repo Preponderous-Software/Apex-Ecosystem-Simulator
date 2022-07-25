@@ -1,11 +1,8 @@
 from operator import truediv
 import random
-import time
 import pygame
-from chicken import Chicken
 from environment import Environment
 from graphik import Graphik
-from grass import Grass
 
 
 pygame.init()
@@ -13,8 +10,8 @@ pygame.init()
 black = (0,0,0)
 white = (255,255,255)
 
-displayWidth = 640
-displayHeight = 640
+displayWidth = 1080
+displayHeight = 720
 
 gameDisplay = pygame.display.set_mode((displayWidth, displayHeight))
 
@@ -24,11 +21,7 @@ pygame.display.set_caption("EWPELG")
 
 clock = pygame.time.Clock()
 
-environment = Environment("Test", 4)
-chicken = Chicken("Gerald")
-
-environment.addEntity(chicken)
-environment.printInfo()
+environment = Environment("Test", 100)
 
 running = True
 
@@ -45,9 +38,9 @@ while running:
 
         # draw environment
         for location in environment.getGrid().getLocations():
-            color = white
-            if location.getNumEntities() > 0:
-                color = black
-            graphik.drawRectangle(location.getX() * locationWidth, location.getY() * locationHeight, locationWidth, locationHeight, color)
-
+            red = random.randrange(50, 200)
+            green = random.randrange(50, 200)
+            blue = random.randrange(50, 200)
+            graphik.drawRectangle(location.getX() * locationWidth, location.getY() * locationHeight, locationWidth, locationHeight, (red,green,blue))
+        
         pygame.display.update()

@@ -10,10 +10,10 @@ from grid import Grid
 # @since July 1st, 2022
 class Environment(object):
 
-    def __init__(self, name):
+    def __init__(self, name, size):
         self.id = random.randint(0, 999) # TODO: make this unique
         self.name = name
-        self.grid = Grid(2, 2, self)
+        self.grid = Grid(size, size, self)
         self.creationDate = datetime.datetime.now()
     
     def getID(self):
