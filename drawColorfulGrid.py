@@ -10,7 +10,7 @@ pygame.init()
 black = (0,0,0)
 white = (255,255,255)
 
-displayWidth = 1080
+displayWidth = 1280
 displayHeight = 720
 
 gameDisplay = pygame.display.set_mode((displayWidth, displayHeight))
@@ -21,7 +21,7 @@ pygame.display.set_caption("EWPELG")
 
 clock = pygame.time.Clock()
 
-environment = Environment("Test", 100)
+environment = Environment("Test", 50)
 
 running = True
 
