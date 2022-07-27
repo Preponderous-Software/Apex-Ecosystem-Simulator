@@ -22,7 +22,7 @@ class Simulation:
 
         self.gameDisplay = pygame.display.set_mode((self.displayWidth, self.displayHeight))
         self.graphik = Graphik(self.gameDisplay)
-        self.environment = Environment("Test", 100)
+        self.environment = Environment("Test", 16)
         self.moveActionHandler = MoveActionHandler(self.environment)
 
         self.black = (0,0,0)
@@ -31,6 +31,11 @@ class Simulation:
         self.locationWidth = self.displayWidth/self.environment.getGrid().getRows()
         self.locationHeight = self.displayHeight/self.environment.getGrid().getColumns()
 
+        self.livingEntities = []
+        self.inanimateEntities = []
+
+        self.running = True
+
     def drawEnvironment(self):
         for location in self.environment.getGrid().getLocations():
             color = self.white
@@ -38,22 +43,23 @@ class Simulation:
                 color = location.getEntities()[-1].getColor()
             self.graphik.drawRectangle(location.getX() * self.locationWidth, location.getY() * self.locationHeight, self.locationWidth, self.locationHeight, color)
 
+    def initializeEntities(self):
+        self.livingEntities.append(Chicken("Gerald"))
+        self.livingEntities.append(Chicken("Paul"))
+        self.inanimateEntities.append(Grass())
+        self.inanimateEntities.append(Grass())
+        self.inanimateEntities.append(Grass())
+
+    def placeEntities(self):
+        for entity in self.livingEntities:
+            self.environment.addEntity(entity)
+        for entity in self.inanimateEntities:
+            self.environment.addEntity(entity)
+
     def run(self):
-        gerald = Chicken("Gerald")
-        paul = Chicken("Paul")
-        grass1 = Grass()
-        grass2 = Grass()
-        grass3 = Grass()
-
-        self.environment.addEntity(gerald)
-        self.environment.addEntity(paul)
-        self.environment.addEntity(grass1)
-        self.environment.addEntity(grass2)
-        self.environment.addEntity(grass3)
-        self.environment.printInfo()
-
-        running = True
-        while running:
+        self.initializeEntities()
+        self.placeEntities()
+        while self.running:
             # handle quitting
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -61,8 +67,8 @@ class Simulation:
                     quit()            
 
             # make entities moves
-            self.moveActionHandler.initiateMoveAction(gerald)
-            self.moveActionHandler.initiateMoveAction(paul)
+            for entity in self.livingEntities:
+                self.moveActionHandler.initiateMoveAction(entity)
 
             # draw environment
             self.gameDisplay.fill(self.white)
