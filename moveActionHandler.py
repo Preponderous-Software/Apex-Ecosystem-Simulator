@@ -5,6 +5,9 @@ import random
 # @since July 26th, 2022
 class MoveActionHandler:
 
+    def __init__(self, environment):
+        self.environment = environment
+
     def chooseRandomDirection(self, grid, location):
         direction = random.randrange(0, 4)
         if direction == 0:
@@ -16,10 +19,10 @@ class MoveActionHandler:
         elif direction == 3:
             return grid.getLeft(location)
         
-    def initiateMoveAction(self, entity, environment):
+    def initiateMoveAction(self, entity):
         # get location
         locationID = entity.getLocationID()
-        grid = environment.getGrid()
+        grid = self.environment.getGrid()
         location = grid.getLocation(locationID) 
         
         # get new location

@@ -14,45 +14,45 @@ from moveActionHandler import MoveActionHandler
 class Simulation:
 
     def __init__(self):
-        self.black = (0,0,0)
-        self.white = (255,255,255)
         self.displayWidth = 800
         self.displayHeight = 800
-        self.gridSize = 100
-        self.moveActionHandler = MoveActionHandler()
 
-    def drawEnvironment(self, graphik, environment, locationWidth, locationHeight):
-        for location in environment.getGrid().getLocations():
+        pygame.init()
+        pygame.display.set_caption("Environment Simulation")
+
+        self.gameDisplay = pygame.display.set_mode((self.displayWidth, self.displayHeight))
+        self.graphik = Graphik(self.gameDisplay)
+        self.environment = Environment("Test", 100)
+        self.moveActionHandler = MoveActionHandler(self.environment)
+
+        self.black = (0,0,0)
+        self.white = (255,255,255)
+
+        self.locationWidth = self.displayWidth/self.environment.getGrid().getRows()
+        self.locationHeight = self.displayHeight/self.environment.getGrid().getColumns()
+
+    def drawEnvironment(self):
+        for location in self.environment.getGrid().getLocations():
             color = self.white
             if location.getNumEntities() > 0:
                 color = location.getEntities()[-1].getColor()
-            graphik.drawRectangle(location.getX() * locationWidth, location.getY() * locationHeight, locationWidth, locationHeight, color)
+            self.graphik.drawRectangle(location.getX() * self.locationWidth, location.getY() * self.locationHeight, self.locationWidth, self.locationHeight, color)
 
     def run(self):
-        pygame.init()
-        gameDisplay = pygame.display.set_mode((self.displayWidth, self.displayHeight))
-        graphik = Graphik(gameDisplay)
-        pygame.display.set_caption("Environment Simulation")
-
-        environment = Environment("Test", self.gridSize)
         gerald = Chicken("Gerald")
         paul = Chicken("Paul")
         grass1 = Grass()
         grass2 = Grass()
         grass3 = Grass()
 
-        environment.addEntity(gerald)
-        environment.addEntity(paul)
-        environment.addEntity(grass1)
-        environment.addEntity(grass2)
-        environment.addEntity(grass3)
-        environment.printInfo()
-
-        locationWidth = self.displayWidth/environment.getGrid().getRows()
-        locationHeight = self.displayHeight/environment.getGrid().getColumns()
+        self.environment.addEntity(gerald)
+        self.environment.addEntity(paul)
+        self.environment.addEntity(grass1)
+        self.environment.addEntity(grass2)
+        self.environment.addEntity(grass3)
+        self.environment.printInfo()
 
         running = True
-
         while running:
             # handle quitting
             for event in pygame.event.get():
@@ -61,12 +61,12 @@ class Simulation:
                     quit()            
 
             # make entities moves
-            self.moveActionHandler.initiateMoveAction(gerald, environment)
-            self.moveActionHandler.initiateMoveAction(paul, environment)
+            self.moveActionHandler.initiateMoveAction(gerald)
+            self.moveActionHandler.initiateMoveAction(paul)
 
             # draw environment
-            gameDisplay.fill(self.white)
-            self.drawEnvironment(graphik, environment, locationWidth, locationHeight)
+            self.gameDisplay.fill(self.white)
+            self.drawEnvironment()
 
             # update and sleep
             pygame.display.update()
