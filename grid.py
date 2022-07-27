@@ -5,6 +5,7 @@
 # @author Daniel McCoy Stephenson
 # @since July 1st, 2022
 import random
+import uuid
 
 from entity import Entity
 from location import Location
@@ -13,7 +14,7 @@ from location import Location
 class Grid(object):
 
     def __init__(self, columns, rows, parentEnvironment):
-        self.id = random.randint(0, 999) # TODO: make this unique
+        self.id = uuid.uuid4()
         self.columns = columns
         self.rows = rows
         self.parentEnvironment = parentEnvironment

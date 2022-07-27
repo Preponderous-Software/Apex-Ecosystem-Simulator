@@ -4,8 +4,8 @@
 
 # @author Daniel McCoy Stephenson
 # @since July 1st, 2022
-import random
 from re import X
+import uuid
 
 from entity import Entity
 
@@ -13,7 +13,7 @@ from entity import Entity
 class Location(object):
 
     def __init__(self, x, y, parentGrid):
-        self.id = random.randint(0, 999) # TODO: make this unique
+        self.id = uuid.uuid4()
         self.x = x
         self.y = y
         self.parentGrid = parentGrid

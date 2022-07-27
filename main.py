@@ -5,6 +5,7 @@ import pygame
 from chicken import Chicken
 from environment import Environment
 from graphik import Graphik
+from grass import Grass
 
 black = (0,0,0)
 white = (255,255,255)
@@ -51,9 +52,11 @@ def main():
     environment = Environment("Test", gridSize)
     gerald = Chicken("Gerald")
     paul = Chicken("Paul")
+    grass = Grass()
 
     environment.addEntity(gerald)
     environment.addEntity(paul)
+    environment.addEntity(grass)
     environment.printInfo()
 
     locationWidth = displayWidth/environment.getGrid().getRows()

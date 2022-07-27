@@ -1,7 +1,7 @@
 # Copyright (c) 2022 Preponderous Software
 # MIT License
 import datetime
-import random
+import uuid
 
 
 # @author Daniel McCoy Stephenson
@@ -9,7 +9,7 @@ import random
 class Entity(object):
 
     def __init__(self, name):
-        self.id = random.randint(0, 999) # TODO: make this unique
+        self.id = uuid.uuid4()
         self.name = name
         self.creationDate = datetime.datetime.now()
         self.environmentID = -1

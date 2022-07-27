@@ -1,7 +1,7 @@
 # Copyright (c) 2022 Preponderous Software
 # MIT License
 import datetime
-import random
+import uuid
 from entity import Entity
 from grid import Grid
 
@@ -11,7 +11,7 @@ from grid import Grid
 class Environment(object):
 
     def __init__(self, name, size):
-        self.id = random.randint(0, 999) # TODO: make this unique
+        self.id = uuid.uuid4()
         self.name = name
         self.grid = Grid(size, size, self)
         self.creationDate = datetime.datetime.now()
