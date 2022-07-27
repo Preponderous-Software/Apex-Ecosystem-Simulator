@@ -25,7 +25,7 @@ class Simulation:
         for location in environment.getGrid().getLocations():
             color = self.white
             if location.getNumEntities() > 0:
-                color = self.black
+                color = location.getEntities()[-1].getColor()
             graphik.drawRectangle(location.getX() * locationWidth, location.getY() * locationHeight, locationWidth, locationHeight, color)
 
     def run(self):
@@ -37,11 +37,15 @@ class Simulation:
         environment = Environment("Test", self.gridSize)
         gerald = Chicken("Gerald")
         paul = Chicken("Paul")
-        grass = Grass()
+        grass1 = Grass()
+        grass2 = Grass()
+        grass3 = Grass()
 
         environment.addEntity(gerald)
         environment.addEntity(paul)
-        environment.addEntity(grass)
+        environment.addEntity(grass1)
+        environment.addEntity(grass2)
+        environment.addEntity(grass3)
         environment.printInfo()
 
         locationWidth = self.displayWidth/environment.getGrid().getRows()

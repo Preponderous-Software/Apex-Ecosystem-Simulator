@@ -49,3 +49,6 @@ class Location(object):
     
     def isEntityPresent(self, entity: Entity):
         return entity in self.entities
+    
+    def getEntities(self):
+        return self.entities
