@@ -22,7 +22,9 @@ class Simulation:
 
         self.gameDisplay = pygame.display.set_mode((self.displayWidth, self.displayHeight))
         self.graphik = Graphik(self.gameDisplay)
-        self.environment = Environment("Test", 16)
+
+        self.gridSize = 16
+        self.environment = Environment("Test", self.gridSize)
         self.moveActionHandler = MoveActionHandler(self.environment)
 
         self.black = (0,0,0)
@@ -35,7 +37,7 @@ class Simulation:
         self.inanimateEntities = []
 
         self.running = True
-        self.tickSpeed = 1
+        self.tickSpeed = 0.1
 
     def drawEnvironment(self):
         for location in self.environment.getGrid().getLocations():
@@ -47,9 +49,8 @@ class Simulation:
     def initializeEntities(self):
         self.livingEntities.append(Chicken("Gerald"))
         self.livingEntities.append(Chicken("Paul"))
-        self.inanimateEntities.append(Grass())
-        self.inanimateEntities.append(Grass())
-        self.inanimateEntities.append(Grass())
+        for i in range(self.gridSize*self.gridSize):
+            self.inanimateEntities.append(Grass())
 
     def placeEntities(self):
         for entity in self.livingEntities:
