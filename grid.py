@@ -91,3 +91,31 @@ class Grid(object):
             for y in range(self.getRows()):
                 location = Location(x, y, self)
                 self.locations.append(location)
+    
+    def getLocation(self, id):
+        for location in self.locations:
+            if location.getID() == id:
+                return location
+        return -1
+    
+    def getRandomLocation(self):
+        index = random.randrange(0, len(self.locations))
+        return self.locations[index]
+    
+    def getLocationByCoordinates(self, x, y):
+        for location in self.locations:
+            if location.getX() == x and location.getY() == y:
+                return location
+        return -1
+
+    def getUp(self, location):
+        return self.getLocationByCoordinates(location.getX(), location.getY() - 1)
+    
+    def getRight(self, location):
+        return self.getLocationByCoordinates(location.getX() + 1, location.getY())
+    
+    def getDown(self, location):
+        return self.getLocationByCoordinates(location.getX(), location.getY() + 1)
+    
+    def getLeft(self, location):
+        return self.getLocationByCoordinates(location.getX() - 1, location.getY())
