@@ -1,3 +1,4 @@
+import random
 from entity import Entity
 
 
@@ -8,7 +9,7 @@ class Grass(Entity):
     def __init__(self):
         Entity.__init__(self, "Grass")
         self.energy = 100
-        self.color = ((0, 255, 0))
+        self.color = ((0, random.randrange(130, 170), 0))
     
     def getColor(self):
         return self.color

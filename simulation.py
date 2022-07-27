@@ -23,7 +23,7 @@ class Simulation:
         self.gameDisplay = pygame.display.set_mode((self.displayWidth, self.displayHeight))
         self.graphik = Graphik(self.gameDisplay)
 
-        self.gridSize = 16
+        self.gridSize = 50
         self.environment = Environment("Test", self.gridSize)
         self.moveActionHandler = MoveActionHandler(self.environment)
 
@@ -37,7 +37,7 @@ class Simulation:
         self.inanimateEntities = []
 
         self.running = True
-        self.tickSpeed = 0.1
+        self.tickSpeed = 1
 
     def drawEnvironment(self):
         for location in self.environment.getGrid().getLocations():
