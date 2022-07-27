@@ -1,10 +1,42 @@
 from operator import truediv
 import random
+import time
 import pygame
 from chicken import Chicken
 from environment import Environment
 from graphik import Graphik
 from grass import Grass
+
+
+# @author Daniel McCoy Stephenson
+# @since July 26th, 2022
+class MoveActionHandler:
+
+    def chooseRandomDirection(self, grid, location):
+        direction = random.randrange(0, 4)
+        if direction == 0:
+            return grid.getUp(location)
+        elif direction == 1:
+            return grid.getRight(location)
+        elif direction == 2:
+            return grid.getDown(location)
+        elif direction == 3:
+            return grid.getLeft(location)
+        
+    def initiateMoveAction(self, entity, environment):
+        # get location
+        locationID = entity.getLocationID()
+        grid = environment.getGrid()
+        location = grid.getLocation(locationID) 
+        
+        # get new location
+        newLocation = self.chooseRandomDirection(grid, location)
+        if newLocation == -1:
+            return
+        
+        # move entity
+        location.removeEntity(entity)
+        newLocation.addEntity(entity)
 
 
 # @author Daniel McCoy Stephenson
@@ -17,27 +49,7 @@ class Simulation:
         self.displayWidth = 800
         self.displayHeight = 800
         self.gridSize = 10
-
-    def moveEntity(self, entity, environment):
-        locationID = entity.getLocationID()
-        grid = environment.getGrid()
-        location = grid.getLocation(locationID) 
-        direction = random.randrange(0, 4)
-
-        if direction == 0:
-            newLocation = grid.getUp(location)
-        elif direction == 1:
-            newLocation = grid.getRight(location)
-        elif direction == 2:
-            newLocation = grid.getDown(location)
-        elif direction == 3:
-            newLocation = grid.getLeft(location)
-
-        if newLocation == -1:
-            return
-        
-        location.removeEntity(entity)
-        newLocation.addEntity(entity)
+        self.moveActionHandler = MoveActionHandler()
 
     def drawEnvironment(self, graphik, environment, locationWidth, locationHeight):
         for location in environment.getGrid().getLocations():
@@ -73,8 +85,9 @@ class Simulation:
                     pygame.quit()
                     quit()
 
-                gameDisplay.fill(self.white)
-                self.drawEnvironment(graphik, environment, locationWidth, locationHeight)
-                self.moveEntity(gerald, environment)
-                self.moveEntity(paul, environment)
-                pygame.display.update()
+            gameDisplay.fill(self.white)
+            self.drawEnvironment(graphik, environment, locationWidth, locationHeight)
+            self.moveActionHandler.initiateMoveAction(gerald, environment)
+            self.moveActionHandler.initiateMoveAction(paul, environment)
+            pygame.display.update()
+            time.sleep(0.5)

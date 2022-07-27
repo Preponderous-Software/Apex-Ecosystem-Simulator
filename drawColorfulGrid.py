@@ -39,8 +39,8 @@ def main():
                 pygame.quit()
                 quit()
             
-            gameDisplay.fill(white)
-            drawEnvironment(environment, graphik, locationWidth, locationHeight)
-            pygame.display.update()
+        gameDisplay.fill(white)
+        drawEnvironment(environment, graphik, locationWidth, locationHeight)
+        pygame.display.update()
 
 main()
