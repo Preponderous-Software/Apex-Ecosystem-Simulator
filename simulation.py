@@ -18,7 +18,7 @@ class Simulation:
         self.white = (255,255,255)
         self.displayWidth = 800
         self.displayHeight = 800
-        self.gridSize = 10
+        self.gridSize = 100
         self.moveActionHandler = MoveActionHandler()
 
     def drawEnvironment(self, graphik, environment, locationWidth, locationHeight):
@@ -32,7 +32,7 @@ class Simulation:
         pygame.init()
         gameDisplay = pygame.display.set_mode((self.displayWidth, self.displayHeight))
         graphik = Graphik(gameDisplay)
-        pygame.display.set_caption("EWPELG")
+        pygame.display.set_caption("Environment Simulation")
 
         environment = Environment("Test", self.gridSize)
         gerald = Chicken("Gerald")
