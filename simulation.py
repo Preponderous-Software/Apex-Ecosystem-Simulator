@@ -80,14 +80,22 @@ class Simulation:
         running = True
 
         while running:
+            # handle quitting
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
 
+            # white background to start
             gameDisplay.fill(self.white)
+
+            # draw environment
             self.drawEnvironment(graphik, environment, locationWidth, locationHeight)
+
+            # make entities move
             self.moveActionHandler.initiateMoveAction(gerald, environment)
             self.moveActionHandler.initiateMoveAction(paul, environment)
+
+            # update and sleep
             pygame.display.update()
             time.sleep(0.5)
