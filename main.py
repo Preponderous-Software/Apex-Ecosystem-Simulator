@@ -14,7 +14,7 @@ displayHeight = 800
 
 gridSize = 16
 
-def moveChicken(entity, environment):
+def moveEntity(entity, environment):
     locationID = entity.getLocationID()
     grid = environment.getGrid()
     location = grid.getLocation(locationID) 
@@ -49,9 +49,11 @@ def main():
     pygame.display.set_caption("EWPELG")
 
     environment = Environment("Test", gridSize)
-    chicken = Chicken("Gerald")
+    gerald = Chicken("Gerald")
+    paul = Chicken("Paul")
 
-    environment.addEntity(chicken)
+    environment.addEntity(gerald)
+    environment.addEntity(paul)
     environment.printInfo()
 
     locationWidth = displayWidth/environment.getGrid().getRows()
@@ -67,8 +69,8 @@ def main():
 
             gameDisplay.fill(white)
             drawEnvironment(graphik, environment, locationWidth, locationHeight)
-            moveChicken(chicken, environment)
+            moveEntity(gerald, environment)
+            moveEntity(paul, environment)
             pygame.display.update()
-            time.sleep(0.5)
 
 main()

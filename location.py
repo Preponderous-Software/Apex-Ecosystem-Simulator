@@ -35,11 +35,17 @@ class Location(object):
         return len(self.entities)
     
     def addEntity(self, entity: Entity):
-        self.entities.append(entity)
-        entity.setLocationID(self.getID())
+        if not self.isEntityPresent(entity):
+            self.entities.append(entity)
+            entity.setLocationID(self.getID())
+        else:
+            print("Warning: An entity was already present when attempting to add it to a location.")
     
     def removeEntity(self, entity: Entity):
-        self.entities.remove(entity)
+        if self.isEntityPresent(entity):
+            self.entities.remove(entity)
+        else:
+            print("Warning: An entity was not present when attempting to remove it from a location.")
     
     def isEntityPresent(self, entity: Entity):
         return entity in self.entities

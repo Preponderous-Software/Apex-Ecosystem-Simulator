@@ -72,7 +72,7 @@ class Grid(object):
         self.locations.remove(location)
     
     def addEntity(self, entity: Entity):
-        self.getFirstLocation().addEntity(entity)
+        self.getRandomLocation().addEntity(entity)
         entity.setGridID(self.getID())
     
     def removeEntity(self, entity: Entity):
