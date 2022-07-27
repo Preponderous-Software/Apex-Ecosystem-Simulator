@@ -1,2 +1,2 @@
-# experimenting-with-py_env_lib-and-graphik
-Experimenting with py_env_lib and graphik.
+# Environment Simulation
+This application simulates an environment and entities that exist within that environment.
