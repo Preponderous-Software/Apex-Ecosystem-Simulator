@@ -35,6 +35,7 @@ class Simulation:
         self.inanimateEntities = []
 
         self.running = True
+        self.tickSpeed = 1
 
     def drawEnvironment(self):
         for location in self.environment.getGrid().getLocations():
@@ -76,4 +77,4 @@ class Simulation:
 
             # update and sleep
             pygame.display.update()
-            time.sleep(0.5)
+            time.sleep(self.tickSpeed)

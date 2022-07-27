@@ -33,3 +33,5 @@ class MoveActionHandler:
         # move entity
         location.removeEntity(entity)
         newLocation.addEntity(entity)
+
+        print("[EVENT] ", entity.getName(), "moved to (", location.getX(), ",", location.getY(), ")")
