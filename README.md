@@ -6,9 +6,12 @@ Key | Action
 ------------ | -------------
 c | spawn a chicken
 p | spawn a pig
+up | increase tick speed
+down | decrease tick speed
 r | restart
 d | debug mode
 q | quit
+
 
 ## Project Info
 This project was started in July of 2022.

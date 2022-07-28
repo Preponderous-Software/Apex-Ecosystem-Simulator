@@ -13,6 +13,7 @@ from grass import Grass
 from moveActionHandler import MoveActionHandler
 from pig import Pig
 from reproduceActionHandler import ReproduceActionHandler
+from wolf import Wolf
 
 
 # @author Daniel McCoy Stephenson
@@ -31,7 +32,8 @@ class Simulation:
         grassFactor = random.randrange(1, 5)
         self.numGrassEntities = self.gridSize*self.gridSize*grassFactor
 
-        self.tickSpeed = 0.1
+        self.tickSpeed = 10
+        self.maxTickSpeed = 20
 
         self.black = (0,0,0)
         self.white = (255,255,255)
@@ -94,11 +96,13 @@ class Simulation:
 
     def initializeEntities(self):
         for i in range(self.numLivingEntities):
-            choice = random.randrange(0, 2)
+            choice = random.randrange(0, 3)
             if (choice == 0):
-                self.livingEntities.append(Chicken("Gerald"))
+                self.livingEntities.append(Chicken("Chicken"))
             elif choice == 1:
-                self.livingEntities.append(Pig("Ulysses"))
+                self.livingEntities.append(Pig("Pig"))
+            elif choice == 2:
+                self.livingEntities.append(Wolf("Wolf"))
 
         for i in range(self.numGrassEntities):
             self.inanimateEntities.append(Grass())
@@ -129,7 +133,10 @@ class Simulation:
 
         text = []
 
-        text.append("Num ticks:")
+        text.append("Tick Speed:")
+        text.append(str(self.tickSpeed))
+        text.append("")
+        text.append("Num Ticks:")
         text.append(str(self.numTicks))
         text.append("")
         text.append("Living Entities: ")
@@ -149,6 +156,9 @@ class Simulation:
         text.append("")
         text.append("Pigs:")
         text.append(str(self.getNumberOfLivingEntitiesOfType(Pig)))
+        text.append("")
+        text.append("Wolves:")
+        text.append(str(self.getNumberOfLivingEntitiesOfType(Wolf)))
 
 
         buffer = self.textSize
@@ -202,6 +212,17 @@ class Simulation:
                         pig = Pig("player created pig")
                         self.environment.addEntity(pig)
                         self.addLivingEntity(pig)
+                    if event.key == pygame.K_w:
+                        wolf = Wolf("player created wolf")
+                        self.environment.addEntity(wolf)
+                        self.addLivingEntity(wolf)
+                    if event.key == pygame.K_UP:
+                        if self.tickSpeed < self.maxTickSpeed:
+                            self.tickSpeed += 1
+                    if event.key == pygame.K_DOWN:
+                        if self.tickSpeed > 1:
+                            self.tickSpeed -= 1
+
 
             # initiate entity actions
             for entity in self.livingEntities:
@@ -230,7 +251,7 @@ class Simulation:
 
             # update and sleep
             pygame.display.update()
-            time.sleep(self.tickSpeed)
+            time.sleep((self.maxTickSpeed - self.tickSpeed)/self.maxTickSpeed)
             self.numTicks += 1
 
             # if len(self.livingEntities) == 0:
