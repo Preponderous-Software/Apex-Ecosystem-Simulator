@@ -22,15 +22,14 @@ class MoveActionHandler:
         elif direction == 3:
             return grid.getLeft(location)
         
-    def searchForFood(self, grid, location):
+    def searchForFood(self, foodType, grid, location):
         attempts = 0
-        while attempts < random.randrange(1, 4):
+        while attempts < random.randrange(1, 5):
             searchLocation = self.chooseRandomDirection(grid, location)
             if searchLocation == -1:
-                break
+                continue
             for entity in searchLocation.getEntities():
-                if type(entity) is Grass:
-                    print("Food found")
+                if type(entity) is foodType:
                     return searchLocation
             attempts += 1
         return -1
@@ -46,7 +45,7 @@ class MoveActionHandler:
             return
 
         # get new location
-        newLocation = self.searchForFood(grid, location)
+        newLocation = self.searchForFood(Grass, grid, location)
         if newLocation == -1:
             # no food found
             newLocation = self.chooseRandomDirection(grid, location)
