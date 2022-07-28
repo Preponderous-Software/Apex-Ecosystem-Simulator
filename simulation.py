@@ -12,6 +12,7 @@ from graphik import Graphik
 from grass import Grass
 from moveActionHandler import MoveActionHandler
 from pig import Pig
+from reproduceActionHandler import ReproduceActionHandler
 
 
 # @author Daniel McCoy Stephenson
@@ -19,18 +20,18 @@ from pig import Pig
 class Simulation:
 
     def __init__(self):
-        self.displayWidth = 600
-        self.displayHeight = 600
+        self.displayWidth = 720
+        self.displayHeight = 720
 
-        self.gridSize = 20
+        self.gridSize = random.randrange(10, 50)
 
-        self.numLivingEntities = ceil(self.gridSize/4)
+        self.numLivingEntities = ceil(self.gridSize/2)
 
-        self.grassGrowTime = 100
-        grassFactor = 1
+        self.grassGrowTime = random.randrange(100, 200)
+        grassFactor = random.randrange(1, 5)
         self.numGrassEntities = self.gridSize*self.gridSize*grassFactor
 
-        self.tickSpeed = 0.001
+        self.tickSpeed = 0.1
 
         self.black = (0,0,0)
         self.white = (255,255,255)
@@ -49,6 +50,7 @@ class Simulation:
         self.moveActionHandler = MoveActionHandler(self.environment)
         self.eatActionHandler = EatActionHandler(self.environment)
         self.excreteActionHandler = ExcreteActionHandler(self.environment)
+        self.reproduceActionHandler = ReproduceActionHandler(self.environment)
 
         self.locationWidth = self.displayWidth/self.environment.getGrid().getRows()
         self.locationHeight = self.displayHeight/self.environment.getGrid().getColumns()
@@ -59,6 +61,9 @@ class Simulation:
         self.running = True
 
         self.numTicks = 0
+    
+    def addLivingEntity(self, entity):
+        self.livingEntities.append(entity)
     
     def addInanimateEntity(self, entity):
         self.inanimateEntities.append(entity)
@@ -102,6 +107,20 @@ class Simulation:
         for entity in self.inanimateEntities:
             self.environment.addEntity(entity)
     
+    def getNumberOfLivingEntitiesOfType(self, entityType):
+        count = 0
+        for entity in self.livingEntities:
+            if type(entity) is entityType:
+                count += 1
+        return count
+    
+    def getNumberOfInanimateEntitiesOfType(self, entityType):
+        count = 0
+        for entity in self.inanimateEntities:
+            if type(entity) is entityType:
+                count += 1
+        return count
+    
     def displayStats(self):
         startingX = 100
         startingY = 50
@@ -116,6 +135,18 @@ class Simulation:
         text.append("")
         text.append("Inanimate Entities:")
         text.append(str(len(self.inanimateEntities)))
+        text.append("")
+        text.append("Grass:")
+        text.append(str(self.getNumberOfInanimateEntitiesOfType(Grass)))
+        text.append("")
+        text.append("Excrement:")
+        text.append(str(self.getNumberOfInanimateEntitiesOfType(Excrement)))
+        text.append("")
+        text.append("Chickens:")
+        text.append(str(self.getNumberOfLivingEntitiesOfType(Chicken)))
+        text.append("")
+        text.append("Pigs:")
+        text.append(str(self.getNumberOfLivingEntitiesOfType(Pig)))
 
 
         buffer = self.textSize
@@ -160,6 +191,7 @@ class Simulation:
                 else:
                     if random.randrange(0, 4) == 0:
                         self.excreteActionHandler.initiateExcreteAction(entity, self.addInanimateEntity, self.numTicks)
+                    self.reproduceActionHandler.initiateReproduceAction(entity, self.addLivingEntity)
             
             # decrease energy for living entities
             for entity in self.livingEntities:

@@ -1,5 +1,6 @@
 from simulation import Simulation
 
 
-simulation = Simulation()
-simulation.run()
+for i in range(10):
+    simulation = Simulation()
+    simulation.run()
