@@ -8,8 +8,11 @@ class Grass(Entity):
 
     def __init__(self):
         Entity.__init__(self, "Grass")
-        self.energy = 100
+        self.energy = random.randrange(1, 5)
         self.color = ((0, random.randrange(130, 170), 0))
+    
+    def getEnergy(self):
+        return self.energy
     
     def getColor(self):
         return self.color
