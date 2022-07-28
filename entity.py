@@ -8,9 +8,10 @@ import uuid
 # @since July 1st, 2022
 class Entity(object):
 
-    def __init__(self, name):
+    def __init__(self, name, energy):
         self.id = uuid.uuid4()
         self.name = name
+        self.energy = energy
         self.creationDate = datetime.datetime.now()
         self.environmentID = -1
         self.gridID = -1
@@ -65,3 +66,15 @@ class Entity(object):
         print("Grid ID: ", self.getGridID())
         print("Location ID: ", self.getLocationID())
         print("\n")
+    
+    def getEnergy(self):
+        return self.energy
+
+    def addEnergy(self, amount):
+        self.energy += amount
+    
+    def removeEnergy(self, amount):
+        self.energy -= amount
+    
+    def needsEnergy(self):
+        return self.energy < 100

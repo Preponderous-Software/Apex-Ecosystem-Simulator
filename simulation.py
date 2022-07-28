@@ -1,3 +1,4 @@
+from math import ceil
 from operator import truediv
 import random
 import time
@@ -16,14 +17,17 @@ from pig import Pig
 class Simulation:
 
     def __init__(self):
-        self.displayWidth = 800
-        self.displayHeight = 800
+        self.displayWidth = 500
+        self.displayHeight = 500
 
-        self.gridSize = 25
+        self.gridSize = 20
 
-        self.numGrassEntities = self.gridSize*self.gridSize*2
+        self.numLivingEntities = ceil(self.gridSize/4)
 
-        self.tickSpeed = 1
+        grassFactor = 2
+        self.numGrassEntities = self.gridSize*self.gridSize*grassFactor
+
+        self.tickSpeed = 0.01
 
         self.black = (0,0,0)
         self.white = (255,255,255)
@@ -52,11 +56,21 @@ class Simulation:
 
         self.numTicks = 0
     
+    def removeEntityFromLocation(self, entity):
+        locationID = entity.getLocationID()
+        grid = self.environment.getGrid()
+        location = grid.getLocation(locationID)
+        if location.isEntityPresent(entity):
+            location.removeEntity(entity)
+
     def removeLivingEntity(self, entity):
         self.livingEntities.remove(entity)
+        self.removeEntityFromLocation(entity)
     
     def removeInanimateEntity(self, entity):
-        self.inanimateEntities.remove(entity) 
+        self.inanimateEntities.remove(entity)
+        self.removeEntityFromLocation(entity)
+        
 
     def drawEnvironment(self):
         for location in self.environment.getGrid().getLocations():
@@ -66,10 +80,12 @@ class Simulation:
             self.graphik.drawRectangle(location.getX() * self.locationWidth, location.getY() * self.locationHeight, self.locationWidth, self.locationHeight, color)
 
     def initializeEntities(self):
-        self.livingEntities.append(Chicken("Gerald"))
-        self.livingEntities.append(Chicken("Paul"))
-        self.livingEntities.append(Pig("Ulysses"))
-        self.livingEntities.append(Pig("Leonard"))
+        for i in range(self.numLivingEntities):
+            choice = random.randrange(0, 2)
+            if (choice == 0):
+                self.livingEntities.append(Chicken("Gerald"))
+            elif choice == 1:
+                self.livingEntities.append(Pig("Ulysses"))
 
         for i in range(self.numGrassEntities):
             self.inanimateEntities.append(Grass())
@@ -120,7 +136,8 @@ class Simulation:
                     self.removeLivingEntity(entity)
                     continue
                 self.moveActionHandler.initiateMoveAction(entity)
-                self.eatActionHandler.initiateEatAction(entity, Grass, self.removeInanimateEntity)
+                if entity.needsEnergy():
+                    self.eatActionHandler.initiateEatAction(entity, Grass, self.removeInanimateEntity)
             
             # decrease energy for living entities
             for entity in self.livingEntities:

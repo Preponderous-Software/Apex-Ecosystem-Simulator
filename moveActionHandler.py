@@ -1,5 +1,7 @@
 import random
 
+from grass import Grass
+
 
 # @author Daniel McCoy Stephenson
 # @since July 26th, 2022
@@ -20,20 +22,44 @@ class MoveActionHandler:
         elif direction == 3:
             return grid.getLeft(location)
         
+    def searchForFood(self, grid, location):
+        attempts = 0
+        while attempts < random.randrange(1, 4):
+            searchLocation = self.chooseRandomDirection(grid, location)
+            if searchLocation == -1:
+                break
+            for entity in searchLocation.getEntities():
+                if type(entity) is Grass:
+                    print("Food found")
+                    return searchLocation
+            attempts += 1
+        return -1
+        
     def initiateMoveAction(self, entity):
         # get location
         locationID = entity.getLocationID()
         grid = self.environment.getGrid()
-        location = grid.getLocation(locationID) 
+        location = grid.getLocation(locationID)
         
+        # return if we don't need energy
+        if not entity.needsEnergy():
+            return
+
         # get new location
-        newLocation = self.chooseRandomDirection(grid, location)
+        newLocation = self.searchForFood(grid, location)
         if newLocation == -1:
+            # no food found
+            newLocation = self.chooseRandomDirection(grid, location)
+            
+        if newLocation == -1:
+            # location doesn't exist, we're at a border
             return
         
         # move entity
         location.removeEntity(entity)
         newLocation.addEntity(entity)
+
+        entity.removeEnergy(1)
 
         if self.debug:
             print("[EVENT] ", entity.getName(), "moved to (", location.getX(), ",", location.getY(), ")")

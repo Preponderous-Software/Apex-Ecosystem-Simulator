@@ -7,18 +7,8 @@ from entity import Entity
 class Chicken(Entity):
 
     def __init__(self, name):
-        Entity.__init__(self, name)
-        self.energy = random.randrange(50, 100)
+        Entity.__init__(self, name, random.randrange(40, 60))
         self.color = (random.randrange(240, 255), random.randrange(240, 255), random.randrange(240, 255))
-    
-    def getEnergy(self):
-        return self.energy
-
-    def addEnergy(self, amount):
-        self.energy += amount
-    
-    def removeEnergy(self, amount):
-        self.energy -= amount
 
     def getColor(self):
         return self.color

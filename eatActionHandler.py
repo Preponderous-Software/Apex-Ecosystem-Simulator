@@ -25,7 +25,6 @@ class EatActionHandler:
             # no food of this type found
             return
 
-        location.removeEntity(food)
         callbackFunction(food)
         energy = food.getEnergy()
         entity.addEnergy(energy)
