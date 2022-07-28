@@ -3,13 +3,13 @@ from entity import Entity
 
 
 # @author Daniel McCoy Stephenson
-# @since June 7th, 2022
-class Chicken(Entity):
+# @since July 27th, 2022
+class Pig(Entity):
 
     def __init__(self, name):
         Entity.__init__(self, name)
         self.energy = random.randrange(50, 100)
-        self.color = (random.randrange(240, 255), random.randrange(240, 255), random.randrange(240, 255))
+        self.color = (255, random.randrange(170, 190), random.randrange(180, 200))
     
     def getEnergy(self):
         return self.energy

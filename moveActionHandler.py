@@ -7,6 +7,7 @@ class MoveActionHandler:
 
     def __init__(self, environment):
         self.environment = environment
+        self.debug = False
 
     def chooseRandomDirection(self, grid, location):
         direction = random.randrange(0, 4)
@@ -34,4 +35,5 @@ class MoveActionHandler:
         location.removeEntity(entity)
         newLocation.addEntity(entity)
 
-        print("[EVENT] ", entity.getName(), "moved to (", location.getX(), ",", location.getY(), ")")
+        if self.debug:
+            print("[EVENT] ", entity.getName(), "moved to (", location.getX(), ",", location.getY(), ")")
