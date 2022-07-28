@@ -14,7 +14,7 @@ q | quit
 This project was started in July of 2022.
 
 ### Inspiration
-This application is inspired by the [Kreatures](https://github.com/Stephenson-Software/Kreatures) and [Interkat](https://github.com/Stephenson-Software/Interakt) projects.
+This application is based on the [Kreatures](https://github.com/Stephenson-Software/Kreatures) and [Interakt](https://github.com/Stephenson-Software/Interakt) projects.
 
 ### Libraries
 This project makes use of the [graphik](https://github.com/Preponderous-Software/graphik) and [py_env_lib](https://github.com/Preponderous-Software/py_env_lib) libraries.
