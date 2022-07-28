@@ -61,6 +61,8 @@ class Simulation:
         self.running = True
 
         self.numTicks = 0
+
+        self.debug = False
     
     def addLivingEntity(self, entity):
         self.livingEntities.append(entity)
@@ -174,11 +176,32 @@ class Simulation:
         self.environment.printInfo()
 
         while self.running:
-            # handle quitting
             for event in pygame.event.get():
+                # handle quitting
                 if event.type == pygame.QUIT:
+                    print("State of environment:")
+                    self.environment.printInfo()
+                    print("Length of simulation:", self.numTicks, "ticks")
                     pygame.quit()
-                    quit()      
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_d:
+                        if self.debug == True:
+                            self.debug = False
+                        else:
+                            self.debug = True
+                    if event.key == pygame.K_q:
+                        self.running = False
+                    if event.key == pygame.K_r:
+                        return "restart"
+                    if event.key == pygame.K_c:
+                        chicken = Chicken("player created chicken")
+                        self.environment.addEntity(chicken)
+                        self.addLivingEntity(chicken)
+                    if event.key == pygame.K_p:
+                        pig = Pig("player created pig")
+                        self.environment.addEntity(pig)
+                        self.addLivingEntity(pig)
 
             # initiate entity actions
             for entity in self.livingEntities:
@@ -202,16 +225,14 @@ class Simulation:
             # draw environment
             self.drawEnvironment()
 
-            self.displayStats()
+            if self.debug:
+                self.displayStats()
 
             # update and sleep
             pygame.display.update()
             time.sleep(self.tickSpeed)
             self.numTicks += 1
 
-            if len(self.livingEntities) == 0:
-                time.sleep(10)
-                self.running = False
-                print("State of environment:")
-                self.environment.printInfo()
-                print("Length of simulation:", self.numTicks, "ticks")
+            # if len(self.livingEntities) == 0:
+            #     time.sleep(10)
+            #     self.running = False

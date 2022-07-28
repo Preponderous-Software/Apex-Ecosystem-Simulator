@@ -7,7 +7,7 @@ class ReproduceActionHandler:
 
     def __init__(self, environment):
         self.environment = environment
-        self.debug = True
+        self.debug = False
         
     def initiateReproduceAction(self, entity, callbackFunction):
         # get location

@@ -1,6 +1,9 @@
 from simulation import Simulation
 
 
-for i in range(10):
+def createAndRunSimulation():
     simulation = Simulation()
-    simulation.run()
+    return simulation.run()
+
+while createAndRunSimulation() == "restart":
+    pass
