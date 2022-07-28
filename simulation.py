@@ -6,6 +6,8 @@ import pygame
 from chicken import Chicken
 from eatActionHandler import EatActionHandler
 from environment import Environment
+from excrement import Excrement
+from excreteActionHandler import ExcreteActionHandler
 from graphik import Graphik
 from grass import Grass
 from moveActionHandler import MoveActionHandler
@@ -17,17 +19,18 @@ from pig import Pig
 class Simulation:
 
     def __init__(self):
-        self.displayWidth = 500
-        self.displayHeight = 500
+        self.displayWidth = 600
+        self.displayHeight = 600
 
         self.gridSize = 20
 
         self.numLivingEntities = ceil(self.gridSize/4)
 
-        grassFactor = 2
+        self.grassGrowTime = 100
+        grassFactor = 1
         self.numGrassEntities = self.gridSize*self.gridSize*grassFactor
 
-        self.tickSpeed = 0.01
+        self.tickSpeed = 0.001
 
         self.black = (0,0,0)
         self.white = (255,255,255)
@@ -45,6 +48,7 @@ class Simulation:
 
         self.moveActionHandler = MoveActionHandler(self.environment)
         self.eatActionHandler = EatActionHandler(self.environment)
+        self.excreteActionHandler = ExcreteActionHandler(self.environment)
 
         self.locationWidth = self.displayWidth/self.environment.getGrid().getRows()
         self.locationHeight = self.displayHeight/self.environment.getGrid().getColumns()
@@ -55,6 +59,9 @@ class Simulation:
         self.running = True
 
         self.numTicks = 0
+    
+    def addInanimateEntity(self, entity):
+        self.inanimateEntities.append(entity)
     
     def removeEntityFromLocation(self, entity):
         locationID = entity.getLocationID()
@@ -71,7 +78,6 @@ class Simulation:
         self.inanimateEntities.remove(entity)
         self.removeEntityFromLocation(entity)
         
-
     def drawEnvironment(self):
         for location in self.environment.getGrid().getLocations():
             color = self.brown
@@ -116,6 +122,19 @@ class Simulation:
 
         for i in range(0, len(text)):
             self.graphik.drawText(text[i], startingX, startingY + buffer*i, self.textSize, self.black)
+        
+    def checkForPotentialGrass(self):
+        for entity in self.inanimateEntities:
+            if type(entity) is Excrement and (self.numTicks - entity.getTick()) > self.grassGrowTime:
+                locationID = entity.getLocationID()
+                grid = self.environment.getGrid()
+                location = grid.getLocation(locationID)
+                
+                self.removeInanimateEntity(entity)
+                grass = Grass()
+                location.addEntity(grass)
+                self.addInanimateEntity(grass)
+
     
     def run(self):
         self.initializeEntities()
@@ -138,10 +157,15 @@ class Simulation:
                 self.moveActionHandler.initiateMoveAction(entity)
                 if entity.needsEnergy():
                     self.eatActionHandler.initiateEatAction(entity, Grass, self.removeInanimateEntity)
+                else:
+                    if random.randrange(0, 4) == 0:
+                        self.excreteActionHandler.initiateExcreteAction(entity, self.addInanimateEntity, self.numTicks)
             
             # decrease energy for living entities
             for entity in self.livingEntities:
                 entity.removeEnergy(1)
+            
+            self.checkForPotentialGrass()
 
             # draw environment
             self.drawEnvironment()
