@@ -12,6 +12,7 @@ class Entity(object):
         self.id = uuid.uuid4()
         self.name = name
         self.energy = energy
+        self.targetEnergy = energy
         self.creationDate = datetime.datetime.now()
         self.environmentID = -1
         self.gridID = -1
@@ -77,4 +78,4 @@ class Entity(object):
         self.energy -= amount
     
     def needsEnergy(self):
-        return self.energy < 100
+        return self.energy < self.targetEnergy

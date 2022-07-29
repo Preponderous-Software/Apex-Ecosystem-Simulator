@@ -41,6 +41,10 @@ class Environment(object):
         entity.setEnvironmentID(self.getID())
         self.grid.addEntity(entity)
     
+    def addEntityToLocation(self, entity: Entity, location):
+        entity.setEnvironmentID(self.getID())
+        self.grid.addEntityToLocation(entity, location)
+    
     def removeEntity(self, entity: Entity):
         self.grid.removeEntity(entity)
     

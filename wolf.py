@@ -7,7 +7,7 @@ from entity import Entity
 class Wolf(Entity):
 
     def __init__(self, name):
-        Entity.__init__(self, name, random.randrange(50, 75))
+        Entity.__init__(self, name, random.randrange(40, 50))
         self.color = (145, random.randrange(145, 155), random.randrange(145, 155))
 
     def getColor(self):

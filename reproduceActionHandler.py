@@ -32,7 +32,10 @@ class ReproduceActionHandler:
 
         name = random.randrange(0,9999)
         child = type(entity)(name)
-        self.environment.addEntity(child)
+        targetLocation = grid.getDown(location)
+        if targetLocation == -1:
+            return
+        self.environment.addEntityToLocation(child, targetLocation)
         callbackFunction(child)
 
         if self.debug:

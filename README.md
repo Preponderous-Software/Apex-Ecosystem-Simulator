@@ -4,10 +4,11 @@ This application simulates an environment and entities that exist within that en
 ## Controls
 Key | Action
 ------------ | -------------
-c | spawn a chicken
-p | spawn a pig
 up | increase tick speed
 down | decrease tick speed
+c | spawn a chicken
+p | spawn a pig
+w | spawn a wolf
 r | restart
 d | debug mode
 q | quit
