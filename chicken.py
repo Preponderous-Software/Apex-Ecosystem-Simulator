@@ -7,7 +7,7 @@ from entity import Entity
 class Chicken(Entity):
 
     def __init__(self, name):
-        Entity.__init__(self, name, random.randrange(40, 60))
+        Entity.__init__(self, name, random.randrange(20, 30))
         self.color = (random.randrange(240, 255), random.randrange(240, 255), random.randrange(240, 255))
 
     def getColor(self):
