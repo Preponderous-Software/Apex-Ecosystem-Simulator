@@ -58,7 +58,5 @@ class MoveActionHandler:
         location.removeEntity(entity)
         newLocation.addEntity(entity)
 
-        entity.removeEnergy(1)
-
         if self.debug:
             print("[EVENT] ", entity.getName(), "moved to (", location.getX(), ",", location.getY(), ")")

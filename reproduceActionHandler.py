@@ -8,6 +8,17 @@ class ReproduceActionHandler:
     def __init__(self, environment):
         self.environment = environment
         self.debug = False
+    
+    def getRandomDirection(self, grid, location):
+        direction = random.randrange(0, 4)
+        if direction == 0:
+            return grid.getUp(location)
+        elif direction == 1:
+            return grid.getRight(location)
+        elif direction == 2:
+            return grid.getDown(location)
+        elif direction == 3:
+            return grid.getLeft(location)
         
     def initiateReproduceAction(self, entity, callbackFunction):
         # get location
@@ -32,7 +43,7 @@ class ReproduceActionHandler:
 
         name = random.randrange(0,9999)
         child = type(entity)(name)
-        targetLocation = grid.getDown(location)
+        targetLocation = self.getRandomDirection(grid, location)
         if targetLocation == -1:
             return
         self.environment.addEntityToLocation(child, targetLocation)

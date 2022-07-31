@@ -10,14 +10,14 @@ class Config:
         # local
         grassFactor = random.randrange(1, 5)
         livingEntityFactor = 1
-        minGridSize = 4
-        maxGridSize = 40
+        minGridSize = 3
+        maxGridSize = 30
         minGrassGrowTime = 100
-        maxGrassGrowTime = 200
+        maxGrassGrowTime = 500
 
         # static
-        self.displayWidth = 720
-        self.displayHeight = 720
+        self.displayWidth = 600
+        self.displayHeight = 600
         self.tickSpeed = 1
         self.maxTickSpeed = 10
         self.black = (0,0,0)
@@ -27,7 +27,7 @@ class Config:
         self.endSimulationUponAllLivingEntitiesDying = True
         self.autoRestart = True
         self.chanceToExcrete = 0.10
-        self.chanceToReproduce = 0.10
+        self.chanceToReproduce = 0.02
 
         # calculated/random
         self.gridSize = random.randrange(minGridSize, maxGridSize)
