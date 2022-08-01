@@ -8,10 +8,12 @@ import uuid
 # @since July 1st, 2022
 class Entity(object):
 
-    def __init__(self, name, energy):
+    def __init__(self, name, energy, living, edibleEntityTypes):
         self.id = uuid.uuid4()
         self.name = name
         self.energy = energy
+        self.living = living
+        self.edibleEntityTypes = edibleEntityTypes
         self.targetEnergy = energy
         self.creationDate = datetime.datetime.now()
         self.environmentID = -1
@@ -79,3 +81,12 @@ class Entity(object):
     
     def needsEnergy(self):
         return self.energy < self.targetEnergy
+    
+    def canEat(self, entity):
+        for entityType in self.edibleEntityTypes:
+            if type(entity) is entityType:
+                return True
+        return False
+    
+    def isLiving(self):
+        return self.living

@@ -10,14 +10,14 @@ class Config:
         # local
         grassFactor = random.randrange(1, 5)
         livingEntityFactor = 1
-        minGridSize = 4
-        maxGridSize = 40
+        minGridSize = 10
+        maxGridSize = 20
         minGrassGrowTime = 100
-        maxGrassGrowTime = 200
+        maxGrassGrowTime = 500
 
         # static
-        self.displayWidth = 720
-        self.displayHeight = 720
+        self.displayWidth = 600
+        self.displayHeight = 600
         self.tickSpeed = 1
         self.maxTickSpeed = 10
         self.black = (0,0,0)
@@ -27,10 +27,11 @@ class Config:
         self.endSimulationUponAllLivingEntitiesDying = True
         self.autoRestart = True
         self.chanceToExcrete = 0.10
-        self.chanceToReproduce = 0.10
-
+        self.chanceToReproduce = 0.02
         # calculated/random
         self.gridSize = random.randrange(minGridSize, maxGridSize)
-        self.numLivingEntities = ceil(self.gridSize*livingEntityFactor)
+        self.numChickensToStart = ceil(self.gridSize*livingEntityFactor/1)
+        self.numPigsToStart = ceil(self.gridSize*livingEntityFactor/2)
+        self.numWolvesToStart = ceil(self.gridSize*livingEntityFactor/4)
         self.grassGrowTime = random.randrange(minGrassGrowTime, maxGrassGrowTime)
         self.numGrassEntities = self.gridSize*self.gridSize*grassFactor

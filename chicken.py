@@ -1,5 +1,6 @@
 import random
 from entity import Entity
+from grass import Grass
 
 
 # @author Daniel McCoy Stephenson
@@ -7,7 +8,7 @@ from entity import Entity
 class Chicken(Entity):
 
     def __init__(self, name):
-        Entity.__init__(self, name, random.randrange(20, 30))
+        Entity.__init__(self, name, random.randrange(20, 30), True, [Grass])
         self.color = (random.randrange(240, 255), random.randrange(240, 255), random.randrange(240, 255))
 
     def getColor(self):

@@ -7,7 +7,7 @@ from entity import Entity
 class Grass(Entity):
 
     def __init__(self):
-        Entity.__init__(self, "Grass", random.randrange(10, 20))
+        Entity.__init__(self, "Grass", random.randrange(10, 20), False, [])
         self.color = ((0, random.randrange(130, 170), 0))
     
     def getColor(self):
