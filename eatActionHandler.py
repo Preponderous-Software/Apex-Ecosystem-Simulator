@@ -9,7 +9,7 @@ class EatActionHandler:
         self.environment = environment
         self.debug = False
         
-    def initiateEatAction(self, entity, foodType, callbackFunction):
+    def initiateEatAction(self, entity, callbackFunction):
         # get location
         locationID = entity.getLocationID()
         grid = self.environment.getGrid()
@@ -17,12 +17,12 @@ class EatActionHandler:
 
         food = -1
         for e in location.getEntities():
-            if type(e) is foodType:
+            if entity.canEat(e):
                 food = e
                 break
         
         if food == -1:
-            # no food of this type found
+            # no food found
             return
 
         callbackFunction(food)

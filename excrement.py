@@ -7,7 +7,7 @@ from entity import Entity
 class Excrement(Entity):
 
     def __init__(self, tick):
-        Entity.__init__(self, "Excrement", random.randrange(1, 5))
+        Entity.__init__(self, "Excrement", random.randrange(1, 5), False, [])
         self.color = ((random.randrange(135, 145), random.randrange(65, 75), random.randrange(15, 25)))
         self.tick = tick
     
