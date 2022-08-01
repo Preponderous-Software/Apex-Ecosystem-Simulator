@@ -24,7 +24,7 @@ class Simulation:
 
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Environment Simulation")
+        pygame.display.set_caption("Apex")
 
         self.config = Config()
 
