@@ -29,6 +29,8 @@ class Simulation:
         self.config = config
 
         self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.RESIZABLE)
+        pygame.display.set_icon(pygame.image.load('icon.PNG'))
+        
         self.graphik = Graphik(self.gameDisplay)
         
         self.environment = Environment("Test", self.config.gridSize)
