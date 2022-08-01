@@ -22,11 +22,11 @@ from wolf import Wolf
 # @since July 26th, 2022
 class Simulation:
 
-    def __init__(self):
+    def __init__(self, config):
         pygame.init()
         pygame.display.set_caption("Apex")
 
-        self.config = Config()
+        self.config = config
 
         self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.RESIZABLE)
         self.graphik = Graphik(self.gameDisplay)

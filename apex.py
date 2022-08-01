@@ -1,9 +1,17 @@
+from config import Config
 from simulation import Simulation
 
+class Apex:
+    def __init__(self):
+        self.config = Config()
 
-def createAndRunSimulation():
-    simulation = Simulation()
-    return simulation.run()
+    def createAndRunSimulation(self):
+        simulation = Simulation(self.config)
+        return simulation.run()
 
-while createAndRunSimulation() == "restart":
-    pass
+    def run(self):
+        while self.createAndRunSimulation() == "restart":
+            pass
+
+apex = Apex()
+apex.run()
