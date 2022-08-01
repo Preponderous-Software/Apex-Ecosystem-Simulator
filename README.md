@@ -7,6 +7,7 @@ There are four types of living entities: Chicken, Pig, Cow and Wolf. Each of the
 
 ## Controls
 There are nine controls which are listed and described below. At this time, the user can speed up or slow down the application, manually spawn living entities, restart the simulation, enter debug mode and quit the application.
+
 Key | Action
 ------------ | -------------
 up | increase tick speed
