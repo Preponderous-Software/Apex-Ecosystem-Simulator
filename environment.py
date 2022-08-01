@@ -13,7 +13,7 @@ class Environment(object):
     def __init__(self, name, size):
         self.id = uuid.uuid4()
         self.name = name
-        self.grid = Grid(size, size, self)
+        self.grid = Grid(size, size)
         self.creationDate = datetime.datetime.now()
     
     def getID(self):

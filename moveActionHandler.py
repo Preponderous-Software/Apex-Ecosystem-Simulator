@@ -1,6 +1,8 @@
 import random
+from entity import Entity
 
-from grass import Grass
+from grid import Grid
+from location import Location
 
 
 # @author Daniel McCoy Stephenson
@@ -11,7 +13,7 @@ class MoveActionHandler:
         self.environment = environment
         self.debug = False
 
-    def chooseRandomDirection(self, grid, location):
+    def chooseRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
         if direction == 0:
             return grid.getUp(location)
@@ -22,7 +24,7 @@ class MoveActionHandler:
         elif direction == 3:
             return grid.getLeft(location)
         
-    def searchForFood(self, entity, grid, location):
+    def searchForFood(self, entity, grid: Grid, location: Location):
         attempts = 0
         while attempts < random.randrange(1, 5):
             searchLocation = self.chooseRandomDirection(grid, location)
@@ -34,7 +36,7 @@ class MoveActionHandler:
             attempts += 1
         return -1
         
-    def initiateMoveAction(self, entity):
+    def initiateMoveAction(self, entity: Entity):
         # get location
         locationID = entity.getLocationID()
         grid = self.environment.getGrid()

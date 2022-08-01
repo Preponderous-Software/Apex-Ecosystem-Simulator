@@ -1,4 +1,4 @@
-import random
+from entity import Entity
 
 
 # @author Daniel McCoy Stephenson
@@ -9,7 +9,7 @@ class EatActionHandler:
         self.environment = environment
         self.debug = False
         
-    def initiateEatAction(self, entity, callbackFunction):
+    def initiateEatAction(self, entity: Entity, callbackFunction):
         # get location
         locationID = entity.getLocationID()
         grid = self.environment.getGrid()

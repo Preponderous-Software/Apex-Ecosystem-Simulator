@@ -4,9 +4,9 @@ import random
 import time
 import pygame
 from chicken import Chicken
-from config import Config
 from cow import Cow
 from eatActionHandler import EatActionHandler
+from entity import Entity
 from environment import Environment
 from excrement import Excrement
 from excreteActionHandler import ExcreteActionHandler
@@ -55,17 +55,17 @@ class Simulation:
         self.locationWidth = x/self.environment.getGrid().getRows()
         self.locationHeight = y/self.environment.getGrid().getColumns()
     
-    def addEntity(self, entity):
+    def addEntity(self, entity: Entity):
         self.entities.append(entity)
     
-    def removeEntityFromLocation(self, entity):
+    def removeEntityFromLocation(self, entity: Entity):
         locationID = entity.getLocationID()
         grid = self.environment.getGrid()
         location = grid.getLocation(locationID)
         if location.isEntityPresent(entity):
             location.removeEntity(entity)
 
-    def removeEntity(self, entity):
+    def removeEntity(self, entity: Entity):
         self.entities.remove(entity)
         self.removeEntityFromLocation(entity)
         
