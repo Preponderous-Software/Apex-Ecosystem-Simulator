@@ -28,7 +28,7 @@ class Simulation:
 
         self.config = Config()
 
-        self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight))
+        self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.RESIZABLE)
         self.graphik = Graphik(self.gameDisplay)
         
         self.environment = Environment("Test", self.config.gridSize)
@@ -38,8 +38,7 @@ class Simulation:
         self.excreteActionHandler = ExcreteActionHandler(self.environment)
         self.reproduceActionHandler = ReproduceActionHandler(self.environment)
 
-        self.locationWidth = self.config.displayWidth/self.environment.getGrid().getRows()
-        self.locationHeight = self.config.displayHeight/self.environment.getGrid().getColumns()
+        self.initializeLocationWidthAndHeight()
 
         self.entities = []
 
@@ -48,6 +47,11 @@ class Simulation:
         self.numTicks = 0
 
         self.debug = False
+    
+    def initializeLocationWidthAndHeight(self):
+        x, y = self.gameDisplay.get_size()
+        self.locationWidth = x/self.environment.getGrid().getRows()
+        self.locationHeight = y/self.environment.getGrid().getColumns()
     
     def addEntity(self, entity):
         self.entities.append(entity)
@@ -192,7 +196,7 @@ class Simulation:
         if key == pygame.K_DOWN:
             if self.config.tickSpeed > 1:
                 self.config.tickSpeed -= 1
-
+            
     def initiateEntityActions(self):
         for entity in self.entities:
             if entity.isLiving():
@@ -231,16 +235,16 @@ class Simulation:
 
         while self.running:
             for event in pygame.event.get():
-                # handle quitting
                 if event.type == pygame.QUIT:
                     self.cleanup()
                     self.quit()
-                # handle key down
-                if event.type == pygame.KEYDOWN:
+                elif event.type == pygame.KEYDOWN:
                     result = self.handleKeyDownEvent(event.key)
                     if result == "restart":
                         self.cleanup()
                         return "restart"
+                elif event.type == pygame.VIDEORESIZE:
+                    self.initializeLocationWidthAndHeight() 
 
             # initiate entity actions
             self.initiateEntityActions()

@@ -16,8 +16,8 @@ class Config:
         maxGrassGrowTime = 500
 
         # static
-        self.displayWidth = 1080
-        self.displayHeight = 720
+        self.displayWidth = 400
+        self.displayHeight = 400
         self.tickSpeed = 1
         self.maxTickSpeed = 10
         self.black = (0,0,0)
