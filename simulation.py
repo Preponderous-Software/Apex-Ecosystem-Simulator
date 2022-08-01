@@ -5,6 +5,7 @@ import time
 import pygame
 from chicken import Chicken
 from config import Config
+from cow import Cow
 from eatActionHandler import EatActionHandler
 from environment import Environment
 from excrement import Excrement
@@ -78,6 +79,9 @@ class Simulation:
 
         for i in range(self.config.numWolvesToStart):
             self.addEntity(Wolf("Wolf"))
+        
+        for i in range (self.config.numCowsToStart):
+            self.addEntity(Cow("Cow"))
 
         for i in range(self.config.numGrassEntities):
             self.addEntity(Grass())
@@ -131,6 +135,9 @@ class Simulation:
         text.append("Pigs:")
         text.append(str(self.getNumberOfEntitiesOfType(Pig)))
         text.append("")
+        text.append("Cows:")
+        text.append(str(self.getNumberOfEntitiesOfType(Cow)))
+        text.append("")
         text.append("Wolves:")
         text.append(str(self.getNumberOfEntitiesOfType(Wolf)))
 
@@ -171,6 +178,10 @@ class Simulation:
             pig = Pig("player created pig")
             self.environment.addEntity(pig)
             self.addEntity(pig)
+        if key == pygame.K_m:
+            cow = Cow("player created cow")
+            self.environment.addEntity(cow)
+            self.addEntity(cow)
         if key == pygame.K_w:
             wolf = Wolf("player created wolf")
             self.environment.addEntity(wolf)

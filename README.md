@@ -8,6 +8,7 @@ up | increase tick speed
 down | decrease tick speed
 c | spawn a chicken
 p | spawn a pig
+m | spawn a cow
 w | spawn a wolf
 r | restart
 d | debug mode
