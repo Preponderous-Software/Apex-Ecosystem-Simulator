@@ -3,7 +3,7 @@ from entity import Entity
 
 
 # @author Daniel McCoy Stephenson
-# @since June 27th, 2022
+# @since July 27th, 2022
 class Excrement(Entity):
 
     def __init__(self, tick):
