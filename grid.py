@@ -13,11 +13,10 @@ from location import Location
 
 class Grid(object):
 
-    def __init__(self, columns, rows, parentEnvironment):
+    def __init__(self, columns, rows):
         self.id = uuid.uuid4()
         self.columns = columns
         self.rows = rows
-        self.parentEnvironment = parentEnvironment
         self.locations = []
         self.generateLocations()
 
@@ -29,9 +28,6 @@ class Grid(object):
 
     def getRows(self):
         return self.rows
-    
-    def getParentEnvironment(self):
-        return self.parentEnvironment
 
     def getLocations(self):
         return self.locations
@@ -55,21 +51,18 @@ class Grid(object):
         self.id = id
     
     def setColumns(self, columns):
-        self.columns = columns;
+        self.columns = columns
     
     def setRows(self, rows):
-        self.rows = rows;
-    
-    def setParentEnvironment(self, parentEnvironment):
-        self.parentEnvironment = parentEnvironment
+        self.rows = rows
     
     def setLocations(self, locations):
         self.locations = locations
     
-    def addLocation(self, location):
+    def addLocation(self, location: Location):
         self.locationss.append(location)
     
-    def removeLocation(self, location):
+    def removeLocation(self, location: Location):
         self.locations.remove(location)
     
     def addEntity(self, entity: Entity):
@@ -94,7 +87,7 @@ class Grid(object):
     def generateLocations(self):
         for x in range(self.getColumns()):
             for y in range(self.getRows()):
-                location = Location(x, y, self)
+                location = Location(x, y)
                 self.locations.append(location)
     
     def getLocation(self, id):
@@ -113,14 +106,14 @@ class Grid(object):
                 return location
         return -1
 
-    def getUp(self, location):
+    def getUp(self, location: Location):
         return self.getLocationByCoordinates(location.getX(), location.getY() - 1)
     
-    def getRight(self, location):
+    def getRight(self, location: Location):
         return self.getLocationByCoordinates(location.getX() + 1, location.getY())
     
-    def getDown(self, location):
+    def getDown(self, location: Location):
         return self.getLocationByCoordinates(location.getX(), location.getY() + 1)
     
-    def getLeft(self, location):
+    def getLeft(self, location: Location):
         return self.getLocationByCoordinates(location.getX() - 1, location.getY())

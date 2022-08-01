@@ -1,6 +1,9 @@
 import random
+from entity import Entity
 
 from excrement import Excrement
+from grid import Grid
+from location import Location
 
 
 # @author Daniel McCoy Stephenson
@@ -11,7 +14,7 @@ class ExcreteActionHandler:
         self.environment = environment
         self.debug = False
     
-    def getRandomDirection(self, grid, location):
+    def getRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
         if direction == 0:
             return grid.getUp(location)
@@ -22,7 +25,7 @@ class ExcreteActionHandler:
         elif direction == 3:
             return grid.getLeft(location)
         
-    def initiateExcreteAction(self, entity, callbackFunction, tick):
+    def initiateExcreteAction(self, entity: Entity, callbackFunction, tick):
         # get location
         locationID = entity.getLocationID()
         grid = self.environment.getGrid()

@@ -4,7 +4,6 @@
 
 # @author Daniel McCoy Stephenson
 # @since July 1st, 2022
-from re import X
 import uuid
 
 from entity import Entity
@@ -12,11 +11,10 @@ from entity import Entity
 
 class Location(object):
 
-    def __init__(self, x, y, parentGrid):
+    def __init__(self, x, y):
         self.id = uuid.uuid4()
         self.x = x
         self.y = y
-        self.parentGrid = parentGrid
         self.entities = []
     
     def getID(self):
@@ -27,9 +25,6 @@ class Location(object):
     
     def getY(self):
         return self.y
-    
-    def getParentGrid(self):
-        return self.parentGrid
 
     def getNumEntities(self):
         return len(self.entities)
