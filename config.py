@@ -10,8 +10,8 @@ class Config:
         # local
         grassFactor = random.randrange(1, 5)
         livingEntityFactor = 1
-        minGridSize = 20
-        maxGridSize = 40
+        minGridSize = 25
+        maxGridSize = 50
         minGrassGrowTime = 100
         maxGrassGrowTime = 500
 
