@@ -71,6 +71,9 @@ class Simulation:
             self.graphik.drawRectangle(location.getX() * self.locationWidth, location.getY() * self.locationHeight, self.locationWidth, self.locationHeight, color)
 
     def initializeEntities(self):
+        for i in range(self.config.numGrassEntities):
+            self.addEntity(Grass())
+
         for i in range(self.config.numChickensToStart):
             self.addEntity(Chicken("Chicken"))
 
@@ -82,9 +85,6 @@ class Simulation:
         
         for i in range (self.config.numCowsToStart):
             self.addEntity(Cow("Cow"))
-
-        for i in range(self.config.numGrassEntities):
-            self.addEntity(Grass())
 
     def placeEntities(self):
         for entity in self.entities:
