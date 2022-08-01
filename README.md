@@ -1,7 +1,7 @@
 # Apex
 This application simulates an environment containing entities that depend on each other as sources of food.
 
-[screenshot](pics/screenshot.PNG)
+![screenshot](pics/screenshot.PNG)
 
 ## Controls
 Key | Action
