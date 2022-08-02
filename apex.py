@@ -159,7 +159,9 @@ class Apex:
             pygame.display.update()
             if (self.config.limitTickSpeed):
                 time.sleep((self.config.maxTickSpeed - self.config.tickSpeed)/self.config.maxTickSpeed)
-            self.simulation.numTicks += 1
+            
+            if not self.paused:
+                self.simulation.numTicks += 1
 
             if (self.config.endSimulationUponAllLivingEntitiesDying):
                 if self.simulation.getNumLivingEntities() == 0:
