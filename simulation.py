@@ -43,6 +43,7 @@ class Simulation:
         self.initializeLocationWidthAndHeight()
 
         self.entities = []
+        self.livingEntities = []
 
         self.running = True
 
@@ -57,6 +58,8 @@ class Simulation:
     
     def addEntity(self, entity: Entity):
         self.entities.append(entity)
+        if entity.isLiving():
+            self.livingEntities.append(entity)
     
     def removeEntityFromLocation(self, entity: Entity):
         locationID = entity.getLocationID()
@@ -68,6 +71,8 @@ class Simulation:
     def removeEntity(self, entity: Entity):
         self.entities.remove(entity)
         self.removeEntityFromLocation(entity)
+        if entity.isLiving():
+            self.livingEntities.remove(entity)
         
     def drawEnvironment(self):
         for location in self.environment.getGrid().getLocations():
@@ -103,13 +108,15 @@ class Simulation:
                 count += 1
         return count
 
-    
-    def getNumLivingEntities(self):
+    def getNumberOfLivingEntitiesOfType(self, entityType):
         count = 0
-        for e in self.entities:
-            if e.isLiving():
+        for entity in self.livingEntities:
+            if type(entity) is entityType:
                 count += 1
         return count
+    
+    def getNumLivingEntities(self):
+        return len(self.livingEntities)
     
     def displayStats(self):
         startingX = 100
@@ -117,9 +124,10 @@ class Simulation:
 
         text = []
 
-        text.append("Tick Speed:")
-        text.append(str(self.config.tickSpeed))
-        text.append("")
+        if self.config.limitTickSpeed:
+            text.append("Tick Speed:")
+            text.append(str(self.config.tickSpeed))
+            text.append("")
         text.append("Num Ticks:")
         text.append(str(self.numTicks))
         text.append("")
@@ -136,16 +144,16 @@ class Simulation:
         text.append(str(self.getNumberOfEntitiesOfType(Excrement)))
         text.append("")
         text.append("Chickens:")
-        text.append(str(self.getNumberOfEntitiesOfType(Chicken)))
+        text.append(str(self.getNumberOfLivingEntitiesOfType(Chicken)))
         text.append("")
         text.append("Pigs:")
-        text.append(str(self.getNumberOfEntitiesOfType(Pig)))
+        text.append(str(self.getNumberOfLivingEntitiesOfType(Pig)))
         text.append("")
         text.append("Cows:")
-        text.append(str(self.getNumberOfEntitiesOfType(Cow)))
+        text.append(str(self.getNumberOfLivingEntitiesOfType(Cow)))
         text.append("")
         text.append("Wolves:")
-        text.append(str(self.getNumberOfEntitiesOfType(Wolf)))
+        text.append(str(self.getNumberOfLivingEntitiesOfType(Wolf)))
 
 
         buffer = self.config.textSize
@@ -198,25 +206,28 @@ class Simulation:
         if key == pygame.K_DOWN:
             if self.config.tickSpeed > 1:
                 self.config.tickSpeed -= 1
+        if key == pygame.K_l:
+            if self.config.limitTickSpeed:
+                self.config.limitTickSpeed = False
+            else:
+                self.config.limitTickSpeed = True
             
     def initiateEntityActions(self):
-        for entity in self.entities:
-            if entity.isLiving():
-                self.moveActionHandler.initiateMoveAction(entity)
-                if entity.needsEnergy():
-                    self.eatActionHandler.initiateEatAction(entity, self.removeEntity)
-                else:
-                    if random.randrange(0, 100) < (self.config.chanceToExcrete*100):
-                        self.excreteActionHandler.initiateExcreteAction(entity, self.addEntity, self.numTicks)
-                    if random.randrange(0, 100) < (self.config.chanceToReproduce*100):
-                        self.reproduceActionHandler.initiateReproduceAction(entity, self.addEntity)
-    
+        for entity in self.livingEntities:
+            self.moveActionHandler.initiateMoveAction(entity)
+            if entity.needsEnergy():
+                self.eatActionHandler.initiateEatAction(entity, self.removeEntity)
+            else:
+                if random.randrange(0, 100) < (self.config.chanceToExcrete*100):
+                    self.excreteActionHandler.initiateExcreteAction(entity, self.addEntity, self.numTicks)
+                if random.randrange(0, 100) < (self.config.chanceToReproduce*100):
+                    self.reproduceActionHandler.initiateReproduceAction(entity, self.addEntity)
+
     def decreaseEnergyForLivingEntities(self):
-        for entity in self.entities:
-            if entity.isLiving():
-                entity.removeEnergy(1)
-                if entity.getEnergy() <= 0:
-                    self.removeEntity(entity)
+        for entity in self.livingEntities:
+            entity.removeEnergy(1)
+            if entity.getEnergy() <= 0:
+                self.removeEntity(entity)
     
     def cleanup(self):
         print("---")
@@ -264,7 +275,8 @@ class Simulation:
 
             # update and sleep
             pygame.display.update()
-            time.sleep((self.config.maxTickSpeed - self.config.tickSpeed)/self.config.maxTickSpeed)
+            if (self.config.limitTickSpeed):
+                time.sleep((self.config.maxTickSpeed - self.config.tickSpeed)/self.config.maxTickSpeed)
             self.numTicks += 1
 
             if (self.config.endSimulationUponAllLivingEntitiesDying):

@@ -1,6 +1,7 @@
 import random
 
 from entity import Entity
+from environment import Environment
 from grid import Grid
 from location import Location
 
@@ -9,7 +10,7 @@ from location import Location
 # @since July 27th, 2022
 class ReproduceActionHandler:
 
-    def __init__(self, environment):
+    def __init__(self, environment: Environment):
         self.environment = environment
         self.debug = False
     
