@@ -11,7 +11,8 @@ class Apex:
 
     def run(self):
         while self.createAndRunSimulation() == "restart":
-            pass
+            if self.config.reinitializeConfigUponRestart:
+                self.config = Config()
 
 apex = Apex()
 apex.run()

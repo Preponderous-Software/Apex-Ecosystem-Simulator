@@ -20,6 +20,15 @@ r | restart
 d | debug mode
 q | quit
 
+## Support
+You can find the support discord server [here](https://discord.gg/49J4RHQxhy).
+
+## Authors and acknowledgement
+### Developers
+Name | Main Contributions
+------------ | -------------
+Daniel Stephenson | Creator
+
 ## Project Info
 This project was started in July 2022.
 
