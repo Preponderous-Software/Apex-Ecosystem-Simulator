@@ -24,13 +24,17 @@ class Apex:
         pygame.display.set_icon(pygame.image.load('icon.PNG'))
         
         self.graphik = Graphik(self.gameDisplay)
-        self.initializeSimulation()
-
+        
         self.debug = False
         self.paused = False
+        self.simCount = 0
+
+        self.initializeSimulation()
     
     def initializeSimulation(self):
-        self.simulation = Simulation(self.config, self.gameDisplay)
+        self.simCount += 1
+        name = "Simulation " + str(self.simCount)
+        self.simulation = Simulation(name, self.config, self.gameDisplay)
         self.simulation.initializeEntities()
         self.simulation.placeEntities()
         self.simulation.environment.printInfo()
@@ -137,7 +141,7 @@ class Apex:
         if self.paused:
             self.paused = False
 
-    def run(self):
+    def simulationScreen(self):
         while self.simulation.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -178,6 +182,9 @@ class Apex:
                     time.sleep(1)
                     if (self.config.autoRestart):
                         self.restartSimulation()
+
+    def run(self):
+        self.simulationScreen()
 
 apex = Apex()
 apex.run()
