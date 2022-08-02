@@ -10,6 +10,7 @@ At this time, the user can increase/decrease the tick speed, toggle the tick spe
 
 Key | Action
 ------------ | -------------
+space | pause/unpause
 c | spawn a chicken
 p | spawn a pig
 m | spawn a cow
