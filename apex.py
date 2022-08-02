@@ -27,6 +27,7 @@ class Apex:
         self.initializeSimulation()
 
         self.debug = False
+        self.paused = False
     
     def initializeSimulation(self):
         self.simulation = Simulation(self.config, self.gameDisplay)
@@ -79,6 +80,11 @@ class Apex:
                 self.config.limitTickSpeed = False
             else:
                 self.config.limitTickSpeed = True
+        if key == pygame.K_SPACE:
+            if self.paused:
+                self.paused = False
+            else:
+                self.paused = True
             
     def displayStats(self):
         startingX = 100
@@ -140,8 +146,9 @@ class Apex:
                 elif event.type == pygame.VIDEORESIZE:
                     self.simulation.initializeLocationWidthAndHeight()
             
-            # update simulation
-            self.simulation.update()
+            if not self.paused:
+                # update simulation
+                self.simulation.update()
 
             # draw environment
             self.drawEnvironment()
