@@ -129,6 +129,14 @@ class Apex:
         for i in range(0, len(text)):
             self.graphik.drawText(text[i], startingX, startingY + buffer*i, self.config.textSize, self.config.black)
 
+    def restartSimulation(self):
+        self.simulation.cleanup()
+        if self.config.reinitializeConfigUponRestart:
+            self.config = Config()
+        self.initializeSimulation()
+        if self.paused:
+            self.paused = False
+
     def run(self):
         while self.simulation.running:
             for event in pygame.event.get():
@@ -139,10 +147,7 @@ class Apex:
                 elif event.type == pygame.KEYDOWN:
                     result = self.handleKeyDownEvent(event.key)
                     if result == "restart":
-                        self.simulation.cleanup()
-                        if self.config.reinitializeConfigUponRestart:
-                            self.config = Config()
-                        self.initializeSimulation()
+                        self.restartSimulation()
                 elif event.type == pygame.VIDEORESIZE:
                     self.simulation.initializeLocationWidthAndHeight()
             
@@ -172,10 +177,7 @@ class Apex:
                     self.running = False
                     time.sleep(1)
                     if (self.config.autoRestart):
-                        self.simulation.cleanup()
-                        if self.config.reinitializeConfigUponRestart:
-                            self.config = Config()
-                        self.initializeSimulation()
+                        self.restartSimulation()
 
 apex = Apex()
 apex.run()
