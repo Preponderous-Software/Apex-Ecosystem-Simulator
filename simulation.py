@@ -1,8 +1,6 @@
 from math import ceil
 from operator import truediv
 import random
-import time
-import pygame
 from chicken import Chicken
 from cow import Cow
 from eatActionHandler import EatActionHandler
@@ -10,7 +8,6 @@ from entity import Entity
 from environment import Environment
 from excrement import Excrement
 from excreteActionHandler import ExcreteActionHandler
-from graphik import Graphik
 from grass import Grass
 from moveActionHandler import MoveActionHandler
 from pig import Pig
@@ -22,17 +19,10 @@ from wolf import Wolf
 # @since July 26th, 2022
 class Simulation:
 
-    def __init__(self, config):
-        pygame.init()
-        pygame.display.set_caption("Apex")
-
+    def __init__(self, config, gameDisplay):        
         self.config = config
+        self.gameDisplay = gameDisplay
 
-        self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.RESIZABLE)
-        pygame.display.set_icon(pygame.image.load('icon.PNG'))
-        
-        self.graphik = Graphik(self.gameDisplay)
-        
         self.environment = Environment("Test", self.config.gridSize)
 
         self.moveActionHandler = MoveActionHandler(self.environment)
@@ -48,8 +38,6 @@ class Simulation:
         self.running = True
 
         self.numTicks = 0
-
-        self.debug = False
     
     def initializeLocationWidthAndHeight(self):
         x, y = self.gameDisplay.get_size()
@@ -74,13 +62,6 @@ class Simulation:
         if entity.isLiving():
             self.livingEntities.remove(entity)
         
-    def drawEnvironment(self):
-        for location in self.environment.getGrid().getLocations():
-            color = self.config.brown
-            if location.getNumEntities() > 0:
-                color = location.getEntities()[-1].getColor()
-            self.graphik.drawRectangle(location.getX() * self.locationWidth, location.getY() * self.locationHeight, self.locationWidth, self.locationHeight, color)
-
     def initializeEntities(self):
         for i in range(self.config.numGrassEntities):
             self.addEntity(Grass())
@@ -117,49 +98,6 @@ class Simulation:
     
     def getNumLivingEntities(self):
         return len(self.livingEntities)
-    
-    def displayStats(self):
-        startingX = 100
-        startingY = 50
-
-        text = []
-
-        if self.config.limitTickSpeed:
-            text.append("Tick Speed:")
-            text.append(str(self.config.tickSpeed))
-            text.append("")
-        text.append("Num Ticks:")
-        text.append(str(self.numTicks))
-        text.append("")
-        text.append("Entities:")
-        text.append(str(len(self.entities)))
-        text.append("")
-        text.append("Living Entities: ")
-        text.append(str(self.getNumLivingEntities()))
-        text.append("")
-        text.append("Grass:")
-        text.append(str(self.getNumberOfEntitiesOfType(Grass)))
-        text.append("")
-        text.append("Excrement:")
-        text.append(str(self.getNumberOfEntitiesOfType(Excrement)))
-        text.append("")
-        text.append("Chickens:")
-        text.append(str(self.getNumberOfLivingEntitiesOfType(Chicken)))
-        text.append("")
-        text.append("Pigs:")
-        text.append(str(self.getNumberOfLivingEntitiesOfType(Pig)))
-        text.append("")
-        text.append("Cows:")
-        text.append(str(self.getNumberOfLivingEntitiesOfType(Cow)))
-        text.append("")
-        text.append("Wolves:")
-        text.append(str(self.getNumberOfLivingEntitiesOfType(Wolf)))
-
-
-        buffer = self.config.textSize
-
-        for i in range(0, len(text)):
-            self.graphik.drawText(text[i], startingX, startingY + buffer*i, self.config.textSize, self.config.black)
         
     def checkForPotentialGrass(self):
         for entity in self.entities:
@@ -172,45 +110,6 @@ class Simulation:
                 grass = Grass()
                 location.addEntity(grass)
                 self.addEntity(grass)
-
-    def handleKeyDownEvent(self, key):
-        if key == pygame.K_d:
-            if self.debug == True:
-                self.debug = False
-            else:
-                self.debug = True
-        if key == pygame.K_q:
-            self.running = False
-        if key == pygame.K_r:
-            self.cleanup()
-            return "restart"
-        if key == pygame.K_c:
-            chicken = Chicken("player created chicken")
-            self.environment.addEntity(chicken)
-            self.addEntity(chicken)
-        if key == pygame.K_p:
-            pig = Pig("player created pig")
-            self.environment.addEntity(pig)
-            self.addEntity(pig)
-        if key == pygame.K_m:
-            cow = Cow("player created cow")
-            self.environment.addEntity(cow)
-            self.addEntity(cow)
-        if key == pygame.K_w:
-            wolf = Wolf("player created wolf")
-            self.environment.addEntity(wolf)
-            self.addEntity(wolf)
-        if key == pygame.K_UP:
-            if self.config.tickSpeed < self.config.maxTickSpeed:
-                self.config.tickSpeed += 1
-        if key == pygame.K_DOWN:
-            if self.config.tickSpeed > 1:
-                self.config.tickSpeed -= 1
-        if key == pygame.K_l:
-            if self.config.limitTickSpeed:
-                self.config.limitTickSpeed = False
-            else:
-                self.config.limitTickSpeed = True
             
     def initiateEntityActions(self):
         for entity in self.livingEntities:
@@ -236,29 +135,7 @@ class Simulation:
         print("Length of simulation:", self.numTicks, "ticks")
         print("---")
     
-    def quit(self):
-        pygame.quit()
-        quit()
-    
-    def run(self):
-        self.initializeEntities()
-        self.placeEntities()
-
-        self.environment.printInfo()
-
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.cleanup()
-                    self.quit()
-                elif event.type == pygame.KEYDOWN:
-                    result = self.handleKeyDownEvent(event.key)
-                    if result == "restart":
-                        self.cleanup()
-                        return "restart"
-                elif event.type == pygame.VIDEORESIZE:
-                    self.initializeLocationWidthAndHeight() 
-
+    def update(self):
             # initiate entity actions
             self.initiateEntityActions()
             
@@ -267,22 +144,3 @@ class Simulation:
             
             # make grass grow
             self.checkForPotentialGrass()
-
-            # draw environment
-            self.drawEnvironment()
-            if self.debug:
-                self.displayStats()
-
-            # update and sleep
-            pygame.display.update()
-            if (self.config.limitTickSpeed):
-                time.sleep((self.config.maxTickSpeed - self.config.tickSpeed)/self.config.maxTickSpeed)
-            self.numTicks += 1
-
-            if (self.config.endSimulationUponAllLivingEntitiesDying):
-                if self.getNumLivingEntities() == 0:
-                    self.running = False
-                    time.sleep(1)
-                    if (self.config.autoRestart):
-                        self.cleanup()
-                        return "restart"
