@@ -1,5 +1,5 @@
 # Apex
-This application simulates an environment containing entities that depend on each other as sources of food. A food chain arises from the configuration of various entities and their specified diets.
+This application simulates an environment containing entities that depend on each other as sources of energy. A food chain arises from the configuration of various entities and their specified diets.
 
 ![screenshot](pics/screenshot.PNG)
 
@@ -10,12 +10,13 @@ There are nine controls which are listed and described below. At this time, the 
 
 Key | Action
 ------------ | -------------
-up | increase tick speed
-down | decrease tick speed
 c | spawn a chicken
 p | spawn a pig
 m | spawn a cow
 w | spawn a wolf
+up | increase tick speed
+down | decrease tick speed
+l | toggle tick speed limit
 r | restart
 d | debug mode
 q | quit
