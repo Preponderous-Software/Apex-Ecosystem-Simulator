@@ -150,10 +150,10 @@ class Apex:
                 # update simulation
                 self.simulation.update()
 
-            # draw environment
-            self.drawEnvironment()
-            if self.debug:
-                self.displayStats()
+                # draw environment
+                self.drawEnvironment()
+                if self.debug:
+                    self.displayStats()
 
             # update and sleep
             pygame.display.update()
@@ -162,6 +162,10 @@ class Apex:
             
             if not self.paused:
                 self.simulation.numTicks += 1
+            
+            if self.paused:
+                x, y = self.gameDisplay.get_size()
+                self.graphik.drawText("PAUSED", x/2, y/2, 50, self.config.black)
 
             if (self.config.endSimulationUponAllLivingEntitiesDying):
                 if self.simulation.getNumLivingEntities() == 0:
