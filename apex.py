@@ -138,7 +138,7 @@ class Apex:
                             self.config = Config()
                         self.initializeSimulation()
                 elif event.type == pygame.VIDEORESIZE:
-                    self.initializeLocationWidthAndHeight()
+                    self.simulation.initializeLocationWidthAndHeight()
             
             # update simulation
             self.simulation.update()
