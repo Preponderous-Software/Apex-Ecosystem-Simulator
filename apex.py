@@ -32,12 +32,13 @@ class Apex:
         self.initializeSimulation()
     
     def initializeSimulation(self):
-        self.simCount += 1
         name = "Simulation " + str(self.simCount)
         self.simulation = Simulation(name, self.config, self.gameDisplay)
         self.simulation.initializeEntities()
         self.simulation.placeEntities()
         self.simulation.environment.printInfo()
+        self.simCount += 1
+        pygame.display.set_caption("Apex - " + name + " - " + str(self.simulation.environment.getGrid().getColumns()) + "x" + str(self.simulation.environment.getGrid().getRows()))
         
     def drawEnvironment(self):
         for location in self.simulation.environment.getGrid().getLocations():
@@ -53,24 +54,25 @@ class Apex:
             else:
                 self.debug = True
         if key == pygame.K_q:
+            self.simulation.cleanup()
             self.simulation.running = False
         if key == pygame.K_r:
             self.simulation.cleanup()
             return "restart"
         if key == pygame.K_c:
-            chicken = Chicken("player created chicken")
+            chicken = Chicken("player-created-chicken")
             self.simulation.environment.addEntity(chicken)
             self.simulation.addEntity(chicken)
         if key == pygame.K_p:
-            pig = Pig("player created pig")
+            pig = Pig("player-created-pig")
             self.simulation.environment.addEntity(pig)
             self.simulation.addEntity(pig)
         if key == pygame.K_m:
-            cow = Cow("player created cow")
+            cow = Cow("player-created-cow")
             self.simulation.environment.addEntity(cow)
             self.simulation.addEntity(cow)
         if key == pygame.K_w:
-            wolf = Wolf("player created wolf")
+            wolf = Wolf("player-created-wolf")
             self.simulation.environment.addEntity(wolf)
             self.simulation.addEntity(wolf)
         if key == pygame.K_UP:
