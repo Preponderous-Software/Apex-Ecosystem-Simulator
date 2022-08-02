@@ -13,6 +13,7 @@ class ReproduceActionHandler:
     def __init__(self, environment: Environment):
         self.environment = environment
         self.debug = False
+        self.childCount = 0
     
     def getRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
@@ -46,13 +47,15 @@ class ReproduceActionHandler:
         entity.removeEnergy(1)
         mate.removeEnergy(1)
 
-        name = random.randrange(0,9999)
+        name = "child " + str(self.childCount)
         child = type(entity)(name)
         targetLocation = self.getRandomDirection(grid, location)
         if targetLocation == -1:
             return
         self.environment.addEntityToLocation(child, targetLocation)
         callbackFunction(child)
+
+        self.childCount += 1
 
         if self.debug:
             print("[EVENT] ", entity.getName(), "has reproduced with", mate.getName() , "at (", location.getX(), ",", location.getY(), ").")

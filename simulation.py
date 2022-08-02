@@ -19,11 +19,11 @@ from wolf import Wolf
 # @since July 26th, 2022
 class Simulation:
 
-    def __init__(self, config, gameDisplay):        
+    def __init__(self, name, config, gameDisplay):        
         self.config = config
         self.gameDisplay = gameDisplay
 
-        self.environment = Environment("Test", self.config.gridSize)
+        self.environment = Environment(name, self.config.gridSize)
 
         self.moveActionHandler = MoveActionHandler(self.environment)
         self.eatActionHandler = EatActionHandler(self.environment)
