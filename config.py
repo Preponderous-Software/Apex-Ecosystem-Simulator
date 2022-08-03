@@ -37,8 +37,9 @@ class Config:
         # calculated
         self.textSize = ceil(self.displayHeight/37)
         self.numGrassEntities = ceil(self.gridSize*self.gridSize*grassFactor)
-        self.numChickensToStart = ceil(self.gridSize*livingEntityFactor/0.5)
+        self.numChickensToStart = ceil(self.gridSize*livingEntityFactor/1)
         self.numPigsToStart = ceil(self.gridSize*livingEntityFactor/1)
         self.numCowsToStart = ceil(self.gridSize*livingEntityFactor/2)
         self.numWolvesToStart = ceil(self.gridSize*livingEntityFactor/8)
         self.numFoxesToStart = ceil(self.gridSize*livingEntityFactor/4)
+        self.numRabbitsToStart = ceil(self.gridSize*livingEntityFactor/1)

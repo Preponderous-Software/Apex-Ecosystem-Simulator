@@ -12,6 +12,7 @@ A food chain arises from the configuration of various entities and their specifi
 - Cow
 - Wolf
 - Fox
+- Rabbit
 
 Each of these attempt to gain energy and reproduce. At the bottom of the food chain is Grass, which chickens, pigs and cows are able to eat.
 
@@ -29,6 +30,7 @@ p | spawn a pig
 m | spawn a cow
 w | spawn a wolf
 f | spawn a fox
+b | spawn a rabbit
 l | toggle tick speed limit
 up | increase tick speed
 down | decrease tick speed

@@ -12,6 +12,7 @@ from fox import Fox
 from grass import Grass
 from moveActionHandler import MoveActionHandler
 from pig import Pig
+from rabbit import Rabbit
 from reproduceActionHandler import ReproduceActionHandler
 from wolf import Wolf
 
@@ -81,6 +82,9 @@ class Simulation:
         
         for i in range(self.config.numFoxesToStart):
             self.addEntity(Fox("Fox"))
+
+        for i in range(self.config.numRabbitsToStart):
+            self.addEntity(Rabbit("Rabbit"))
 
     def placeEntities(self):
         for entity in self.entities:
