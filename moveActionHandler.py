@@ -26,6 +26,12 @@ class MoveActionHandler:
             return grid.getLeft(location)
         
     def searchForFood(self, entity, grid: Grid, location: Location):
+        # search current location
+        for e in location.getEntities():
+            if entity.canEat(e):
+                return location
+        
+        # search nearby locations
         attempts = 0
         while attempts < random.randrange(1, 5):
             searchLocation = self.chooseRandomDirection(grid, location)
