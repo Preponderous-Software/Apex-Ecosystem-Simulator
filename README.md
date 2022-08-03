@@ -1,8 +1,7 @@
 # Apex
-This application simulates an environment containing entities that depend on each other as sources of energy.
+This application simulates an environment containing entities that depend on each other as sources of energy. A food chain arises from the configuration of various entities and their specified diets.
 
-A food chain arises from the configuration of various entities and their specified diets.
-
+<img src="pics/screenshot.PNG" alt="screenshot" width="400"/>
 
 ## Types of Living Entities
 - Chicken
@@ -41,13 +40,6 @@ At this time, the user can pause/unpause, toggle the tick speed limit, increase/
 ## Support
 You can find the support discord server [here](https://discord.gg/49J4RHQxhy).
 
-## Screenshots
-![screenshot](pics/screenshot.PNG)
-
-![screenshot 2](pics/screenshot2.PNG)
-
-![screenshot 3](pics/screenshot3.PNG)
-
 ## Authors and acknowledgement
 ### Developers
 Name | Main Contributions
@@ -59,3 +51,9 @@ This project is based on [Kreatures](https://github.com/Stephenson-Software/Krea
 
 ## Libraries
 This project makes use of [graphik](https://github.com/Preponderous-Software/graphik) and [py_env_lib](https://github.com/Preponderous-Software/py_env_lib).
+
+
+## Screenshots
+
+<img src="pics/screenshot2.PNG" alt="screenshot2" width="400"/>
+<img src="pics/screenshot3.PNG" alt="screenshot3" width="400"/>
