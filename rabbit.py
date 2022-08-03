@@ -9,7 +9,7 @@ class Rabbit(Entity):
 
     def __init__(self, name):
         Entity.__init__(self, name, random.randrange(20, 30), True, [Grass])
-        self.color = (250,235,215)
+        self.color = (250,220,200)
 
     def getColor(self):
         return self.color
