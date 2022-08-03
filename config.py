@@ -8,12 +8,18 @@ class Config:
 
     def __init__(self):
         # local
-        grassFactor = random.randrange(2, 6)
-        livingEntityFactor = 1.5
-        minGridSize = 16
-        maxGridSize = 32
+        grassFactor = random.randrange(3, 10)
+        livingEntityFactor = 0.2
+        minGridSize = 8
+        maxGridSize = 36
         minGrassGrowTime = 100
-        maxGrassGrowTime = 500
+        maxGrassGrowTime = 300
+        chickenFactor = random.randrange(1, 10)
+        pigFactor = random.randrange(0, 10)
+        cowFactor = random.randrange(0, 10)
+        wolfFactor = random.randrange(0, 5)
+        foxFactor = random.randrange(0, 5)
+        rabbitFactor = random.randrange(0, 10)
 
         # static
         self.displayWidth = 400
@@ -37,9 +43,9 @@ class Config:
         # calculated
         self.textSize = ceil(self.displayHeight/37)
         self.numGrassEntities = ceil(self.gridSize*self.gridSize*grassFactor)
-        self.numChickensToStart = ceil(self.gridSize*livingEntityFactor/1)
-        self.numPigsToStart = ceil(self.gridSize*livingEntityFactor/1)
-        self.numCowsToStart = ceil(self.gridSize*livingEntityFactor/2)
-        self.numWolvesToStart = ceil(self.gridSize*livingEntityFactor/8)
-        self.numFoxesToStart = ceil(self.gridSize*livingEntityFactor/4)
-        self.numRabbitsToStart = ceil(self.gridSize*livingEntityFactor/1)
+        self.numChickensToStart = ceil(self.gridSize*livingEntityFactor*chickenFactor)
+        self.numPigsToStart = ceil(self.gridSize*livingEntityFactor*pigFactor)
+        self.numCowsToStart = ceil(self.gridSize*livingEntityFactor*cowFactor)
+        self.numWolvesToStart = ceil(self.gridSize*livingEntityFactor*wolfFactor)
+        self.numFoxesToStart = ceil(self.gridSize*livingEntityFactor*foxFactor)
+        self.numRabbitsToStart = ceil(self.gridSize*livingEntityFactor*rabbitFactor)
