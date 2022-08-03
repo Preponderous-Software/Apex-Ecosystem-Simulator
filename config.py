@@ -8,10 +8,10 @@ class Config:
 
     def __init__(self):
         # local
-        grassFactor = random.randrange(1, 5)
-        livingEntityFactor = 1
-        minGridSize = 10
-        maxGridSize = 50
+        grassFactor = random.randrange(2, 6)
+        livingEntityFactor = 1.5
+        minGridSize = 16
+        maxGridSize = 32
         minGrassGrowTime = 100
         maxGrassGrowTime = 500
 
@@ -36,8 +36,9 @@ class Config:
 
         # calculated
         self.textSize = ceil(self.displayHeight/37)
-        self.numChickensToStart = ceil(self.gridSize*livingEntityFactor/1)
-        self.numPigsToStart = ceil(self.gridSize*livingEntityFactor/2)
-        self.numCowsToStart = ceil(self.gridSize*livingEntityFactor/4)
-        self.numWolvesToStart = ceil(self.gridSize*livingEntityFactor/8)
         self.numGrassEntities = ceil(self.gridSize*self.gridSize*grassFactor)
+        self.numChickensToStart = ceil(self.gridSize*livingEntityFactor/0.5)
+        self.numPigsToStart = ceil(self.gridSize*livingEntityFactor/1)
+        self.numCowsToStart = ceil(self.gridSize*livingEntityFactor/2)
+        self.numWolvesToStart = ceil(self.gridSize*livingEntityFactor/8)
+        self.numFoxesToStart = ceil(self.gridSize*livingEntityFactor/4)

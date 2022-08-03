@@ -8,6 +8,7 @@ class EatActionHandler:
     def __init__(self, environment):
         self.environment = environment
         self.debug = False
+        self.energyCost = 1
         
     def initiateEatAction(self, entity: Entity, callbackFunction):
         # get location
@@ -28,6 +29,9 @@ class EatActionHandler:
         callbackFunction(food)
         energy = food.getEnergy()
         entity.addEnergy(energy)
+
+        # energy cost for action
+        entity.removeEnergy(self.energyCost)
 
         if self.debug:
             print("[EVENT] ", entity.getName(), "ate", food.getName() , "at (", location.getX(), ",", location.getY(), ") and gained", energy, "energy.")
