@@ -8,6 +8,7 @@ from fox import Fox
 from graphik import Graphik
 from grass import Grass
 from pig import Pig
+from rabbit import Rabbit
 from simulation import Simulation
 from wolf import Wolf
 
@@ -50,8 +51,8 @@ class Apex:
             self.graphik.drawRectangle(location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight, color)
 
     def displayStats(self):
-        startingX = 50
-        startingY = 50
+        startingX = 100
+        startingY = 10
 
         text = []
 
@@ -88,6 +89,9 @@ class Apex:
         text.append("")
         text.append("Foxes:")
         text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Fox)))
+        text.append("")
+        text.append("Rabbits:")
+        text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Rabbit)))
 
         buffer = self.config.textSize
 
@@ -126,6 +130,10 @@ class Apex:
             fox = Fox("player-created-fox")
             self.simulation.environment.addEntity(fox)
             self.simulation.addEntity(fox)
+        if key == pygame.K_b:
+            rabbit = Rabbit("player-created-rabbit")
+            self.simulation.environment.addEntity(rabbit)
+            self.simulation.addEntity(rabbit)
         if key == pygame.K_UP:
             if self.config.tickSpeed < self.config.maxTickSpeed:
                 self.config.tickSpeed += 1
@@ -162,6 +170,7 @@ class Apex:
 
     def quitApplication(self):
         self.simulation.cleanup()
+        self.tickLengths.append(self.simulation.numTicks)
         print("average simulation length:", self.getAverageTickLength(), "ticks")
         pygame.quit()
         quit()
