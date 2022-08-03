@@ -12,6 +12,7 @@ class MoveActionHandler:
     def __init__(self, environment):
         self.environment = environment
         self.debug = False
+        self.energyCost = 1
 
     def chooseRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
@@ -59,6 +60,9 @@ class MoveActionHandler:
         # move entity
         location.removeEntity(entity)
         newLocation.addEntity(entity)
+
+        # energy cost for action
+        entity.removeEnergy(self.energyCost)
 
         if self.debug:
             print("[EVENT] ", entity.getName(), "moved to (", location.getX(), ",", location.getY(), ")")

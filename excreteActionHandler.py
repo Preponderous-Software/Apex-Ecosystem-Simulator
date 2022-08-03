@@ -13,6 +13,7 @@ class ExcreteActionHandler:
     def __init__(self, environment):
         self.environment = environment
         self.debug = False
+        self.energyCost = 1
     
     def getRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
@@ -37,3 +38,6 @@ class ExcreteActionHandler:
         else:
             excretionLocation.addEntity(excrement)
             callbackFunction(excrement)
+        
+        # energy cost for action
+        entity.removeEnergy(self.energyCost)

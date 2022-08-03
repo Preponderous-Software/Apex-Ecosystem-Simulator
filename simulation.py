@@ -8,6 +8,7 @@ from entity import Entity
 from environment import Environment
 from excrement import Excrement
 from excreteActionHandler import ExcreteActionHandler
+from fox import Fox
 from grass import Grass
 from moveActionHandler import MoveActionHandler
 from pig import Pig
@@ -77,6 +78,9 @@ class Simulation:
         
         for i in range (self.config.numCowsToStart):
             self.addEntity(Cow("Cow"))
+        
+        for i in range(self.config.numFoxesToStart):
+            self.addEntity(Fox("Fox"))
 
     def placeEntities(self):
         for entity in self.entities:

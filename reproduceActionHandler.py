@@ -14,6 +14,7 @@ class ReproduceActionHandler:
         self.environment = environment
         self.debug = False
         self.childCount = 0
+        self.energyCost = 1
     
     def getRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
@@ -44,8 +45,9 @@ class ReproduceActionHandler:
             # no entity of this type found
             return
 
-        entity.removeEnergy(1)
-        mate.removeEnergy(1)
+        # energy cost for action
+        entity.removeEnergy(self.energyCost)
+        mate.removeEnergy(self.energyCost)
 
         name = "child " + str(self.childCount)
         child = type(entity)(name)
