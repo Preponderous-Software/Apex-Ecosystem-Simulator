@@ -1,8 +1,6 @@
 # Apex
 This application simulates an environment containing entities that depend on each other as sources of energy.
 
-![screenshot](pics/screenshot.PNG)
-
 A food chain arises from the configuration of various entities and their specified diets.
 
 
@@ -14,7 +12,7 @@ A food chain arises from the configuration of various entities and their specifi
 - Fox
 - Rabbit
 
-Each of these attempt to gain energy and reproduce. At the bottom of the food chain is Grass, which chickens, pigs and cows are able to eat.
+Each of these attempt to gain energy and reproduce. At the bottom of the food chain is Grass, which chickens, pigs, cows and rabbits are able to eat.
 
 If there is no grass, everything collapses. 
 
@@ -42,6 +40,13 @@ At this time, the user can pause/unpause, toggle the tick speed limit, increase/
 
 ## Support
 You can find the support discord server [here](https://discord.gg/49J4RHQxhy).
+
+## Screenshots
+![screenshot](pics/screenshot.PNG)
+
+![screenshot 2](pics/screenshot2.PNG)
+
+![screenshot 3](pics/screenshot3.PNG)
 
 ## Authors and acknowledgement
 ### Developers
