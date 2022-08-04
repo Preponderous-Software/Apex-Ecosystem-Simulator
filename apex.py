@@ -1,3 +1,4 @@
+from sys import _xoptions
 import time
 import pygame
 from chicken import Chicken
@@ -55,6 +56,7 @@ class Apex:
                     color = topEntity.getColor()
             self.graphik.drawRectangle(location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight, color)
 
+    # helper method for drawRow()
     def drawLocation(self, location, xPos, yPos, width, height):
         if location == -1:
             color = self.config.black
@@ -69,33 +71,66 @@ class Apex:
                     color = topEntity.getColor()
 
         self.graphik.drawRectangle(xPos, yPos, width, height, color)
+    
+    # helper method for drawAreaAroundEntity()
+    def drawRow(self, location, grid, xpos, ypos, width, height):
+        self.drawLocation(location, xpos, ypos, width, height)
+
+        xBackup = xpos
+
+        tempLoc = location
+
+        # to the left
+        while tempLoc != -1:
+            xpos = xpos - width
+            ypos = ypos
+            self.drawLocation(grid.getLeft(tempLoc), xpos, ypos, width, height)
+            tempLoc = grid.getLeft(tempLoc)
+
+        # reset xpos
+        xpos = xBackup
+        tempLoc = location
+        
+        # to the right
+        while tempLoc != -1:
+            xpos = xpos + width
+            ypos = ypos
+            self.drawLocation(grid.getRight(tempLoc), xpos, ypos, width, height)
+            tempLoc = grid.getRight(tempLoc)
 
     def drawAreaAroundEntity(self, entity):
         locationID = entity.getLocationID()
         grid = self.simulation.environment.getGrid()
         location = grid.getLocation(locationID)
-        left = grid.getLeft(location)
-        right = grid.getRight(location)
-        up = grid.getUp(location)
-        down = grid.getDown(location)
-        upLeft = grid.getLeft(up)
-        upRight = grid.getRight(up)
-        downLeft = grid.getLeft(down)
-        downRight = grid.getRight(down)
 
         x, y = self.gameDisplay.get_size()
-        width = x/3
-        height = y/3
         
-        self.drawLocation(location, x/3, y/3, width, height)
-        self.drawLocation(left, x/3 - width, y/3, width, height)
-        self.drawLocation(right, x/3 + width, y/3, width, height)
-        self.drawLocation(up, x/3, y/3 - height, width, height)
-        self.drawLocation(down, x/3, y/3 + height, width, height)
-        self.drawLocation(upLeft, x/3 - width, y/3 - height, width, height)
-        self.drawLocation(upRight, x/3 + width, y/3 - height, width, height)
-        self.drawLocation(downLeft, x/3 - width, y/3 + height, width, height)
-        self.drawLocation(downRight, x/3 + width, y/3 + height, width, height)
+        width = x/(self.config.localViewSize*2 + 1)
+        height = y/(self.config.localViewSize*2 + 1)
+
+        xpos = width*self.config.localViewSize
+        ypos = height*self.config.localViewSize
+
+        yBackup = ypos
+        
+        # draw middle row
+        self.drawRow(location, grid, xpos, ypos, width, height)
+
+        # upwards
+        nextLocation = grid.getUp(location)
+        while nextLocation != -1:
+            ypos = ypos - height
+            self.drawRow(nextLocation, grid, xpos, ypos, width, height)
+            nextLocation = grid.getUp(nextLocation)
+        
+        ypos = yBackup
+
+        # downwards
+        nextLocation = grid.getDown(location)
+        while nextLocation != -1:
+            ypos = ypos + height
+            self.drawRow(nextLocation, grid, xpos, ypos, width, height)
+            nextLocation = grid.getDown(nextLocation)
 
     def displayStats(self):
         startingX = 100
@@ -181,10 +216,10 @@ class Apex:
             rabbit = Rabbit("player-created-rabbit")
             self.simulation.environment.addEntity(rabbit)
             self.simulation.addEntity(rabbit)
-        if key == pygame.K_UP:
+        if key == pygame.K_RIGHTBRACKET:
             if self.config.tickSpeed < self.config.maxTickSpeed:
                 self.config.tickSpeed += 1
-        if key == pygame.K_DOWN:
+        if key == pygame.K_LEFTBRACKET:
             if self.config.tickSpeed > 1:
                 self.config.tickSpeed -= 1
         if key == pygame.K_l:
@@ -207,6 +242,12 @@ class Apex:
                 self.config.highlightOldestEntity = False
             else:
                 self.config.highlightOldestEntity = True
+        if key == pygame.K_UP:
+            if self.config.localViewSize < self.config.maxLocalViewSize:
+                self.config.localViewSize += 1
+        if key == pygame.K_DOWN:
+            if self.config.localViewSize > 1:
+                self.config.localViewSize -= 1
 
     def restartSimulation(self):
         self.simulation.cleanup()

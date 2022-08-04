@@ -38,6 +38,7 @@ class Config:
         self.localView = False
         self.highlightOldestEntity = False
         self.highlightColor = (255, 255, 0)
+        self.localViewSize = 2
 
         # random
         self.gridSize = random.randrange(minGridSize, maxGridSize)
@@ -52,3 +53,4 @@ class Config:
         self.numWolvesToStart = ceil(self.gridSize*livingEntityFactor*wolfFactor)
         self.numFoxesToStart = ceil(self.gridSize*livingEntityFactor*foxFactor)
         self.numRabbitsToStart = ceil(self.gridSize*livingEntityFactor*rabbitFactor)
+        self.maxLocalViewSize = maxGridSize/4

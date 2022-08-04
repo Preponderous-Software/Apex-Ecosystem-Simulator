@@ -23,7 +23,9 @@ Key | Action
 ------------ | -------------
 space | pause/unpause
 h | highlight oldest living entity
-v | change view
+v | toggle view (global/local)
+up | increase view distance (in local view)
+down decrease view distance (in local view)
 d | debug mode
 c | spawn a chicken
 p | spawn a pig
@@ -32,8 +34,8 @@ w | spawn a wolf
 f | spawn a fox
 b | spawn a rabbit
 l | toggle tick speed limit
-up | increase tick speed (if enabled)
-down | decrease tick speed (if enabled)
+] | increase tick speed (if enabled)
+[ | decrease tick speed (if enabled)
 r | restart
 q | quit
 
