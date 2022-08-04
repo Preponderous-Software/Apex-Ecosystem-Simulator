@@ -35,6 +35,9 @@ class Config:
         self.chanceToReproduce = 0.02
         self.reinitializeConfigUponRestart = True
         self.limitTickSpeed = False
+        self.localView = False
+        self.highlightOldestEntity = False
+        self.highlightColor = (255, 255, 0)
 
         # random
         self.gridSize = random.randrange(minGridSize, maxGridSize)

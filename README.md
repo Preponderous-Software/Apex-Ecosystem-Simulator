@@ -23,6 +23,9 @@ Living entities spawn excrement when their energy needs are met and this turns i
 Key | Action
 ------------ | -------------
 space | pause/unpause
+h | highlight oldest living entity
+v | change view
+d | debug mode
 c | spawn a chicken
 p | spawn a pig
 m | spawn a cow
@@ -30,10 +33,9 @@ w | spawn a wolf
 f | spawn a fox
 b | spawn a rabbit
 l | toggle tick speed limit
-up | increase tick speed
-down | decrease tick speed
+up | increase tick speed (if enabled)
+down | decrease tick speed (if enabled)
 r | restart
-d | debug mode
 q | quit
 
 At this time, the user can pause/unpause, toggle the tick speed limit, increase/decrease the tick speed, manually spawn living entities, restart the simulation, enter debug mode and quit the application.

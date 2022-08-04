@@ -107,13 +107,21 @@ class Grid(object):
         return -1
 
     def getUp(self, location: Location):
+        if location == -1:
+            return -1
         return self.getLocationByCoordinates(location.getX(), location.getY() - 1)
     
     def getRight(self, location: Location):
+        if location == -1:
+            return -1
         return self.getLocationByCoordinates(location.getX() + 1, location.getY())
     
     def getDown(self, location: Location):
+        if location == -1:
+            return -1
         return self.getLocationByCoordinates(location.getX(), location.getY() + 1)
     
     def getLeft(self, location: Location):
+        if location == -1:
+            return -1
         return self.getLocationByCoordinates(location.getX() - 1, location.getY())

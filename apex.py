@@ -47,8 +47,55 @@ class Apex:
         for location in self.simulation.environment.getGrid().getLocations():
             color = self.config.brown
             if location.getNumEntities() > 0:
-                color = location.getEntities()[-1].getColor()
+                topEntity = location.getEntities()[-1]
+                oldestLivingEntity = self.simulation.livingEntities[0]
+                if self.config.highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
+                    color = self.config.highlightColor
+                else:
+                    color = topEntity.getColor()
             self.graphik.drawRectangle(location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight, color)
+
+    def drawLocation(self, location, xPos, yPos, width, height):
+        if location == -1:
+            color = self.config.black
+        else:
+            color = self.config.brown
+            if location.getNumEntities() > 0:
+                topEntity = location.getEntities()[-1]
+                oldestLivingEntity = self.simulation.livingEntities[0]
+                if self.config.highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
+                    color = self.config.highlightColor
+                else:
+                    color = topEntity.getColor()
+
+        self.graphik.drawRectangle(xPos, yPos, width, height, color)
+
+    def drawAreaAroundEntity(self, entity):
+        locationID = entity.getLocationID()
+        grid = self.simulation.environment.getGrid()
+        location = grid.getLocation(locationID)
+        left = grid.getLeft(location)
+        right = grid.getRight(location)
+        up = grid.getUp(location)
+        down = grid.getDown(location)
+        upLeft = grid.getLeft(up)
+        upRight = grid.getRight(up)
+        downLeft = grid.getLeft(down)
+        downRight = grid.getRight(down)
+
+        x, y = self.gameDisplay.get_size()
+        width = x/3
+        height = y/3
+        
+        self.drawLocation(location, x/3, y/3, width, height)
+        self.drawLocation(left, x/3 - width, y/3, width, height)
+        self.drawLocation(right, x/3 + width, y/3, width, height)
+        self.drawLocation(up, x/3, y/3 - height, width, height)
+        self.drawLocation(down, x/3, y/3 + height, width, height)
+        self.drawLocation(upLeft, x/3 - width, y/3 - height, width, height)
+        self.drawLocation(upRight, x/3 + width, y/3 - height, width, height)
+        self.drawLocation(downLeft, x/3 - width, y/3 + height, width, height)
+        self.drawLocation(downRight, x/3 + width, y/3 + height, width, height)
 
     def displayStats(self):
         startingX = 100
@@ -150,6 +197,16 @@ class Apex:
                 self.paused = False
             else:
                 self.paused = True
+        if key == pygame.K_v:
+            if self.config.localView:
+                self.config.localView = False
+            else:
+                self.config.localView = True
+        if key == pygame.K_h:
+            if self.config.highlightOldestEntity:
+                self.config.highlightOldestEntity = False
+            else:
+                self.config.highlightOldestEntity = True
 
     def restartSimulation(self):
         self.simulation.cleanup()
@@ -192,9 +249,15 @@ class Apex:
                 self.simulation.update()
 
                 # draw environment
-                self.drawEnvironment()
-                if self.debug:
-                    self.displayStats()
+                self.gameDisplay.fill(self.config.black)
+                if self.simulation.getNumLivingEntities() != 0:
+                    if self.config.localView:
+                        self.drawAreaAroundEntity(self.simulation.livingEntities[0])
+                    else:
+                        self.drawEnvironment()
+
+                    if self.debug:
+                        self.displayStats()
 
             # update and sleep
             pygame.display.update()
