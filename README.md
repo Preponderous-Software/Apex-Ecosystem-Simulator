@@ -25,7 +25,7 @@ space | pause/unpause
 h | highlight oldest living entity
 v | toggle view (global/local)
 up | increase view distance (in local view)
-down decrease view distance (in local view)
+down | decrease view distance (in local view)
 d | debug mode
 c | spawn a chicken
 p | spawn a pig
