@@ -57,12 +57,23 @@ class Simulation:
         location = grid.getLocation(locationID)
         if location.isEntityPresent(entity):
             location.removeEntity(entity)
+    
+    def printDeathInfo(self, entity, oldestLivingEntity):
+            toPrint = entity.getName() + " has died."
+            if len(self.livingEntities) > 0:
+                if entity.getID() == oldestLivingEntity.getID():
+                    toPrint += " They were the oldest living entity."
+            print(toPrint)
 
     def removeEntity(self, entity: Entity):
+        if len(self.livingEntities) > 0:
+            oldestLivingEntity = self.livingEntities[0]
+
         self.entities.remove(entity)
         self.removeEntityFromLocation(entity)
         if entity.isLiving():
             self.livingEntities.remove(entity)
+            self.printDeathInfo(entity, oldestLivingEntity)
         
     def initializeEntities(self):
         for i in range(self.config.numGrassEntities):
