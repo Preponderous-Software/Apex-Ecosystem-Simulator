@@ -155,7 +155,7 @@ class Apex:
         text.append(str(self.simulation.getNumberOfEntitiesOfType(Grass)))
         text.append("")
         text.append("Excrement:")
-        text.append(str(self.simulation.getNumberOfEntitiesOfType(Excrement)))
+        text.append(str(self.simulation.getNumExcrement()))
         text.append("")
         text.append("Chickens:")
         text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Chicken)))
