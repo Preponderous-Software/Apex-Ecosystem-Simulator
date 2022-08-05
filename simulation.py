@@ -36,6 +36,7 @@ class Simulation:
 
         self.entities = []
         self.livingEntities = []
+        self.excrement = []
 
         self.running = True
 
@@ -50,6 +51,8 @@ class Simulation:
         self.entities.append(entity)
         if entity.isLiving():
             self.livingEntities.append(entity)
+        if type(entity) is Excrement:
+            self.excrement.append(entity)
     
     def removeEntityFromLocation(self, entity: Entity):
         locationID = entity.getLocationID()
@@ -74,6 +77,8 @@ class Simulation:
         if entity.isLiving():
             self.livingEntities.remove(entity)
             self.printDeathInfo(entity, oldestLivingEntity)
+        if type(entity) is Excrement:
+            self.excrement.remove(entity)
         
     def initializeEntities(self):
         for i in range(self.config.numGrassEntities):
@@ -117,18 +122,24 @@ class Simulation:
     
     def getNumLivingEntities(self):
         return len(self.livingEntities)
-        
-    def checkForPotentialGrass(self):
-        for entity in self.entities:
-            if type(entity) is Excrement and (self.numTicks - entity.getTick()) > self.config.grassGrowTime:
-                locationID = entity.getLocationID()
+    
+    def getNumExcrement(self):
+        return len(self.excrement)
+
+    def performExcrementCheck(self, excrement):
+            if (self.numTicks - excrement.getTick()) > self.config.grassGrowTime:
+                locationID = excrement.getLocationID()
                 grid = self.environment.getGrid()
                 location = grid.getLocation(locationID)
                 
-                self.removeEntity(entity)
+                self.removeEntity(excrement)
                 grass = Grass()
                 location.addEntity(grass)
                 self.addEntity(grass)
+
+    def growGrass(self):
+        for excrement in self.excrement:
+            self.performExcrementCheck(excrement)
             
     def initiateEntityActions(self):
         for entity in self.livingEntities:
@@ -162,4 +173,4 @@ class Simulation:
             self.decreaseEnergyForLivingEntities()
             
             # make grass grow
-            self.checkForPotentialGrass()
+            self.growGrass()
