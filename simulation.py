@@ -20,7 +20,6 @@ from wolf import Wolf
 # @author Daniel McCoy Stephenson
 # @since July 26th, 2022
 class Simulation:
-
     def __init__(self, name, config, gameDisplay):        
         self.config = config
         self.gameDisplay = gameDisplay

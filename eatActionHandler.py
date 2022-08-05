@@ -4,7 +4,6 @@ from entity import Entity
 # @author Daniel McCoy Stephenson
 # @since July 27th, 2022
 class EatActionHandler:
-
     def __init__(self, environment):
         self.environment = environment
         self.debug = False

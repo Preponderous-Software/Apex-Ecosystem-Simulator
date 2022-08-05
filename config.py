@@ -5,7 +5,6 @@ import random
 # @author Daniel McCoy Stephenson
 # @since July 28th, 2022
 class Config:
-
     def __init__(self):
         # local
         grassFactor = random.randrange(3, 10)

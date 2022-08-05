@@ -4,7 +4,6 @@ import pygame
 from chicken import Chicken
 from config import Config
 from cow import Cow
-from excrement import Excrement
 from fox import Fox
 from graphik import Graphik
 from grass import Grass
@@ -35,6 +34,7 @@ class Apex:
         self.initializeSimulation()
         self.tickLengths = []
     
+    # Creates and initializes a new simulation. Only one simulation can exist at a time.
     def initializeSimulation(self):
         name = "Simulation " + str(self.simCount)
         self.simulation = Simulation(name, self.config, self.gameDisplay)
@@ -43,7 +43,8 @@ class Apex:
         self.simulation.environment.printInfo()
         self.simCount += 1
         pygame.display.set_caption("Apex - " + name + " - " + str(self.simulation.environment.getGrid().getColumns()) + "x" + str(self.simulation.environment.getGrid().getRows()))
-        
+    
+    # Draws the environment that belongs to the simulation in its entirety.
     def drawEnvironment(self):
         for location in self.simulation.environment.getGrid().getLocations():
             color = self.config.brown
@@ -56,7 +57,7 @@ class Apex:
                     color = topEntity.getColor()
             self.graphik.drawRectangle(location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight, color)
 
-    # helper method for drawRow()
+    # Helper method for drawRow()
     def drawLocation(self, location, xPos, yPos, width, height):
         if location == -1:
             color = self.config.black
@@ -72,7 +73,7 @@ class Apex:
 
         self.graphik.drawRectangle(xPos, yPos, width, height, color)
     
-    # helper method for drawAreaAroundEntity()
+    # Helper method for drawAreaAroundEntity()
     def drawRow(self, location, grid, xpos, ypos, width, height):
         self.drawLocation(location, xpos, ypos, width, height)
 
@@ -98,6 +99,7 @@ class Apex:
             self.drawLocation(grid.getRight(tempLoc), xpos, ypos, width, height)
             tempLoc = grid.getRight(tempLoc)
 
+    # Draws the immediate area around an entity. Utilizes drawRow() and drawLocation().
     def drawAreaAroundEntity(self, entity):
         locationID = entity.getLocationID()
         grid = self.simulation.environment.getGrid()
@@ -132,6 +134,7 @@ class Apex:
             self.drawRow(nextLocation, grid, xpos, ypos, width, height)
             nextLocation = grid.getDown(nextLocation)
 
+    # Draws some statistics to the screen, which are updated each tick. This can be laggy.
     def displayStats(self):
         startingX = 100
         startingY = 10
@@ -180,6 +183,7 @@ class Apex:
         for i in range(0, len(text)):
             self.graphik.drawText(text[i], startingX, startingY + buffer*i, self.config.textSize, self.config.black)
 
+    # Defines the controls of the application.
     def handleKeyDownEvent(self, key):
         if key == pygame.K_d:
             if self.debug == True:
@@ -249,6 +253,7 @@ class Apex:
             if self.config.localViewSize > 1:
                 self.config.localViewSize -= 1
 
+    # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
     def restartSimulation(self):
         self.simulation.cleanup()
         self.tickLengths.append(self.simulation.numTicks)
@@ -258,6 +263,7 @@ class Apex:
         if self.paused:
             self.paused = False
 
+    # Gets the average tick length for the current simulation.
     def getAverageTickLength(self):
         if len(self.tickLengths) == 0:
             return 0
@@ -266,6 +272,7 @@ class Apex:
             sum += tickLength
         return sum/len(self.tickLengths)
 
+    # Shuts down the application.
     def quitApplication(self):
         self.simulation.cleanup()
         self.tickLengths.append(self.simulation.numTicks)
@@ -273,6 +280,7 @@ class Apex:
         pygame.quit()
         quit()
 
+    # Invokes the simulation screen loop.
     def simulationScreen(self):
         while self.simulation.running:
             for event in pygame.event.get():
@@ -325,6 +333,7 @@ class Apex:
         # quit
         self.quitApplication()
 
+    # Runs the application.
     def run(self):
         self.simulationScreen()
 
