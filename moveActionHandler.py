@@ -8,7 +8,6 @@ from location import Location
 # @author Daniel McCoy Stephenson
 # @since July 26th, 2022
 class MoveActionHandler:
-
     def __init__(self, environment):
         self.environment = environment
         self.debug = False
