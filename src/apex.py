@@ -247,8 +247,10 @@ class Apex:
     def restartSimulation(self):
         self.simulation.cleanup()
         self.tickLengths.append(self.simulation.numTicks)
-        if self.config.reinitializeConfigUponRestart:
-            self.config = Config()
+        if self.config.randomizeGridSizeUponRestart:
+            self.config.randomizeGridSize()
+            self.config.randomizeGrassGrowTime()
+            self.config.calculateValues()
         self.initializeSimulation()
         if self.paused:
             self.paused = False
