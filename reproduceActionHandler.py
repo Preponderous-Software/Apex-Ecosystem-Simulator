@@ -1,4 +1,5 @@
 import random
+from config import Config
 
 from entity import Entity
 from environment import Environment
@@ -12,12 +13,13 @@ from soundService import SoundService
 # @since July 27th, 2022
 class ReproduceActionHandler:
 
-    def __init__(self, environment: Environment, soundService: SoundService):
+    def __init__(self, environment: Environment, soundService: SoundService, config: Config):
         self.environment = environment
         self.debug = False
         self.childCount = 0
         self.energyCost = 1
         self.soundService = soundService
+        self.config = config
     
     def getRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
@@ -59,7 +61,9 @@ class ReproduceActionHandler:
             return
         self.environment.addEntityToLocation(child, targetLocation)
         callbackFunction(child)
-        self.soundService.playReproduceSoundEffect()
+        
+        if not self.config.muted:
+            self.soundService.playReproduceSoundEffect()
 
         self.childCount += 1
 
