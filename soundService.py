@@ -8,6 +8,9 @@ class SoundService:
         self.reproduceSoundEffect = pygame.mixer.Sound("pop.wav")
         self.deathSoundEffect = pygame.mixer.Sound("death.mp3")
 
+        self.reproduceSoundEffect.set_volume(0.2)
+        self.deathSoundEffect.set_volume(0.2)
+
     def playReproduceSoundEffect(self):
         pygame.mixer.Sound.play(self.reproduceSoundEffect)
     
