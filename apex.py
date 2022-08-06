@@ -18,18 +18,13 @@ class Apex:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Apex")
-
         self.config = Config()
-
         self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.RESIZABLE)
         pygame.display.set_icon(pygame.image.load('icon.PNG'))
-        
         self.graphik = Graphik(self.gameDisplay)
-        
         self.debug = False
         self.paused = False
         self.simCount = 0
-
         self.initializeSimulation()
         self.tickLengths = []
     
@@ -46,18 +41,10 @@ class Apex:
     # Draws the environment that belongs to the simulation in its entirety.
     def drawEnvironment(self):
         for location in self.simulation.environment.getGrid().getLocations():
-            color = self.config.brown
-            if location.getNumEntities() > 0:
-                topEntity = location.getEntities()[-1]
-                oldestLivingEntity = self.simulation.livingEntities[0]
-                if self.config.highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
-                    color = self.config.highlightColor
-                else:
-                    color = topEntity.getColor()
-            self.graphik.drawRectangle(location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight, color)
+            self.drawLocation(location, location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight)
 
-    # Helper method for drawRow()
-    def drawLocation(self, location, xPos, yPos, width, height):
+    # Returns the color that a location should be displayed as.
+    def getColorOfLocation(self, location):
         if location == -1:
             color = self.config.black
         else:
@@ -69,77 +56,76 @@ class Apex:
                     color = self.config.highlightColor
                 else:
                     color = topEntity.getColor()
+        return color
 
+    # Draws a location at a specified position.
+    def drawLocation(self, location, xPos, yPos, width, height):
+        color = self.getColorOfLocation(location)
         self.graphik.drawRectangle(xPos, yPos, width, height, color)
     
-    # Helper method for drawAreaAroundEntity()
-    def drawRow(self, location, grid, xpos, ypos, width, height):
-        self.drawLocation(location, xpos, ypos, width, height)
-
-        xBackup = xpos
-
+    # Draws locations to the left of a given location.
+    def drawLocationsToTheLeftOfLocation(self, location, grid, xpos, ypos, width, height):
         tempLoc = location
-
-        # to the left
         while tempLoc != -1:
             xpos = xpos - width
             ypos = ypos
             self.drawLocation(grid.getLeft(tempLoc), xpos, ypos, width, height)
             tempLoc = grid.getLeft(tempLoc)
-
-        # reset xpos
-        xpos = xBackup
+    
+    # Draws locations to the right of a given location.
+    def drawLocationsToTheRightOfLocation(self, location, grid, xpos, ypos, width, height):
         tempLoc = location
-        
-        # to the right
         while tempLoc != -1:
             xpos = xpos + width
             ypos = ypos
             self.drawLocation(grid.getRight(tempLoc), xpos, ypos, width, height)
             tempLoc = grid.getRight(tempLoc)
-
-    # Draws the immediate area around an entity. Utilizes drawRow() and drawLocation().
-    def drawAreaAroundEntity(self, entity):
-        locationID = entity.getLocationID()
-        grid = self.simulation.environment.getGrid()
-        location = grid.getLocation(locationID)
-
-        x, y = self.gameDisplay.get_size()
-        
-        width = x/(self.config.localViewSize*2 + 1)
-        height = y/(self.config.localViewSize*2 + 1)
-
-        xpos = width*self.config.localViewSize
-        ypos = height*self.config.localViewSize
-
-        yBackup = ypos
-        
-        # draw middle row
-        self.drawRow(location, grid, xpos, ypos, width, height)
-
-        # upwards
+    
+    # Draws a row of locations starting at a given location.
+    def drawRow(self, location, grid, xpos, ypos, width, height):
+        self.drawLocation(location, xpos, ypos, width, height)
+        xBackup = xpos
+        self.drawLocationsToTheLeftOfLocation(location, grid, xpos, ypos, width, height)
+        xpos = xBackup
+        self.drawLocationsToTheRightOfLocation(location, grid, xpos, ypos, width, height)
+    
+    # Draws rows of locations starting above a given location.
+    def drawRowsAboveLocation(self, location, grid, xpos, ypos, width, height):
         nextLocation = grid.getUp(location)
         while nextLocation != -1:
             ypos = ypos - height
             self.drawRow(nextLocation, grid, xpos, ypos, width, height)
             nextLocation = grid.getUp(nextLocation)
-        
-        ypos = yBackup
 
-        # downwards
+    # Draws rows of locations starting below a given location.
+    def drawRowsBelowLocation(self, location, grid, xpos, ypos, width, height):
         nextLocation = grid.getDown(location)
         while nextLocation != -1:
             ypos = ypos + height
             self.drawRow(nextLocation, grid, xpos, ypos, width, height)
             nextLocation = grid.getDown(nextLocation)
 
+    # Draws the immediate area around an entity.
+    def drawAreaAroundEntity(self, entity):
+        locationID = entity.getLocationID()
+        grid = self.simulation.environment.getGrid()
+        location = grid.getLocation(locationID)
+        x, y = self.gameDisplay.get_size()
+        width = x/(self.config.localViewSize*2 + 1)
+        height = y/(self.config.localViewSize*2 + 1)
+        xpos = width*self.config.localViewSize
+        ypos = height*self.config.localViewSize
+        yBackup = ypos
+        self.drawRow(location, grid, xpos, ypos, width, height)
+        self.drawRowsAboveLocation(location, grid, xpos, ypos, width, height)
+        ypos = yBackup
+        self.drawRowsBelowLocation(location, grid, xpos, ypos, width, height)
+
     # Draws some statistics to the screen, which are updated each tick. This can be laggy.
     def displayStats(self):
         startingX = 100
         startingY = 10
-
         text = []
-
         if self.config.limitTickSpeed:
             text.append("Tick Speed:")
             text.append(str(self.config.tickSpeed))
@@ -293,10 +279,7 @@ class Apex:
                     self.simulation.initializeLocationWidthAndHeight()
             
             if not self.paused:
-                # update simulation
                 self.simulation.update()
-
-                # draw environment
                 self.gameDisplay.fill(self.config.black)
                 if self.simulation.getNumLivingEntities() != 0:
                     if self.config.localView:
@@ -307,21 +290,17 @@ class Apex:
                     if self.debug:
                         self.displayStats()
 
-            # update and sleep
             pygame.display.update()
             if (self.config.limitTickSpeed):
                 time.sleep((self.config.maxTickSpeed - self.config.tickSpeed)/self.config.maxTickSpeed)
             
-            # increment ticks if not paused
             if not self.paused:
                 self.simulation.numTicks += 1
             
-            # inform the user that we are paused if that is the case
             if self.paused:
                 x, y = self.gameDisplay.get_size()
                 self.graphik.drawText("PAUSED", x/2, y/2, 50, self.config.black)
 
-            # check for zero living entities scenario
             if (self.config.endSimulationUponAllLivingEntitiesDying):
                 if self.simulation.getNumLivingEntities() == 0:
                     self.running = False
@@ -329,7 +308,6 @@ class Apex:
                     if (self.config.autoRestart):
                         self.restartSimulation()
                         
-        # quit
         self.quitApplication()
 
     # Runs the application.
