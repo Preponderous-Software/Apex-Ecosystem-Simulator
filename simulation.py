@@ -1,5 +1,3 @@
-from math import ceil
-from operator import truediv
 import random
 from chicken import Chicken
 from cow import Cow
@@ -15,7 +13,9 @@ from moveActionHandler import MoveActionHandler
 from pig import Pig
 from rabbit import Rabbit
 from reproduceActionHandler import ReproduceActionHandler
+from soundService import SoundService
 from wolf import Wolf
+import pygame
 
 
 # @author Daniel McCoy Stephenson
@@ -27,10 +27,12 @@ class Simulation:
 
         self.environment = Environment(name, self.config.gridSize)
 
+        self.soundService = SoundService()
+
         self.moveActionHandler = MoveActionHandler(self.environment)
         self.eatActionHandler = EatActionHandler(self.environment)
         self.excreteActionHandler = ExcreteActionHandler(self.environment)
-        self.reproduceActionHandler = ReproduceActionHandler(self.environment)
+        self.reproduceActionHandler = ReproduceActionHandler(self.environment, self.soundService)
 
         self.initializeLocationWidthAndHeight()
 
@@ -77,6 +79,7 @@ class Simulation:
         if isinstance(entity, LivingEntity):
             self.livingEntities.remove(entity)
             self.printDeathInfo(entity, oldestLivingEntity)
+            self.soundService.playDeathSoundEffect()
         if type(entity) is Excrement:
             self.excrement.remove(entity)
         
