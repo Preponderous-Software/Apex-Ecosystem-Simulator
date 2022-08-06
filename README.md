@@ -65,4 +65,4 @@ This project makes use of [graphik](https://github.com/Preponderous-Software/gra
 
 ## Sounds
 - Pop sound source: https://mixkit.co/free-sound-effects/pop/
-- Death sound source: https://pixabay.com/sound-effects/pixel-death-66829/
+- Death sound source: https://soundbible.com/1454-Pain.html
