@@ -62,3 +62,7 @@ This project makes use of [graphik](https://github.com/Preponderous-Software/gra
 
 <img src="pics/screenshot2.PNG" alt="screenshot2" width="400"/>
 <img src="pics/screenshot3.PNG" alt="screenshot3" width="400"/>
+
+## Sounds
+- Pop sound source: https://mixkit.co/free-sound-effects/pop/
+- Death sound source: https://pixabay.com/sound-effects/pixel-death-66829/

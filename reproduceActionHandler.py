@@ -5,16 +5,19 @@ from environment import Environment
 from grid import Grid
 from location import Location
 
+from soundService import SoundService
+
 
 # @author Daniel McCoy Stephenson
 # @since July 27th, 2022
 class ReproduceActionHandler:
 
-    def __init__(self, environment: Environment):
+    def __init__(self, environment: Environment, soundService: SoundService):
         self.environment = environment
         self.debug = False
         self.childCount = 0
         self.energyCost = 1
+        self.soundService = soundService
     
     def getRandomDirection(self, grid: Grid, location: Location):
         direction = random.randrange(0, 4)
@@ -56,6 +59,7 @@ class ReproduceActionHandler:
             return
         self.environment.addEntityToLocation(child, targetLocation)
         callbackFunction(child)
+        self.soundService.playReproduceSoundEffect()
 
         self.childCount += 1
 
