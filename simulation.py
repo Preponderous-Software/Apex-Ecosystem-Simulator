@@ -10,6 +10,7 @@ from excrement import Excrement
 from excreteActionHandler import ExcreteActionHandler
 from fox import Fox
 from grass import Grass
+from livingEntity import LivingEntity
 from moveActionHandler import MoveActionHandler
 from pig import Pig
 from rabbit import Rabbit
@@ -48,7 +49,7 @@ class Simulation:
     
     def addEntity(self, entity: Entity):
         self.entities.append(entity)
-        if entity.isLiving():
+        if isinstance(entity, LivingEntity):
             self.livingEntities.append(entity)
         if type(entity) is Excrement:
             self.excrement.append(entity)
@@ -73,7 +74,7 @@ class Simulation:
 
         self.entities.remove(entity)
         self.removeEntityFromLocation(entity)
-        if entity.isLiving():
+        if isinstance(entity, LivingEntity):
             self.livingEntities.remove(entity)
             self.printDeathInfo(entity, oldestLivingEntity)
         if type(entity) is Excrement:
