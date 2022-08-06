@@ -19,7 +19,7 @@ class Apex:
         pygame.init()
         self.config = Config()
         self.initializeGameDisplay()
-        pygame.display.set_icon(pygame.image.load('icon.PNG'))
+        pygame.display.set_icon(pygame.image.load('src/icon.PNG'))
         self.graphik = Graphik(self.gameDisplay)
         self.debug = False
         self.paused = False
