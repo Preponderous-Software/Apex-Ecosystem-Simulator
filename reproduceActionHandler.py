@@ -1,11 +1,9 @@
 import random
 from config import Config
-
 from entity import Entity
 from environment import Environment
 from grid import Grid
 from location import Location
-
 from soundService import SoundService
 
 
@@ -15,7 +13,6 @@ class ReproduceActionHandler:
 
     def __init__(self, environment: Environment, soundService: SoundService, config: Config):
         self.environment = environment
-        self.debug = False
         self.childCount = 0
         self.energyCost = 1
         self.soundService = soundService
@@ -39,14 +36,11 @@ class ReproduceActionHandler:
         location = grid.getLocation(locationID)
 
         mate = -1
-        count = 0
         for e in location.getEntities():
-            if type(e) is type(entity):
-                count += 1
-                if count == 2:
-                    mate = e
+            if type(e) is type(entity) and e.getID() is not entity.getID():
+                mate = e
 
-        if count < 2:
+        if mate == -1:
             # no entity of this type found
             return
 
@@ -67,5 +61,4 @@ class ReproduceActionHandler:
 
         self.childCount += 1
 
-        if self.debug:
-            print("[EVENT] ", entity.getName(), "has reproduced with", mate.getName() , "at (", location.getX(), ",", location.getY(), ").")
+        print(entity.getName(), "has reproduced with", mate.getName() , "at (", location.getX(), ",", location.getY(), ").")
