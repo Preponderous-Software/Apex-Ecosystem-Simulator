@@ -23,7 +23,7 @@ class Config:
         # static
         self.displayWidth = 400
         self.displayHeight = 400
-        self.tickSpeed = 1
+        self.tickSpeed = 5
         self.maxTickSpeed = 10
         self.black = (0,0,0)
         self.white = (255,255,255)
@@ -33,7 +33,7 @@ class Config:
         self.chanceToExcrete = 0.10
         self.chanceToReproduce = 0.02
         self.reinitializeConfigUponRestart = True
-        self.limitTickSpeed = False
+        self.limitTickSpeed = True
         self.localView = False
         self.highlightOldestEntity = False
         self.highlightColor = (255, 255, 0)
