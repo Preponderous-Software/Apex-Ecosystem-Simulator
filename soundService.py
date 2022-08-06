@@ -1,3 +1,4 @@
+import random
 import pygame
 
 
@@ -6,13 +7,16 @@ import pygame
 class SoundService:
     def __init__(self):
         self.reproduceSoundEffect = pygame.mixer.Sound("pop.wav")
-        self.deathSoundEffect = pygame.mixer.Sound("death.mp3")
+        self.deathSoundEffect = pygame.mixer.Sound("pain.wav")
 
-        self.reproduceSoundEffect.set_volume(0.2)
-        self.deathSoundEffect.set_volume(0.2)
+        self.volumeFactor = 0.01
+        self.minVolume = 1
+        self.maxVolume = 10
 
     def playReproduceSoundEffect(self):
+        self.reproduceSoundEffect.set_volume(self.volumeFactor * random.randrange(self.minVolume, self.maxVolume))
         pygame.mixer.Sound.play(self.reproduceSoundEffect)
     
     def playDeathSoundEffect(self):
+        self.deathSoundEffect.set_volume(self.volumeFactor * random.randrange (self.minVolume, self.maxVolume))
         pygame.mixer.Sound.play(self.deathSoundEffect)
