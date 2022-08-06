@@ -121,47 +121,29 @@ class Apex:
         ypos = yBackup
         self.drawRowsBelowLocation(location, grid, xpos, ypos, width, height)
 
+    def addStatToText(self, text, key, value):
+        text.append(key)
+        text.append(value)
+        text.append("")
+
     # Draws some statistics to the screen, which are updated each tick. This can be laggy.
     def displayStats(self):
         startingX = 100
         startingY = 10
         text = []
         if self.config.limitTickSpeed:
-            text.append("Tick Speed:")
-            text.append(str(self.config.tickSpeed))
-            text.append("")
-        text.append("Num Ticks:")
-        text.append(str(self.simulation.numTicks))
-        text.append("")
-        text.append("Entities:")
-        text.append(str(len(self.simulation.entities)))
-        text.append("")
-        text.append("Living Entities: ")
-        text.append(str(self.simulation.getNumLivingEntities()))
-        text.append("")
-        text.append("Grass:")
-        text.append(str(self.simulation.getNumberOfEntitiesOfType(Grass)))
-        text.append("")
-        text.append("Excrement:")
-        text.append(str(self.simulation.getNumExcrement()))
-        text.append("")
-        text.append("Chickens:")
-        text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Chicken)))
-        text.append("")
-        text.append("Pigs:")
-        text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Pig)))
-        text.append("")
-        text.append("Cows:")
-        text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Cow)))
-        text.append("")
-        text.append("Wolves:")
-        text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Wolf)))
-        text.append("")
-        text.append("Foxes:")
-        text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Fox)))
-        text.append("")
-        text.append("Rabbits:")
-        text.append(str(self.simulation.getNumberOfLivingEntitiesOfType(Rabbit)))
+            self.addStatToText(text, "Tick Speed:", str(self.config.tickSpeed))
+        self.addStatToText(text, "Num Ticks:", str(self.simulation.numTicks))
+        self.addStatToText(text, "Entities:", str(len(self.simulation.entities)))
+        self.addStatToText(text, "Living Entities:", str(self.simulation.getNumLivingEntities()))
+        self.addStatToText(text, "Grass:", str(self.simulation.getNumberOfEntitiesOfType(Grass)))
+        self.addStatToText(text, "Excrement:", str(self.simulation.getNumExcrement()))
+        self.addStatToText(text, "Chickens:", str(self.simulation.getNumberOfLivingEntitiesOfType(Chicken)))
+        self.addStatToText(text, "Pigs:", str(self.simulation.getNumberOfLivingEntitiesOfType(Pig)))
+        self.addStatToText(text, "Cows:", str(self.simulation.getNumberOfLivingEntitiesOfType(Cow)))
+        self.addStatToText(text, "Wolves:", str(self.simulation.getNumberOfLivingEntitiesOfType(Wolf)))
+        self.addStatToText(text, "Foxes:", str(self.simulation.getNumberOfLivingEntitiesOfType(Fox)))
+        self.addStatToText(text, "Rabbits:", str(self.simulation.getNumberOfLivingEntitiesOfType(Rabbit)))
 
         buffer = self.config.textSize
 
