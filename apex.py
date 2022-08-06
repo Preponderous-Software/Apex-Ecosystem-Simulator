@@ -1,4 +1,3 @@
-from sys import _xoptions
 import time
 import pygame
 from chicken import Chicken
