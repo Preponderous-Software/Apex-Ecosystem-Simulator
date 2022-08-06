@@ -22,6 +22,7 @@ Living entities spawn excrement when their energy needs are met and this turns i
 Key | Action
 ------------ | -------------
 space | pause/unpause
+m | mute/unmute
 h | highlight oldest living entity
 v | toggle view (global/local)
 up | increase view distance (in local view)
@@ -29,7 +30,7 @@ down | decrease view distance (in local view)
 d | debug mode
 c | spawn a chicken
 p | spawn a pig
-m | spawn a cow
+k | spawn a cow
 w | spawn a wolf
 f | spawn a fox
 b | spawn a rabbit
