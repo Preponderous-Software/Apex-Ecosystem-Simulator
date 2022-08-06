@@ -8,7 +8,7 @@
             "name": "Run Simulation",
             "type": "python",
             "request": "launch",
-            "program": "apex.py",
+            "program": "src/apex.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
