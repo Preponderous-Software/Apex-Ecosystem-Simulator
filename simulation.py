@@ -21,7 +21,8 @@ import pygame
 # @author Daniel McCoy Stephenson
 # @since July 26th, 2022
 class Simulation:
-    def __init__(self, name, config, gameDisplay):        
+    def __init__(self, name, config, gameDisplay):
+        self.name = name       
         self.config = config
         self.gameDisplay = gameDisplay
 
@@ -32,7 +33,7 @@ class Simulation:
         self.moveActionHandler = MoveActionHandler(self.environment)
         self.eatActionHandler = EatActionHandler(self.environment)
         self.excreteActionHandler = ExcreteActionHandler(self.environment)
-        self.reproduceActionHandler = ReproduceActionHandler(self.environment, self.soundService)
+        self.reproduceActionHandler = ReproduceActionHandler(self.environment, self.soundService, config)
 
         self.initializeLocationWidthAndHeight()
 
@@ -79,7 +80,8 @@ class Simulation:
         if isinstance(entity, LivingEntity):
             self.livingEntities.remove(entity)
             self.printDeathInfo(entity, oldestLivingEntity)
-            self.soundService.playDeathSoundEffect()
+            if not self.config.muted:
+                self.soundService.playDeathSoundEffect()
         if type(entity) is Excrement:
             self.excrement.remove(entity)
         

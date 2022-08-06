@@ -17,7 +17,6 @@ from wolf import Wolf
 class Apex:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Apex")
         self.config = Config()
         self.initializeGameDisplay()
         pygame.display.set_icon(pygame.image.load('icon.PNG'))
@@ -42,8 +41,14 @@ class Apex:
         self.simulation.placeEntities()
         self.simulation.environment.printInfo()
         self.simCount += 1
-        pygame.display.set_caption("Apex - " + name + " - " + str(self.simulation.environment.getGrid().getColumns()) + "x" + str(self.simulation.environment.getGrid().getRows()))
+        self.initializeCaption()
     
+    def initializeCaption(self):
+        caption = "Apex - " + self.simulation.name + " - " + str(self.simulation.environment.getGrid().getColumns()) + "x" + str(self.simulation.environment.getGrid().getRows())
+        if self.config.muted:
+            caption += " (muted)"
+        pygame.display.set_caption(caption)
+
     # Draws the environment that belongs to the simulation in its entirety.
     def drawEnvironment(self):
         for location in self.simulation.environment.getGrid().getLocations():
@@ -177,7 +182,7 @@ class Apex:
             pig = Pig("player-created-pig")
             self.simulation.environment.addEntity(pig)
             self.simulation.addEntity(pig)
-        if key == pygame.K_m:
+        if key == pygame.K_k:
             cow = Cow("player-created-cow")
             self.simulation.environment.addEntity(cow)
             self.simulation.addEntity(cow)
@@ -231,6 +236,12 @@ class Apex:
             else:
                 self.config.fullscreen = True
             self.initializeGameDisplay()
+        if key == pygame.K_m:
+            if self.config.muted:
+                self.config.muted = False
+            else:
+                self.config.muted = True
+            self.initializeCaption()
 
     # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
     def restartSimulation(self):
