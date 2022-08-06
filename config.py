@@ -38,6 +38,7 @@ class Config:
         self.highlightOldestEntity = False
         self.highlightColor = (255, 255, 0)
         self.localViewSize = 2
+        self.fullscreen = True
 
         # random
         self.gridSize = random.randrange(minGridSize, maxGridSize)

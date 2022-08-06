@@ -19,7 +19,7 @@ class Apex:
         pygame.init()
         pygame.display.set_caption("Apex")
         self.config = Config()
-        self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.RESIZABLE)
+        self.initializeGameDisplay()
         pygame.display.set_icon(pygame.image.load('icon.PNG'))
         self.graphik = Graphik(self.gameDisplay)
         self.debug = False
@@ -27,6 +27,12 @@ class Apex:
         self.simCount = 0
         self.initializeSimulation()
         self.tickLengths = []
+    
+    def initializeGameDisplay(self):
+        if self.config.fullscreen:
+            self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.FULLSCREEN)
+        else:
+            self.gameDisplay = pygame.display.set_mode((self.config.displayWidth, self.config.displayHeight), pygame.RESIZABLE)
     
     # Creates and initializes a new simulation. Only one simulation can exist at a time.
     def initializeSimulation(self):
@@ -219,6 +225,12 @@ class Apex:
         if key == pygame.K_DOWN:
             if self.config.localViewSize > 1:
                 self.config.localViewSize -= 1
+        if key == pygame.K_F11:
+            if self.config.fullscreen:
+                self.config.fullscreen = False
+            else:
+                self.config.fullscreen = True
+            self.initializeGameDisplay()
 
     # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
     def restartSimulation(self):

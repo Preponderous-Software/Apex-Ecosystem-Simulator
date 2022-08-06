@@ -36,6 +36,7 @@ b | spawn a rabbit
 l | toggle tick speed limit
 ] | increase tick speed (if enabled)
 [ | decrease tick speed (if enabled)
+f11 | toggle fullscreen mode
 r | restart
 q | quit
 
