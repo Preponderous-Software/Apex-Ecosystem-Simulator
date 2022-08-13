@@ -1,5 +1,5 @@
 # Apex
-This application simulates an environment containing entities that depend on each other as sources of energy. A food chain arises from the configuration of various entities and their specified diets.
+This game allows you to manage a virtual environment containing entities that depend on each other as sources of energy. A food chain arises from the configuration of various entities and their specified diets.
 
 <img src="pics/screenshot.PNG" alt="screenshot" width="400"/>
 
