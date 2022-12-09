@@ -1,8 +1,10 @@
 import random
-from chicken import Chicken
-from livingEntity import LivingEntity
-from pig import Pig
-from rabbit import Rabbit
+
+from entity.livingEntity import LivingEntity
+
+from entity.chicken import Chicken
+from entity.pig import Pig
+from entity.rabbit import Rabbit
 
 
 # @author Daniel McCoy Stephenson

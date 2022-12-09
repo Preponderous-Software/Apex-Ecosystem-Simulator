@@ -1,15 +1,17 @@
 import time
 import pygame
-from chicken import Chicken
+from lib.graphiklib.graphik import Graphik
 from config import Config
-from cow import Cow
-from fox import Fox
-from graphiklib.graphik import Graphik
-from grass import Grass
-from pig import Pig
-from rabbit import Rabbit
 from simulation import Simulation
-from wolf import Wolf
+
+from entity.chicken import Chicken
+from entity.cow import Cow
+from entity.fox import Fox
+from entity.grass import Grass
+from entity.pig import Pig
+from entity.rabbit import Rabbit
+
+from entity.wolf import Wolf
 
 
 # @author Daniel McCoy Stephenson

@@ -1,6 +1,8 @@
 import random
-from drawableEntity import DrawableEntity
-from pyenvlib.entity import Entity
+
+from lib.pyenvlib.entity import Entity
+
+from entity.drawableEntity import DrawableEntity
 
 
 # @author Daniel McCoy Stephenson

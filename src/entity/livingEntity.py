@@ -1,4 +1,4 @@
-from drawableEntity import DrawableEntity
+from entity.drawableEntity import DrawableEntity
 
 
 # @author Daniel McCoy Stephenson
