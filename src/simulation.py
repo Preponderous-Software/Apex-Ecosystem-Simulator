@@ -1,21 +1,23 @@
 import random
-from chicken import Chicken
-from cow import Cow
+import pygame
 from eatActionHandler import EatActionHandler
-from pyenvlib.entity import Entity
-from pyenvlib.environment import Environment
-from excrement import Excrement
 from excreteActionHandler import ExcreteActionHandler
-from fox import Fox
-from grass import Grass
-from livingEntity import LivingEntity
 from moveActionHandler import MoveActionHandler
-from pig import Pig
-from rabbit import Rabbit
 from reproduceActionHandler import ReproduceActionHandler
 from soundService import SoundService
-from wolf import Wolf
-import pygame
+
+from lib.pyenvlib.entity import Entity
+from lib.pyenvlib.environment import Environment
+
+from entity.chicken import Chicken
+from entity.cow import Cow
+from entity.excrement import Excrement
+from entity.fox import Fox
+from entity.grass import Grass
+from entity.livingEntity import LivingEntity
+from entity.pig import Pig
+from entity.rabbit import Rabbit
+from entity.wolf import Wolf
 
 
 # @author Daniel McCoy Stephenson

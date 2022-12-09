@@ -1,6 +1,6 @@
 import random
-from grass import Grass
-from livingEntity import LivingEntity
+from entity.grass import Grass
+from entity.livingEntity import LivingEntity
 
 
 # @author Daniel McCoy Stephenson

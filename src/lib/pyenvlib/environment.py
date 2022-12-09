@@ -2,8 +2,8 @@
 # MIT License
 import datetime
 import uuid
-from pyenvlib.entity import Entity
-from pyenvlib.grid import Grid
+from lib.pyenvlib.entity import Entity
+from lib.pyenvlib.grid import Grid
 
 
 # @author Daniel McCoy Stephenson
