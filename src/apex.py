@@ -4,7 +4,7 @@ from chicken import Chicken
 from config import Config
 from cow import Cow
 from fox import Fox
-from graphik import Graphik
+from graphiklib.graphik import Graphik
 from grass import Grass
 from pig import Pig
 from rabbit import Rabbit

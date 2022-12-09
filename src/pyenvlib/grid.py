@@ -7,8 +7,8 @@
 import random
 import uuid
 
-from entity import Entity
-from location import Location
+from pyenvlib.entity import Entity
+from pyenvlib.location import Location
 
 
 class Grid(object):

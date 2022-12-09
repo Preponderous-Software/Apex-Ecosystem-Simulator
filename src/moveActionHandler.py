@@ -1,8 +1,8 @@
 import random
-from entity import Entity
+from pyenvlib.entity import Entity
 
-from grid import Grid
-from location import Location
+from pyenvlib.grid import Grid
+from pyenvlib.location import Location
 
 
 # @author Daniel McCoy Stephenson

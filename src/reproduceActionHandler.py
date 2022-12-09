@@ -1,9 +1,9 @@
 import random
 from config import Config
-from entity import Entity
-from environment import Environment
-from grid import Grid
-from location import Location
+from pyenvlib.entity import Entity
+from pyenvlib.environment import Environment
+from pyenvlib.grid import Grid
+from pyenvlib.location import Location
 from soundService import SoundService
 
 
