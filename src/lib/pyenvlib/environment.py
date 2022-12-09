@@ -39,7 +39,13 @@ class Environment(object):
 
     def addEntity(self, entity: Entity):
         entity.setEnvironmentID(self.getID())
-        self.grid.addEntity(entity)
+        success = False
+
+        while (True):
+            success = self.grid.addEntity(entity)
+
+            if (success):
+                break
     
     def addEntityToLocation(self, entity: Entity, location):
         entity.setEnvironmentID(self.getID())

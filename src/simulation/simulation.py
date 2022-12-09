@@ -18,6 +18,7 @@ from entity.livingEntity import LivingEntity
 from entity.pig import Pig
 from entity.rabbit import Rabbit
 from entity.wolf import Wolf
+from entity.water import Water
 
 
 # @author Daniel McCoy Stephenson
@@ -90,6 +91,9 @@ class Simulation:
     def initializeEntities(self):
         for i in range(self.config.numGrassEntities):
             self.addEntity(Grass())
+        
+        for i in range(self.config.numWaterEntities):
+            self.addEntity(Water())
 
         for i in range(self.config.numChickensToStart):
             self.addEntity(Chicken("Chicken"))

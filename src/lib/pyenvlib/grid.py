@@ -67,7 +67,20 @@ class Grid(object):
     
     def addEntity(self, entity: Entity):
         entity.setGridID(self.getID())
-        self.getRandomLocation().addEntity(entity)
+        location = self.getRandomLocation()
+
+        if (self.waterIsInLocation(location)):
+            return False
+
+        location.addEntity(entity)
+        return True
+    
+    def waterIsInLocation(self, location: Location): # TODO:  move this
+        # search current location
+        for e in location.getEntities():
+            if e.getName() == "Water":
+                return True
+        return False
     
     def addEntityToLocation(self, entity: Entity, location):
         entity.setGridID(self.getID)

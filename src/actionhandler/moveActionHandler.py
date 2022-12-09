@@ -41,6 +41,13 @@ class MoveActionHandler:
                     return searchLocation
             attempts += 1
         return -1
+    
+    def waterIsInLocation(self, location: Location):
+        # search current location
+        for e in location.getEntities():
+            if e.getName() == "Water":
+                return True
+        return False
         
     def initiateMoveAction(self, entity: Entity):
         # get location
@@ -56,7 +63,21 @@ class MoveActionHandler:
         newLocation = self.searchForFood(entity, grid, location)
         if newLocation == -1:
             # no food found
-            newLocation = self.chooseRandomDirection(grid, location)
+            count = 0
+            while (True):
+                newLocation = self.chooseRandomDirection(grid, location)
+
+                if (newLocation == -1):
+                    continue
+
+                if (not self.waterIsInLocation(newLocation)):
+                    break
+                count += 1
+                if (count > 10):
+                    return
+
+        if newLocation == -1:
+            return
             
         if newLocation == -1:
             # location doesn't exist, we're at a border
