@@ -6,8 +6,8 @@ import pygame
 #  @since August 5th, 2022
 class SoundService:
     def __init__(self):
-        self.reproduceSoundEffect = pygame.mixer.Sound("src/pop.wav")
-        self.deathSoundEffect = pygame.mixer.Sound("src/pain.wav")
+        self.reproduceSoundEffect = pygame.mixer.Sound("src/media/sounds/pop.wav")
+        self.deathSoundEffect = pygame.mixer.Sound("src/media/sounds/pain.wav")
 
         self.volumeFactor = 0.01
         self.minVolume = 1

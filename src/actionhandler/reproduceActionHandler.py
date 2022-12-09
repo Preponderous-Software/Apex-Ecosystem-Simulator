@@ -5,8 +5,8 @@ from lib.pyenvlib.environment import Environment
 from lib.pyenvlib.grid import Grid
 from lib.pyenvlib.location import Location
 
-from config import Config
-from soundService import SoundService
+from simulation.config import Config
+from service.soundService import SoundService
 
 
 # @author Daniel McCoy Stephenson

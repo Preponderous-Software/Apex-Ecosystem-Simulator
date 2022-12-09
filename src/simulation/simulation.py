@@ -1,10 +1,10 @@
 import random
 import pygame
-from eatActionHandler import EatActionHandler
-from excreteActionHandler import ExcreteActionHandler
-from moveActionHandler import MoveActionHandler
-from reproduceActionHandler import ReproduceActionHandler
-from soundService import SoundService
+from actionhandler.eatActionHandler import EatActionHandler
+from actionhandler.excreteActionHandler import ExcreteActionHandler
+from actionhandler.moveActionHandler import MoveActionHandler
+from actionhandler.reproduceActionHandler import ReproduceActionHandler
+from service.soundService import SoundService
 
 from lib.pyenvlib.entity import Entity
 from lib.pyenvlib.environment import Environment
