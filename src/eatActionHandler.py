@@ -1,4 +1,4 @@
-from entity import Entity
+from pyenvlib.entity import Entity
 
 
 # @author Daniel McCoy Stephenson

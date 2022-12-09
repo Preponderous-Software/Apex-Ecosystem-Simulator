@@ -2,8 +2,8 @@ import random
 from chicken import Chicken
 from cow import Cow
 from eatActionHandler import EatActionHandler
-from entity import Entity
-from environment import Environment
+from pyenvlib.entity import Entity
+from pyenvlib.environment import Environment
 from excrement import Excrement
 from excreteActionHandler import ExcreteActionHandler
 from fox import Fox

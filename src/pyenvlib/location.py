@@ -6,7 +6,7 @@
 # @since July 1st, 2022
 import uuid
 
-from entity import Entity
+from pyenvlib.entity import Entity
 
 
 class Location(object):
