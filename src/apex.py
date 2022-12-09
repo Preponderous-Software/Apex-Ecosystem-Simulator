@@ -1,8 +1,8 @@
 import time
 import pygame
 from lib.graphiklib.graphik import Graphik
-from config import Config
-from simulation import Simulation
+from simulation.config import Config
+from simulation.simulation import Simulation
 
 from entity.chicken import Chicken
 from entity.cow import Cow
@@ -21,7 +21,7 @@ class Apex:
         pygame.init()
         self.config = Config()
         self.initializeGameDisplay()
-        pygame.display.set_icon(pygame.image.load('src/icon.PNG'))
+        pygame.display.set_icon(pygame.image.load('src/media/icon/icon.PNG'))
         self.graphik = Graphik(self.gameDisplay)
         self.debug = False
         self.paused = False
