@@ -8,10 +8,10 @@ class Config:
     def __init__(self):
         # locally used
         self.grassFactor = random.randrange(3, 10)
-        self.waterFactor = random.randrange(1, 5)
+        self.waterFactor = random.randrange(2, 5)
         self.livingEntityFactor = 0.2
-        self.minGridSize = 8
-        self.maxGridSize = 24
+        self.minGridSize = 16
+        self.maxGridSize = 32
         self.minGrassGrowTime = 100
         self.maxGrassGrowTime = 300
         self.chickenFactor = random.randrange(1, 10)

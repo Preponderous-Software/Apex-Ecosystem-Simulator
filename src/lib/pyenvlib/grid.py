@@ -69,16 +69,16 @@ class Grid(object):
         entity.setGridID(self.getID())
         location = self.getRandomLocation()
 
-        if (self.waterIsInLocation(location)):
+        if (self.isLocationImpassible(location)):
             return False
 
         location.addEntity(entity)
         return True
     
-    def waterIsInLocation(self, location: Location): # TODO:  move this
+    def isLocationImpassible(self, location: Location):
         # search current location
         for e in location.getEntities():
-            if e.getName() == "Water":
+            if e.isSolid():
                 return True
         return False
     

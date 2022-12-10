@@ -30,6 +30,13 @@ class ReproduceActionHandler:
             return grid.getDown(location)
         elif direction == 3:
             return grid.getLeft(location)
+    
+    def isLocationImpassible(self, location: Location):
+        # search current location
+        for e in location.getEntities():
+            if e.isSolid():
+                return True
+        return False
         
     def initiateReproduceAction(self, entity: Entity, callbackFunction):
         # get location
@@ -53,7 +60,8 @@ class ReproduceActionHandler:
         name = "child " + str(self.childCount)
         child = type(entity)(name)
         targetLocation = self.getRandomDirection(grid, location)
-        if targetLocation == -1:
+        if targetLocation == -1 or self.isLocationImpassible(targetLocation):
+            targetLocation = location
             return
         self.environment.addEntityToLocation(child, targetLocation)
         callbackFunction(child)

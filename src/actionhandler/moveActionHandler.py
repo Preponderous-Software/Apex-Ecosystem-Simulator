@@ -42,10 +42,10 @@ class MoveActionHandler:
             attempts += 1
         return -1
     
-    def waterIsInLocation(self, location: Location):
+    def isLocationImpassible(self, location: Location):
         # search current location
         for e in location.getEntities():
-            if e.getName() == "Water":
+            if e.isSolid():
                 return True
         return False
         
@@ -61,17 +61,18 @@ class MoveActionHandler:
 
         # get new location
         newLocation = self.searchForFood(entity, grid, location)
-        if newLocation == -1:
+        if newLocation == -1 or self.isLocationImpassible(newLocation):
             # no food found
             count = 0
             while (True):
                 newLocation = self.chooseRandomDirection(grid, location)
 
-                if (newLocation == -1):
+                if (newLocation == -1 or self.isLocationImpassible(newLocation)):
                     continue
 
-                if (not self.waterIsInLocation(newLocation)):
+                if (not self.isLocationImpassible(newLocation)):
                     break
+                    
                 count += 1
                 if (count > 10):
                     return

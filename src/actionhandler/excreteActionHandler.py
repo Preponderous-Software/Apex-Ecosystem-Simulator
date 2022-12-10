@@ -26,10 +26,10 @@ class ExcreteActionHandler:
         elif direction == 3:
             return grid.getLeft(location)
 
-    def waterIsInLocation(self, location: Location):
+    def isLocationImpassible(self, location: Location):
         # search current location
         for e in location.getEntities():
-            if e.getName() == "Water":
+            if e.isSolid():
                 return True
         return False
         
@@ -40,7 +40,7 @@ class ExcreteActionHandler:
         location = grid.getLocation(locationID)
         excretionLocation = self.getRandomDirection(grid, location)
         excrement = Excrement(tick)
-        if (excretionLocation == -1 or self.waterIsInLocation(excretionLocation)):
+        if (excretionLocation == -1 or self.isLocationImpassible(excretionLocation)):
             location.addEntity(excrement)
         else:
             excretionLocation.addEntity(excrement)
