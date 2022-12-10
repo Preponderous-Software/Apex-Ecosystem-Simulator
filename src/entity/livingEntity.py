@@ -4,8 +4,8 @@ from entity.drawableEntity import DrawableEntity
 # @author Daniel McCoy Stephenson
 # @since August 5th, 2022
 class LivingEntity(DrawableEntity):
-    def __init__(self, name, color, energy, edibleEntityTypes):
-        DrawableEntity.__init__(self, name, color)
+    def __init__(self, name, color, solid, energy, edibleEntityTypes):
+        DrawableEntity.__init__(self, name, color, solid)
         self.energy = energy
         self.edibleEntityTypes = edibleEntityTypes
         self.targetEnergy = energy

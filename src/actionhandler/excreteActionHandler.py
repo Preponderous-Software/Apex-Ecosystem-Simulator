@@ -25,6 +25,13 @@ class ExcreteActionHandler:
             return grid.getDown(location)
         elif direction == 3:
             return grid.getLeft(location)
+
+    def isLocationImpassible(self, location: Location):
+        # search current location
+        for e in location.getEntities():
+            if e.isSolid():
+                return True
+        return False
         
     def initiateExcreteAction(self, entity: Entity, callbackFunction, tick):
         # get location
@@ -33,7 +40,7 @@ class ExcreteActionHandler:
         location = grid.getLocation(locationID)
         excretionLocation = self.getRandomDirection(grid, location)
         excrement = Excrement(tick)
-        if (excretionLocation == -1):
+        if (excretionLocation == -1 or self.isLocationImpassible(excretionLocation)):
             location.addEntity(excrement)
         else:
             excretionLocation.addEntity(excrement)

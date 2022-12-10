@@ -67,7 +67,20 @@ class Grid(object):
     
     def addEntity(self, entity: Entity):
         entity.setGridID(self.getID())
-        self.getRandomLocation().addEntity(entity)
+        location = self.getRandomLocation()
+
+        if (self.isLocationImpassible(location)):
+            return False
+
+        location.addEntity(entity)
+        return True
+    
+    def isLocationImpassible(self, location: Location):
+        # search current location
+        for e in location.getEntities():
+            if e.isSolid():
+                return True
+        return False
     
     def addEntityToLocation(self, entity: Entity, location):
         entity.setGridID(self.getID)

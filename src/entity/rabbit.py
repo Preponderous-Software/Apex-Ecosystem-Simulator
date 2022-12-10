@@ -7,4 +7,4 @@ from entity.livingEntity import LivingEntity
 # @since August 2nd, 2022
 class Rabbit(LivingEntity):
     def __init__(self, name):
-        LivingEntity.__init__(self, name, (250,220,200), random.randrange(20, 30), [Grass])
+        LivingEntity.__init__(self, name, (250,220,200), False, random.randrange(20, 30), [Grass])
