@@ -280,6 +280,11 @@ class Apex:
             else:
                 self.config.muted = True
             self.initializeCaption()
+        if key == pygame.K_e:
+            if self.config.eyesEnabled:
+                self.config.eyesEnabled = False
+            else:
+                self.config.eyesEnabled = True
 
     # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
     def restartSimulation(self):
