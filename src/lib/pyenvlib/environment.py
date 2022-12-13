@@ -40,11 +40,15 @@ class Environment(object):
     def addEntity(self, entity: Entity):
         entity.setEnvironmentID(self.getID())
         success = False
-
+        attempts = 100
         while (True):
             success = self.grid.addEntity(entity)
+            attempts -= 1
 
             if (success):
+                break
+            elif (attempts == 0):
+                print("Failed to add entity to environment")
                 break
     
     def addEntityToLocation(self, entity: Entity, location):
