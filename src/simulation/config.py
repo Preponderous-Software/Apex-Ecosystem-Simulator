@@ -7,10 +7,11 @@ import random
 class Config:
     def __init__(self):
         # locally used
-        self.grassFactor = random.randrange(3, 10)
         self.waterFactor = random.randrange(2, 5)
+        self.rockFactor = random.randrange(1, 4)
+        self.grassFactor = random.randrange(3, 10)
         self.livingEntityFactor = 0.2
-        self.minGridSize = 16
+        self.minGridSize = 12
         self.maxGridSize = 32
         self.minGrassGrowTime = 100
         self.maxGrassGrowTime = 300
@@ -51,6 +52,7 @@ class Config:
         self.localViewSize = 2
         self.fullscreen = False
         self.muted = False
+        self.eyesEnabled = True
     
     def randomizeGridSize(self):
         self.gridSize = random.randrange(self.minGridSize, self.maxGridSize)
@@ -62,6 +64,7 @@ class Config:
         self.textSize = ceil(self.displayHeight/37)
         self.numGrassEntities = ceil(self.gridSize*self.gridSize*self.grassFactor)
         self.numWaterEntities = ceil(self.gridSize * self.waterFactor)
+        self.numRockEntities = ceil(self.gridSize * self.rockFactor)
         self.numChickensToStart = ceil(self.gridSize*self.livingEntityFactor*self.chickenFactor)
         self.numPigsToStart = ceil(self.gridSize*self.livingEntityFactor*self.pigFactor)
         self.numCowsToStart = ceil(self.gridSize*self.livingEntityFactor*self.cowFactor)

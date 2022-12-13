@@ -19,6 +19,7 @@ from entity.pig import Pig
 from entity.rabbit import Rabbit
 from entity.wolf import Wolf
 from entity.water import Water
+from entity.rock import Rock
 
 
 # @author Daniel McCoy Stephenson
@@ -88,12 +89,15 @@ class Simulation:
         if type(entity) is Excrement:
             self.excrement.remove(entity)
         
-    def initializeEntities(self):
-        for i in range(self.config.numGrassEntities):
-            self.addEntity(Grass())
-        
+    def generateMap(self):        
         for i in range(self.config.numWaterEntities):
             self.addEntity(Water())
+        
+        for i in range(self.config.numRockEntities):
+            self.addEntity(Rock())
+            
+        for i in range(self.config.numGrassEntities):
+            self.addEntity(Grass())
 
         for i in range(self.config.numChickensToStart):
             self.addEntity(Chicken("Chicken"))

@@ -13,6 +13,7 @@ from entity.rabbit import Rabbit
 
 from entity.wolf import Wolf
 
+from entity.livingEntity import LivingEntity
 
 # @author Daniel McCoy Stephenson
 # @since July 31st, 2022
@@ -39,7 +40,7 @@ class Apex:
     def initializeSimulation(self):
         name = "Simulation " + str(self.simCount)
         self.simulation = Simulation(name, self.config, self.gameDisplay)
-        self.simulation.initializeEntities()
+        self.simulation.generateMap()
         self.simulation.placeEntities()
         self.simulation.environment.printInfo()
         self.simCount += 1
@@ -70,12 +71,47 @@ class Apex:
                 else:
                     color = topEntity.getColor()
         return color
+    
+    def locationContainsLivingEntity(self, location):
+        return location.getNumEntities() > 0 and isinstance(location.getEntities()[-1], LivingEntity)
+    
+    def drawEyes(self, xPos, yPos, width, height, eyeSizeFactor, pupilSizeFactor):
+            # draw eyes
+            leftEyeXPos = xPos + width/8
+            leftEyeYPos = yPos + height/4
+            leftEyeWidth = width*eyeSizeFactor
+            leftEyeHeight = height*eyeSizeFactor
+            self.graphik.drawRectangle(leftEyeXPos, leftEyeYPos, leftEyeWidth, leftEyeHeight, self.config.white)
+            
+            rightEyeXPos = xPos + width/2
+            rightEyeYPos = yPos + height/4
+            rightEyeWidth = width*eyeSizeFactor
+            rightEyeHeight = height*eyeSizeFactor
+            self.graphik.drawRectangle(rightEyeXPos, rightEyeYPos, rightEyeWidth, rightEyeHeight, self.config.white)
+            
+            # draw pupils            
+            leftPupilXPos = leftEyeXPos + leftEyeWidth/4
+            leftPupilYPos = leftEyeYPos + leftEyeHeight/4
+            leftPupilWidth = leftEyeWidth*pupilSizeFactor
+            leftPupilHeight = leftEyeHeight*pupilSizeFactor
+            self.graphik.drawRectangle(leftPupilXPos, leftPupilYPos, leftPupilWidth, leftPupilHeight, self.config.black)
+            
+            rightPupilXPos = rightEyeXPos + rightEyeWidth/4
+            rightPupilYPos = rightEyeYPos + rightEyeHeight/4
+            rightPupilWidth = rightEyeWidth*pupilSizeFactor
+            rightPupilHeight = rightEyeHeight*pupilSizeFactor
+            self.graphik.drawRectangle(rightPupilXPos, rightPupilYPos, rightPupilWidth, rightPupilHeight, self.config.black)
+
 
     # Draws a location at a specified position.
     def drawLocation(self, location, xPos, yPos, width, height):
         color = self.getColorOfLocation(location)
         self.graphik.drawRectangle(xPos, yPos, width, height, color)
-    
+        if self.config.eyesEnabled and location != -1 and self.locationContainsLivingEntity(location):
+            eyeSizeFactor = 0.25
+            pupilSizeFactor = 0.5
+            self.drawEyes(xPos, yPos, width, height, eyeSizeFactor, pupilSizeFactor)
+            
     # Draws locations to the left of a given location.
     def drawLocationsToTheLeftOfLocation(self, location, grid, xpos, ypos, width, height):
         tempLoc = location
