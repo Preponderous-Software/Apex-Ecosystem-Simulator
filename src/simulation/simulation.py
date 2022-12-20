@@ -41,7 +41,7 @@ class Simulation:
 
         self.initializeLocationWidthAndHeight()
 
-        self.entities = []
+        self.entities = dict()
         self.livingEntities = []
         self.excrement = []
 
@@ -55,7 +55,7 @@ class Simulation:
         self.locationHeight = y/self.environment.getGrid().getColumns()
     
     def addEntity(self, entity: Entity):
-        self.entities.append(entity)
+        self.entities[entity.getID()] = entity
         if isinstance(entity, LivingEntity):
             self.livingEntities.append(entity)
         if type(entity) is Excrement:
@@ -79,7 +79,7 @@ class Simulation:
         if len(self.livingEntities) > 0:
             oldestLivingEntity = self.livingEntities[0]
 
-        self.entities.remove(entity)
+        del self.entities[entity.getID()]
         self.removeEntityFromLocation(entity)
         if isinstance(entity, LivingEntity):
             self.livingEntities.remove(entity)
@@ -118,12 +118,14 @@ class Simulation:
             self.addEntity(Rabbit("Rabbit"))
 
     def placeEntities(self):
-        for entity in self.entities:
+        for entityId in self.entities:
+            entity = self.entities[entityId]
             self.environment.addEntity(entity)
     
     def getNumberOfEntitiesOfType(self, entityType):
         count = 0
-        for entity in self.entities:
+        for entityId in self.entities:
+            entity = self.entities[entityId]
             if type(entity) is entityType:
                 count += 1
         return count
