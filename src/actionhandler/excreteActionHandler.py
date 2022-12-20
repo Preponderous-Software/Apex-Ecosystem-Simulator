@@ -28,8 +28,9 @@ class ExcreteActionHandler:
 
     def isLocationImpassible(self, location: Location):
         # search current location
-        for e in location.getEntities():
-            if e.isSolid():
+        for eid in location.getEntities():
+            entity = location.getEntities()[eid]
+            if entity.isSolid():
                 return True
         return False
         

@@ -26,8 +26,9 @@ class MoveActionHandler:
         
     def searchForFood(self, entity, grid: Grid, location: Location):
         # search current location
-        for e in location.getEntities():
-            if entity.canEat(e):
+        for eid in location.getEntities():
+            targetEntity = location.getEntities()[eid]
+            if entity.canEat(targetEntity):
                 return location
         
         # search nearby locations
@@ -44,8 +45,9 @@ class MoveActionHandler:
     
     def isLocationImpassible(self, location: Location):
         # search current location
-        for e in location.getEntities():
-            if e.isSolid():
+        for eid in location.getEntities():
+            entity = location.getEntities()[eid]
+            if entity.isSolid():
                 return True
         return False
         
@@ -76,9 +78,6 @@ class MoveActionHandler:
                 count += 1
                 if (count > 10):
                     return
-
-        if newLocation == -1:
-            return
             
         if newLocation == -1:
             # location doesn't exist, we're at a border

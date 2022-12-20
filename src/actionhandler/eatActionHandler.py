@@ -16,9 +16,10 @@ class EatActionHandler:
         location = grid.getLocation(locationID)
 
         food = -1
-        for e in location.getEntities():
-            if entity.canEat(e):
-                food = e
+        for eid in location.getEntities():
+            targetEntity = location.getEntities()[eid]
+            if entity.canEat(targetEntity):
+                food = targetEntity
                 break
         
         if food == -1:
