@@ -133,7 +133,8 @@ class Simulation:
 
     def getNumberOfLivingEntitiesOfType(self, entityType):
         count = 0
-        for entity in self.livingEntities:
+        for entityId in self.livingEntityIds:
+            entity = self.entities[entityId]
             if type(entity) is entityType:
                 count += 1
         return count
