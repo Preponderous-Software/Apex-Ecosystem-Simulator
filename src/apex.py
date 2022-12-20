@@ -54,7 +54,8 @@ class Apex:
 
     # Draws the environment that belongs to the simulation in its entirety.
     def drawEnvironment(self):
-        for location in self.simulation.environment.getGrid().getLocations():
+        for locationId in self.simulation.environment.getGrid().getLocations():
+            location = self.simulation.environment.getGrid().getLocations()[locationId]
             self.drawLocation(location, location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight)
 
     # Returns the color that a location should be displayed as.
@@ -64,7 +65,8 @@ class Apex:
         else:
             color = self.config.brown
             if location.getNumEntities() > 0:
-                topEntity = location.getEntities()[-1]
+                topEntityId = list(location.getEntities().keys())[-1]
+                topEntity = location.getEntities()[topEntityId]
                 oldestLivingEntity = self.simulation.livingEntities[0]
                 if self.config.highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
                     color = self.config.highlightColor
@@ -73,7 +75,11 @@ class Apex:
         return color
     
     def locationContainsLivingEntity(self, location):
-        return location.getNumEntities() > 0 and isinstance(location.getEntities()[-1], LivingEntity)
+        if location.getNumEntities() == 0:
+            return False
+        topEntityId = list(location.getEntities().keys())[-1]
+        topEntity = location.getEntities()[topEntityId]
+        return location.getNumEntities() > 0 and isinstance(topEntity, LivingEntity)
     
     def drawEyes(self, xPos, yPos, width, height, eyeSizeFactor, pupilSizeFactor):
             # draw eyes

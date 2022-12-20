@@ -33,8 +33,9 @@ class ReproduceActionHandler:
     
     def isLocationImpassible(self, location: Location):
         # search current location
-        for e in location.getEntities():
-            if e.isSolid():
+        for eid in location.getEntities():
+            entity = location.getEntities()[eid]
+            if entity.isSolid():
                 return True
         return False
         
@@ -45,9 +46,10 @@ class ReproduceActionHandler:
         location = grid.getLocation(locationID)
 
         mate = -1
-        for e in location.getEntities():
-            if type(e) is type(entity) and e.getID() is not entity.getID():
-                mate = e
+        for eid in location.getEntities():
+            targetEntity = location.getEntities()[eid]
+            if type(targetEntity) is type(entity) and targetEntity.getID() is not entity.getID():
+                mate = targetEntity
 
         if mate == -1:
             # no entity of this type found
