@@ -50,13 +50,12 @@ class Environment(object):
         entity.setEnvironmentID(self.getID())
         success = False
         attempts = 100
-        while (True):
+        for i in range(attempts):
             success = self.grid.addEntity(entity)
-            attempts -= 1
 
             if (success):
                 break
-            elif (attempts == 0):
+            elif (i == attempts - 1):
                 print("Failed to add entity to environment")
                 break
     

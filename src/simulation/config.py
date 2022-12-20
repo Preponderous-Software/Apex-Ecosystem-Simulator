@@ -11,8 +11,8 @@ class Config:
         self.rockFactor = random.randrange(1, 4)
         self.grassFactor = random.randrange(3, 10)
         self.livingEntityFactor = 0.2
-        self.minGridSize = 12
-        self.maxGridSize = 32
+        self.minGridSize = 32
+        self.maxGridSize = 64
         self.minGrassGrowTime = 100
         self.maxGrassGrowTime = 300
         self.chickenFactor = random.randrange(1, 10)
