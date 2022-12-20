@@ -42,8 +42,8 @@ class Simulation:
         self.initializeLocationWidthAndHeight()
 
         self.entities = dict()
-        self.livingEntities = []
-        self.excrement = []
+        self.livingEntityIds = []
+        self.excrementIds = []
 
         self.running = True
 
@@ -57,9 +57,9 @@ class Simulation:
     def addEntity(self, entity: Entity):
         self.entities[entity.getID()] = entity
         if isinstance(entity, LivingEntity):
-            self.livingEntities.append(entity)
+            self.livingEntityIds.append(entity.getID())
         if type(entity) is Excrement:
-            self.excrement.append(entity)
+            self.excrementIds.append(entity.getID())
     
     def removeEntityFromLocation(self, entity: Entity):
         locationID = entity.getLocationID()
@@ -70,24 +70,25 @@ class Simulation:
     
     def printDeathInfo(self, entity, oldestLivingEntity):
             toPrint = entity.getName() + " has died."
-            if len(self.livingEntities) > 0:
+            if len(self.livingEntityIds) > 0:
                 if entity.getID() == oldestLivingEntity.getID():
                     toPrint += " They were the oldest living entity."
             print(toPrint)
 
     def removeEntity(self, entity: Entity):
-        if len(self.livingEntities) > 0:
-            oldestLivingEntity = self.livingEntities[0]
+        if len(self.livingEntityIds) > 0:
+            oldestLivingEntityId = self.livingEntityIds[0]
+            oldestLivingEntity = self.entities[oldestLivingEntityId]
 
         del self.entities[entity.getID()]
         self.removeEntityFromLocation(entity)
         if isinstance(entity, LivingEntity):
-            self.livingEntities.remove(entity)
+            self.livingEntityIds.remove(entity.getID())
             self.printDeathInfo(entity, oldestLivingEntity)
             if not self.config.muted:
                 self.soundService.playDeathSoundEffect()
         if type(entity) is Excrement:
-            self.excrement.remove(entity)
+            self.excrementIds.remove(entity.getID())
         
     def generateMap(self):        
         for i in range(self.config.numWaterEntities):
@@ -138,10 +139,10 @@ class Simulation:
         return count
     
     def getNumLivingEntities(self):
-        return len(self.livingEntities)
+        return len(self.livingEntityIds)
     
     def getNumExcrement(self):
-        return len(self.excrement)
+        return len(self.excrementIds)
 
     def performExcrementCheck(self, excrement):
             if (self.numTicks - excrement.getTick()) > self.config.grassGrowTime:
@@ -155,11 +156,13 @@ class Simulation:
                 self.addEntity(grass)
 
     def growGrass(self):
-        for excrement in self.excrement:
+        for excrementId in self.excrementIds:
+            excrement = self.entities[excrementId]
             self.performExcrementCheck(excrement)
             
     def initiateEntityActions(self):
-        for entity in self.livingEntities:
+        for entityId in self.livingEntityIds:
+            entity = self.entities[entityId]
             self.moveActionHandler.initiateMoveAction(entity)
             if entity.needsEnergy():
                 self.eatActionHandler.initiateEatAction(entity, self.removeEntity)
@@ -170,7 +173,8 @@ class Simulation:
                     self.reproduceActionHandler.initiateReproduceAction(entity, self.addEntity)
 
     def decreaseEnergyForLivingEntities(self):
-        for entity in self.livingEntities:
+        for entityId in self.livingEntityIds:
+            entity = self.entities[entityId]
             entity.removeEnergy(1)
             if entity.getEnergy() <= 0:
                 self.removeEntity(entity)

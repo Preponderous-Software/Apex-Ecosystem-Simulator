@@ -67,7 +67,8 @@ class Apex:
             if location.getNumEntities() > 0:
                 topEntityId = list(location.getEntities().keys())[-1]
                 topEntity = location.getEntities()[topEntityId]
-                oldestLivingEntity = self.simulation.livingEntities[0]
+                oldestLivingEntityId = self.simulation.livingEntityIds[0]
+                oldestLivingEntity = self.simulation.entities[oldestLivingEntityId]
                 if self.config.highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
                     color = self.config.highlightColor
                 else:
