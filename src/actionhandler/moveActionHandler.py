@@ -65,8 +65,7 @@ class MoveActionHandler:
         newLocation = self.searchForFood(entity, grid, location)
         if newLocation == -1 or self.isLocationImpassible(newLocation):
             # no food found
-            count = 0
-            while (True):
+            for i in range(0, 10):
                 newLocation = self.chooseRandomDirection(grid, location)
 
                 if (newLocation == -1 or self.isLocationImpassible(newLocation)):
@@ -74,10 +73,6 @@ class MoveActionHandler:
 
                 if (not self.isLocationImpassible(newLocation)):
                     break
-                    
-                count += 1
-                if (count > 10):
-                    return
             
         if newLocation == -1:
             # location doesn't exist, we're at a border
