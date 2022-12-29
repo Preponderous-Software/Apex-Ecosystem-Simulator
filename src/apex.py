@@ -56,7 +56,7 @@ class Apex:
     def drawEnvironment(self):
         for locationId in self.simulation.environment.getGrid().getLocations():
             location = self.simulation.environment.getGrid().getLocations()[locationId]
-            self.drawLocation(location, location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight)
+            self.drawLocation(location, location.getX() * self.simulation.locationWidth - 1, location.getY() * self.simulation.locationHeight - 1, self.simulation.locationWidth + 2, self.simulation.locationHeight + 2)
 
     # Returns the color that a location should be displayed as.
     def getColorOfLocation(self, location):
