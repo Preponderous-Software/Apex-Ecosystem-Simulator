@@ -15,7 +15,8 @@ from entity.wolf import Wolf
 
 from entity.livingEntity import LivingEntity
 
-from ui.multiLineTextAlert import MultiLineTextAlert
+from ui.textAlertDrawTool import TextAlertDrawTool
+from ui.textAlertFactory import TextAlertFactory
 
 # @author Daniel McCoy Stephenson
 # @since July 31st, 2022
@@ -31,7 +32,9 @@ class Apex:
         self.simCount = 0
         self.initializeSimulation()
         self.tickLengths = []
-        self.multiLineTextAlerts = []
+        self.textAlerts = []
+        self.textAlertFactory = TextAlertFactory()
+        self.textAlertDrawTool = TextAlertDrawTool()
     
     def initializeGameDisplay(self):
         if self.config.fullscreen:
@@ -61,22 +64,11 @@ class Apex:
             location = self.simulation.environment.getGrid().getLocations()[locationId]
             self.drawLocation(location, location.getX() * self.simulation.locationWidth - 1, location.getY() * self.simulation.locationHeight - 1, self.simulation.locationWidth + 2, self.simulation.locationHeight + 2)
         
-        for textAlert in self.multiLineTextAlerts:
-            self.drawTextAlert(textAlert)
+        for textAlert in self.textAlerts:
+            self.textAlertDrawTool.drawTextAlert(textAlert, self.graphik)
             textAlert.duration -= 1
             if textAlert.duration == 0:
-                self.multiLineTextAlerts.remove(textAlert)
-    
-    def drawTextAlert(self, textAlert):
-        numLines = len(textAlert.text)        
-        backgroundColor = (255, 255, 255)
-        backgroundX = textAlert.x - textAlert.size * 6
-        backgroundY = textAlert.y - textAlert.size
-        backgroundWidth = 250
-        backgroundHeight = 20*numLines + 20
-        self.graphik.drawRectangle(backgroundX, backgroundY, backgroundWidth, backgroundHeight, backgroundColor)
-        for i in range(0, numLines):
-            self.graphik.drawText(textAlert.text[i], textAlert.x, textAlert.y + 20*i, textAlert.size, textAlert.color)
+                self.textAlerts.remove(textAlert)
                 
     # Returns the color that a location should be displayed as.
     def getColorOfLocation(self, location):
@@ -332,25 +324,8 @@ class Apex:
             pygame.display.update()
     
     def createTextAlertForLocationInfo(self, location):
-        if location != -1:
-            x = location.getX() * self.simulation.locationWidth
-            y = location.getY() * self.simulation.locationHeight
-            numEntities = location.getNumEntities()
-            newAlert = MultiLineTextAlert(x + 20, y + 100, 20, self.config.black, 10) 
-            newAlert.addLine("Location (" + str(location.getX()) + ", " + str(location.getY()) + ")")
-            newAlert.addLine("Number of entities: " + str(numEntities))
-            
-            entityNames = []
-            for entityId in location.getEntities():
-                entity = location.getEntities()[entityId]
-                entityNames.append(entity.getName())
-            # print occurrences
-            for entityName in set(entityNames):
-                numOccurrences = entityNames.count(entityName)
-                newAlert.addLine(entityName + ": " + str(numOccurrences))
-                y += 20
-        
-            self.multiLineTextAlerts.append(newAlert)
+        newAlert = self.textAlertFactory.createTextAlertForLocationInfo(location, self.simulation, self.config)
+        self.textAlerts.append(newAlert)
 
     def printLocationInfoToConsole(self, location):
         if location != -1:
