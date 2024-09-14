@@ -64,6 +64,7 @@ class Apex:
             location = self.simulation.environment.getGrid().getLocations()[locationId]
             self.drawLocation(location, location.getX() * self.simulation.locationWidth - 1, location.getY() * self.simulation.locationHeight - 1, self.simulation.locationWidth + 2, self.simulation.locationHeight + 2)
         
+    def drawTextAlerts(self):
         for textAlert in self.textAlerts:
             self.textAlertDrawTool.drawTextAlert(textAlert, self.graphik)
             textAlert.duration -= 1
@@ -396,6 +397,8 @@ class Apex:
 
                     if self.debug:
                         self.displayStats()
+            
+            self.drawTextAlerts()
 
             pygame.display.update()
             if (self.config.limitTickSpeed):
