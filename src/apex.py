@@ -15,6 +15,8 @@ from entity.wolf import Wolf
 
 from entity.livingEntity import LivingEntity
 
+from ui.multiLineTextAlert import MultiLineTextAlert
+
 # @author Daniel McCoy Stephenson
 # @since July 31st, 2022
 class Apex:
@@ -29,6 +31,7 @@ class Apex:
         self.simCount = 0
         self.initializeSimulation()
         self.tickLengths = []
+        self.multiLineTextAlerts = []
     
     def initializeGameDisplay(self):
         if self.config.fullscreen:
@@ -57,7 +60,24 @@ class Apex:
         for locationId in self.simulation.environment.getGrid().getLocations():
             location = self.simulation.environment.getGrid().getLocations()[locationId]
             self.drawLocation(location, location.getX() * self.simulation.locationWidth - 1, location.getY() * self.simulation.locationHeight - 1, self.simulation.locationWidth + 2, self.simulation.locationHeight + 2)
-
+        
+        for textAlert in self.multiLineTextAlerts:
+            self.drawTextAlert(textAlert)
+            textAlert.duration -= 1
+            if textAlert.duration == 0:
+                self.multiLineTextAlerts.remove(textAlert)
+    
+    def drawTextAlert(self, textAlert):
+        numLines = len(textAlert.text)        
+        backgroundColor = (255, 255, 255)
+        backgroundX = textAlert.x - textAlert.size * 6
+        backgroundY = textAlert.y - textAlert.size
+        backgroundWidth = 250
+        backgroundHeight = 20*numLines + 20
+        self.graphik.drawRectangle(backgroundX, backgroundY, backgroundWidth, backgroundHeight, backgroundColor)
+        for i in range(0, numLines):
+            self.graphik.drawText(textAlert.text[i], textAlert.x, textAlert.y + 20*i, textAlert.size, textAlert.color)
+                
     # Returns the color that a location should be displayed as.
     def getColorOfLocation(self, location):
         if location == -1:
@@ -292,6 +312,59 @@ class Apex:
                 self.config.eyesEnabled = False
             else:
                 self.config.eyesEnabled = True
+    
+    def retrieveLocationAtMousePosition(self, pos):
+        x, y = pos
+        grid = self.simulation.environment.getGrid()
+        locationWidth = self.simulation.locationWidth
+        locationHeight = self.simulation.locationHeight
+        locationX = x // locationWidth
+        locationY = y // locationHeight
+        location = grid.getLocationByCoordinates(locationX, locationY)
+        return location
+                
+    def handleMouseClickEvent(self, pos):
+        # retrieve location
+        location = self.retrieveLocationAtMousePosition(pos)
+        if location != -1:
+            self.printLocationInfoToConsole(location)
+            self.createTextAlertForLocationInfo(location)
+            pygame.display.update()
+    
+    def createTextAlertForLocationInfo(self, location):
+        if location != -1:
+            x = location.getX() * self.simulation.locationWidth
+            y = location.getY() * self.simulation.locationHeight
+            numEntities = location.getNumEntities()
+            newAlert = MultiLineTextAlert(x + 20, y + 100, 20, self.config.black, 10) 
+            newAlert.addLine("Location (" + str(location.getX()) + ", " + str(location.getY()) + ")")
+            newAlert.addLine("Number of entities: " + str(numEntities))
+            
+            entityNames = []
+            for entityId in location.getEntities():
+                entity = location.getEntities()[entityId]
+                entityNames.append(entity.getName())
+            # print occurrences
+            for entityName in set(entityNames):
+                numOccurrences = entityNames.count(entityName)
+                newAlert.addLine(entityName + ": " + str(numOccurrences))
+                y += 20
+        
+            self.multiLineTextAlerts.append(newAlert)
+
+    def printLocationInfoToConsole(self, location):
+        if location != -1:
+            print("")
+            print("=== Location (" + str(location.getX()) + ", " + str(location.getY()) + ") ===")
+            print("Number of entities: " + str(location.getNumEntities()))
+            entityNames = []
+            for entityId in location.getEntities():
+                entity = location.getEntities()[entityId]
+                entityNames.append(entity.getName())
+            # print occurrences
+            for entityName in set(entityNames):
+                print(entityName + ": " + str(entityNames.count(entityName)))
+            print("")
 
     # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
     def restartSimulation(self):
@@ -334,6 +407,8 @@ class Apex:
                         self.restartSimulation()
                 elif event.type == pygame.VIDEORESIZE:
                     self.simulation.initializeLocationWidthAndHeight()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handleMouseClickEvent(event.pos)
             
             if not self.paused:
                 self.simulation.update()
