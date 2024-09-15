@@ -323,11 +323,12 @@ class Apex:
             self.printLocationInfoToConsole(location)
             self.createTextAlertForLocationInfo(location)
             pygame.display.update()
-            topEntity = location.getEntities()[list(location.getEntities().keys())[-1]]
-            if isinstance(topEntity, LivingEntity):
-                self.selectedEntity = topEntity
-            else:
-                self.selectedEntity = None
+            if location.getNumEntities() > 0:
+                topEntity = location.getEntities()[list(location.getEntities().keys())[-1]]
+                if isinstance(topEntity, LivingEntity):
+                    self.selectedEntity = topEntity
+                else:
+                    self.selectedEntity = None
                 
     
     def createTextAlertForLocationInfo(self, location):
