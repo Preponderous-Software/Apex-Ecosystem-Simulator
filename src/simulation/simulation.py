@@ -4,6 +4,8 @@ from actionhandler.eatActionHandler import EatActionHandler
 from actionhandler.excreteActionHandler import ExcreteActionHandler
 from actionhandler.moveActionHandler import MoveActionHandler
 from actionhandler.reproduceActionHandler import ReproduceActionHandler
+from entity.berries import Berries
+from entity.berryBush import BerryBush
 from service.soundService import SoundService
 
 from lib.pyenvlib.entity import Entity
@@ -44,6 +46,7 @@ class Simulation:
         self.entities = dict()
         self.livingEntityIds = []
         self.excrementIds = []
+        self.berryBushIds = []
 
         self.running = True
 
@@ -60,6 +63,8 @@ class Simulation:
             self.livingEntityIds.append(entity.getID())
         if type(entity) is Excrement:
             self.excrementIds.append(entity.getID())
+        if type(entity) is BerryBush:
+            self.berryBushIds.append(entity.getID())
     
     def removeEntityFromLocation(self, entity: Entity):
         locationID = entity.getLocationID()
@@ -99,6 +104,12 @@ class Simulation:
             
         for i in range(self.config.numGrassEntities):
             self.addEntity(Grass())
+            
+        for i in range(self.config.numBerriesEntities):
+            self.addEntity(Berries())
+            
+        for i in range(self.config.numBerryBushEntities):
+            self.addEntity(BerryBush())
 
         for i in range(self.config.numChickensToStart):
             self.addEntity(Chicken("Chicken"))
@@ -160,6 +171,23 @@ class Simulation:
         for excrementId in self.excrementIds:
             excrement = self.entities[excrementId]
             self.performExcrementCheck(excrement)
+    
+    def growBerries(self):
+        for berryBushId in self.berryBushIds:
+            berryBush = self.entities[berryBushId]
+            berryBush.incrementTick()
+            self.performBerryBushCheck(berryBush)
+    
+    def performBerryBushCheck(self, berryBush):
+        if (berryBush.getTick() % self.config.berryBushGrowTime) == 0 and berryBush.getEnergy() > 10:
+            locationID = berryBush.getLocationID()
+            grid = self.environment.getGrid()
+            location = grid.getLocation(locationID)
+            
+            berries = Berries()
+            location.addEntity(berries)
+            self.addEntity(berries)
+            berryBush.energy -= 1
             
     def initiateEntityActions(self):
         for entityId in self.livingEntityIds:
@@ -188,11 +216,20 @@ class Simulation:
         print("---")
     
     def update(self):
-            # initiate entity actions
-            self.initiateEntityActions()
-            
-            # decrease energy for living entities
-            self.decreaseEnergyForLivingEntities()
-            
-            # make grass grow
-            self.growGrass()
+        # initiate entity actions
+        self.initiateEntityActions()
+        
+        # decrease energy for living entities
+        self.decreaseEnergyForLivingEntities()
+        
+        # make grass grow
+        self.growGrass()
+
+        # make berries grow
+        self.growBerries()
+        
+        # 10% chance for berry bushes to gain energy
+        for berryBushId in self.berryBushIds:
+            berryBush = self.entities[berryBushId]
+            if random.randrange(0, 100) < 10:
+                berryBush.energy += 1

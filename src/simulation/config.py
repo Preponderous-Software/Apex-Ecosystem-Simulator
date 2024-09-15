@@ -53,6 +53,7 @@ class Config:
         self.fullscreen = False
         self.muted = False
         self.eyesEnabled = True
+        self.berryBushGrowTime = 50
     
     def randomizeGridSize(self):
         self.gridSize = random.randrange(self.minGridSize, self.maxGridSize)
@@ -72,3 +73,5 @@ class Config:
         self.numFoxesToStart = ceil(self.gridSize*self.livingEntityFactor*self.foxFactor)
         self.numRabbitsToStart = ceil(self.gridSize*self.livingEntityFactor*self.rabbitFactor)
         self.maxLocalViewSize = self.maxGridSize/4
+        self.numBerriesEntities = ceil(self.gridSize*self.gridSize*0.1)
+        self.numBerryBushEntities = ceil(self.gridSize*self.gridSize*0.01)
