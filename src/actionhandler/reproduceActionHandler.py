@@ -16,7 +16,6 @@ class ReproduceActionHandler:
     def __init__(self, environment: Environment, soundService: SoundService, config: Config):
         self.environment = environment
         self.childCount = 0
-        self.energyCost = 1
         self.soundService = soundService
         self.config = config
     
@@ -48,16 +47,17 @@ class ReproduceActionHandler:
         mate = -1
         for eid in location.getEntities():
             targetEntity = location.getEntities()[eid]
-            if type(targetEntity) is type(entity) and targetEntity.getID() is not entity.getID():
+            if type(targetEntity) is type(entity) and targetEntity.getID() is not entity.getID() and targetEntity.getSex() is not entity.getSex():
                 mate = targetEntity
 
         if mate == -1:
-            # no entity of this type found
+            # no valid mate
             return
 
         # energy cost for action
-        entity.removeEnergy(self.energyCost)
-        mate.removeEnergy(self.energyCost)
+        energyCost = random.randrange(1, entity.getEnergy() // 2)
+        entity.removeEnergy(energyCost)
+        mate.removeEnergy(energyCost)
 
         name = entity.getName()
         child = type(entity)(name)
