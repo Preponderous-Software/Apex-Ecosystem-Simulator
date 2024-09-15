@@ -184,10 +184,12 @@ class Simulation:
             grid = self.environment.getGrid()
             location = grid.getLocation(locationID)
             
-            berries = Berries()
-            location.addEntity(berries)
-            self.addEntity(berries)
-            berryBush.energy -= 1
+            # if location does not have more than 10 berries, add a berry
+            if len(location.getEntitiesOfType(Berries)) < 10:
+                berries = Berries()
+                location.addEntity(berries)
+                self.addEntity(berries)
+                berryBush.energy -= 1
             
     def initiateEntityActions(self):
         for entityId in self.livingEntityIds:
