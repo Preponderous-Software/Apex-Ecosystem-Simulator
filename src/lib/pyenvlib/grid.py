@@ -109,7 +109,7 @@ class Grid(object):
     
     # Checks if an entity is present in this grid.
     def isEntityPresent(self, entity: Entity):
-        for locationId in self.grid.getLocations():
+        for locationId in self.getLocations():
             location = self.locations[locationId]
             if location.isEntityPresent(entity):
                 return True

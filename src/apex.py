@@ -35,6 +35,7 @@ class Apex:
         self.textAlerts = []
         self.textAlertFactory = TextAlertFactory()
         self.textAlertDrawTool = TextAlertDrawTool()
+        self.selectedEntity = None
     
     def initializeGameDisplay(self):
         if self.config.fullscreen:
@@ -174,9 +175,9 @@ class Apex:
             self.drawRow(nextLocation, grid, xpos, ypos, width, height)
             nextLocation = grid.getDown(nextLocation)
 
-    # Draws the immediate area around an entity.
-    def drawAreaAroundEntity(self, entity):
-        locationID = entity.getLocationID()
+    # Draws the immediate area around the selected entity.
+    def drawAreaAroundSelectedEntity(self):
+        locationID = self.selectedEntity.getLocationID()
         grid = self.simulation.environment.getGrid()
         location = grid.getLocation(locationID)
         x, y = self.gameDisplay.get_size()
@@ -317,12 +318,17 @@ class Apex:
         return location
                 
     def handleMouseClickEvent(self, pos):
-        # retrieve location
         location = self.retrieveLocationAtMousePosition(pos)
         if location != -1:
             self.printLocationInfoToConsole(location)
             self.createTextAlertForLocationInfo(location)
             pygame.display.update()
+            topEntity = location.getEntities()[list(location.getEntities().keys())[-1]]
+            if isinstance(topEntity, LivingEntity):
+                self.selectedEntity = topEntity
+            else:
+                self.selectedEntity = None
+                
     
     def createTextAlertForLocationInfo(self, location):
         newAlert = self.textAlertFactory.createTextAlertForLocationInfo(location, self.simulation, self.config)
@@ -383,15 +389,15 @@ class Apex:
                         self.restartSimulation()
                 elif event.type == pygame.VIDEORESIZE:
                     self.simulation.initializeLocationWidthAndHeight()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.config.localView == False:
                     self.handleMouseClickEvent(event.pos)
             
             if not self.paused:
                 self.simulation.update()
                 self.gameDisplay.fill(self.config.black)
                 if self.simulation.getNumLivingEntities() != 0:
-                    if self.config.localView:
-                        self.drawAreaAroundEntity(self.simulation.livingEntities[0])
+                    if self.config.localView and self.selectedEntity != None:
+                        self.drawAreaAroundSelectedEntity()
                     else:
                         self.drawEnvironment()
 
@@ -399,6 +405,14 @@ class Apex:
                         self.displayStats()
             
             self.drawTextAlerts()
+            
+            # if selected entity is no longer alive, deselect it
+            if self.selectedEntity != None and not self.simulation.environment.isEntityPresent(self.selectedEntity):
+                self.selectedEntity = None
+                
+                # if local view, switch back to global view
+                if self.config.localView:
+                    self.config.localView = False
 
             pygame.display.update()
             if (self.config.limitTickSpeed):
