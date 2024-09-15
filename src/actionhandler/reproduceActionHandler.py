@@ -16,7 +16,6 @@ class ReproduceActionHandler:
     def __init__(self, environment: Environment, soundService: SoundService, config: Config):
         self.environment = environment
         self.childCount = 0
-        self.energyCost = 1
         self.soundService = soundService
         self.config = config
     
@@ -30,6 +29,14 @@ class ReproduceActionHandler:
             return grid.getDown(location)
         elif direction == 3:
             return grid.getLeft(location)
+    
+    def isLocationImpassible(self, location: Location):
+        # search current location
+        for eid in location.getEntities():
+            entity = location.getEntities()[eid]
+            if entity.isSolid():
+                return True
+        return False
         
     def initiateReproduceAction(self, entity: Entity, callbackFunction):
         # get location
@@ -38,22 +45,25 @@ class ReproduceActionHandler:
         location = grid.getLocation(locationID)
 
         mate = -1
-        for e in location.getEntities():
-            if type(e) is type(entity) and e.getID() is not entity.getID():
-                mate = e
+        for eid in location.getEntities():
+            targetEntity = location.getEntities()[eid]
+            if type(targetEntity) is type(entity) and targetEntity.getID() is not entity.getID() and targetEntity.getSex() is not entity.getSex():
+                mate = targetEntity
 
         if mate == -1:
-            # no entity of this type found
+            # no valid mate
             return
 
         # energy cost for action
-        entity.removeEnergy(self.energyCost)
-        mate.removeEnergy(self.energyCost)
+        energyCost = random.randrange(1, entity.getEnergy() // 2)
+        entity.removeEnergy(energyCost)
+        mate.removeEnergy(energyCost)
 
-        name = "child " + str(self.childCount)
+        name = entity.getName()
         child = type(entity)(name)
         targetLocation = self.getRandomDirection(grid, location)
-        if targetLocation == -1:
+        if targetLocation == -1 or self.isLocationImpassible(targetLocation):
+            targetLocation = location
             return
         self.environment.addEntityToLocation(child, targetLocation)
         callbackFunction(child)

@@ -7,10 +7,12 @@ import random
 class Config:
     def __init__(self):
         # locally used
+        self.waterFactor = random.randrange(2, 5)
+        self.rockFactor = random.randrange(1, 4)
         self.grassFactor = random.randrange(3, 10)
         self.livingEntityFactor = 0.2
-        self.minGridSize = 8
-        self.maxGridSize = 24
+        self.minGridSize = 16
+        self.maxGridSize = 32
         self.minGrassGrowTime = 100
         self.maxGrassGrowTime = 300
         self.chickenFactor = random.randrange(1, 10)
@@ -33,8 +35,8 @@ class Config:
     def setStaticValues(self):
         self.displayWidth = 400
         self.displayHeight = 400
-        self.tickSpeed = 5
-        self.maxTickSpeed = 10
+        self.tickSpeed = 30
+        self.maxTickSpeed = 60
         self.black = (0,0,0)
         self.white = (255,255,255)
         self.brown = (170, 120, 0)
@@ -47,9 +49,10 @@ class Config:
         self.localView = False
         self.highlightOldestEntity = False
         self.highlightColor = (255, 255, 0)
-        self.localViewSize = 2
+        self.localViewSize = 4
         self.fullscreen = False
         self.muted = False
+        self.eyesEnabled = True
     
     def randomizeGridSize(self):
         self.gridSize = random.randrange(self.minGridSize, self.maxGridSize)
@@ -60,6 +63,8 @@ class Config:
     def calculateValues(self):
         self.textSize = ceil(self.displayHeight/37)
         self.numGrassEntities = ceil(self.gridSize*self.gridSize*self.grassFactor)
+        self.numWaterEntities = ceil(self.gridSize * self.waterFactor)
+        self.numRockEntities = ceil(self.gridSize * self.rockFactor)
         self.numChickensToStart = ceil(self.gridSize*self.livingEntityFactor*self.chickenFactor)
         self.numPigsToStart = ceil(self.gridSize*self.livingEntityFactor*self.pigFactor)
         self.numCowsToStart = ceil(self.gridSize*self.livingEntityFactor*self.cowFactor)

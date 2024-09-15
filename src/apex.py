@@ -13,6 +13,10 @@ from entity.rabbit import Rabbit
 
 from entity.wolf import Wolf
 
+from entity.livingEntity import LivingEntity
+
+from ui.textAlertDrawTool import TextAlertDrawTool
+from ui.textAlertFactory import TextAlertFactory
 
 # @author Daniel McCoy Stephenson
 # @since July 31st, 2022
@@ -28,6 +32,10 @@ class Apex:
         self.simCount = 0
         self.initializeSimulation()
         self.tickLengths = []
+        self.textAlerts = []
+        self.textAlertFactory = TextAlertFactory()
+        self.textAlertDrawTool = TextAlertDrawTool()
+        self.selectedEntity = None
     
     def initializeGameDisplay(self):
         if self.config.fullscreen:
@@ -39,7 +47,7 @@ class Apex:
     def initializeSimulation(self):
         name = "Simulation " + str(self.simCount)
         self.simulation = Simulation(name, self.config, self.gameDisplay)
-        self.simulation.initializeEntities()
+        self.simulation.generateMap()
         self.simulation.placeEntities()
         self.simulation.environment.printInfo()
         self.simCount += 1
@@ -53,9 +61,17 @@ class Apex:
 
     # Draws the environment that belongs to the simulation in its entirety.
     def drawEnvironment(self):
-        for location in self.simulation.environment.getGrid().getLocations():
-            self.drawLocation(location, location.getX() * self.simulation.locationWidth, location.getY() * self.simulation.locationHeight, self.simulation.locationWidth, self.simulation.locationHeight)
-
+        for locationId in self.simulation.environment.getGrid().getLocations():
+            location = self.simulation.environment.getGrid().getLocations()[locationId]
+            self.drawLocation(location, location.getX() * self.simulation.locationWidth - 1, location.getY() * self.simulation.locationHeight - 1, self.simulation.locationWidth + 2, self.simulation.locationHeight + 2)
+        
+    def drawTextAlerts(self):
+        for textAlert in self.textAlerts:
+            self.textAlertDrawTool.drawTextAlert(textAlert, self.graphik)
+            textAlert.duration -= 1
+            if textAlert.duration == 0:
+                self.textAlerts.remove(textAlert)
+                
     # Returns the color that a location should be displayed as.
     def getColorOfLocation(self, location):
         if location == -1:
@@ -63,19 +79,60 @@ class Apex:
         else:
             color = self.config.brown
             if location.getNumEntities() > 0:
-                topEntity = location.getEntities()[-1]
-                oldestLivingEntity = self.simulation.livingEntities[0]
+                topEntityId = list(location.getEntities().keys())[-1]
+                topEntity = location.getEntities()[topEntityId]
+                oldestLivingEntityId = self.simulation.livingEntityIds[0]
+                oldestLivingEntity = self.simulation.entities[oldestLivingEntityId]
                 if self.config.highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
                     color = self.config.highlightColor
                 else:
                     color = topEntity.getColor()
         return color
+    
+    def locationContainsLivingEntity(self, location):
+        if location.getNumEntities() == 0:
+            return False
+        topEntityId = list(location.getEntities().keys())[-1]
+        topEntity = location.getEntities()[topEntityId]
+        return location.getNumEntities() > 0 and isinstance(topEntity, LivingEntity)
+    
+    def drawEyes(self, xPos, yPos, width, height, eyeSizeFactor, pupilSizeFactor):
+            # draw eyes
+            leftEyeXPos = xPos + width/8
+            leftEyeYPos = yPos + height/4
+            leftEyeWidth = width*eyeSizeFactor
+            leftEyeHeight = height*eyeSizeFactor
+            self.graphik.drawRectangle(leftEyeXPos, leftEyeYPos, leftEyeWidth, leftEyeHeight, self.config.white)
+            
+            rightEyeXPos = xPos + width/2
+            rightEyeYPos = yPos + height/4
+            rightEyeWidth = width*eyeSizeFactor
+            rightEyeHeight = height*eyeSizeFactor
+            self.graphik.drawRectangle(rightEyeXPos, rightEyeYPos, rightEyeWidth, rightEyeHeight, self.config.white)
+            
+            # draw pupils            
+            leftPupilXPos = leftEyeXPos + leftEyeWidth/4
+            leftPupilYPos = leftEyeYPos + leftEyeHeight/4
+            leftPupilWidth = leftEyeWidth*pupilSizeFactor
+            leftPupilHeight = leftEyeHeight*pupilSizeFactor
+            self.graphik.drawRectangle(leftPupilXPos, leftPupilYPos, leftPupilWidth, leftPupilHeight, self.config.black)
+            
+            rightPupilXPos = rightEyeXPos + rightEyeWidth/4
+            rightPupilYPos = rightEyeYPos + rightEyeHeight/4
+            rightPupilWidth = rightEyeWidth*pupilSizeFactor
+            rightPupilHeight = rightEyeHeight*pupilSizeFactor
+            self.graphik.drawRectangle(rightPupilXPos, rightPupilYPos, rightPupilWidth, rightPupilHeight, self.config.black)
+
 
     # Draws a location at a specified position.
     def drawLocation(self, location, xPos, yPos, width, height):
         color = self.getColorOfLocation(location)
         self.graphik.drawRectangle(xPos, yPos, width, height, color)
-    
+        if self.config.eyesEnabled and location != -1 and self.locationContainsLivingEntity(location):
+            eyeSizeFactor = 0.25
+            pupilSizeFactor = 0.5
+            self.drawEyes(xPos, yPos, width, height, eyeSizeFactor, pupilSizeFactor)
+            
     # Draws locations to the left of a given location.
     def drawLocationsToTheLeftOfLocation(self, location, grid, xpos, ypos, width, height):
         tempLoc = location
@@ -118,9 +175,9 @@ class Apex:
             self.drawRow(nextLocation, grid, xpos, ypos, width, height)
             nextLocation = grid.getDown(nextLocation)
 
-    # Draws the immediate area around an entity.
-    def drawAreaAroundEntity(self, entity):
-        locationID = entity.getLocationID()
+    # Draws the immediate area around the selected entity.
+    def drawAreaAroundSelectedEntity(self):
+        locationID = self.selectedEntity.getLocationID()
         grid = self.simulation.environment.getGrid()
         location = grid.getLocation(locationID)
         x, y = self.gameDisplay.get_size()
@@ -244,6 +301,53 @@ class Apex:
             else:
                 self.config.muted = True
             self.initializeCaption()
+        if key == pygame.K_e:
+            if self.config.eyesEnabled:
+                self.config.eyesEnabled = False
+            else:
+                self.config.eyesEnabled = True
+    
+    def retrieveLocationAtMousePosition(self, pos):
+        x, y = pos
+        grid = self.simulation.environment.getGrid()
+        locationWidth = self.simulation.locationWidth
+        locationHeight = self.simulation.locationHeight
+        locationX = x // locationWidth
+        locationY = y // locationHeight
+        location = grid.getLocationByCoordinates(locationX, locationY)
+        return location
+                
+    def handleMouseClickEvent(self, pos):
+        location = self.retrieveLocationAtMousePosition(pos)
+        if location != -1:
+            self.printLocationInfoToConsole(location)
+            self.createTextAlertForLocationInfo(location)
+            pygame.display.update()
+            if location.getNumEntities() > 0:
+                topEntity = location.getEntities()[list(location.getEntities().keys())[-1]]
+                if isinstance(topEntity, LivingEntity):
+                    self.selectedEntity = topEntity
+                else:
+                    self.selectedEntity = None
+                
+    
+    def createTextAlertForLocationInfo(self, location):
+        newAlert = self.textAlertFactory.createTextAlertForLocationInfo(location, self.simulation, self.config)
+        self.textAlerts.append(newAlert)
+
+    def printLocationInfoToConsole(self, location):
+        if location != -1:
+            print("")
+            print("=== Location (" + str(location.getX()) + ", " + str(location.getY()) + ") ===")
+            print("Number of entities: " + str(location.getNumEntities()))
+            entityNames = []
+            for entityId in location.getEntities():
+                entity = location.getEntities()[entityId]
+                entityNames.append(entity.getName())
+            # print occurrences
+            for entityName in set(entityNames):
+                print(entityName + ": " + str(entityNames.count(entityName)))
+            print("")
 
     # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
     def restartSimulation(self):
@@ -286,18 +390,30 @@ class Apex:
                         self.restartSimulation()
                 elif event.type == pygame.VIDEORESIZE:
                     self.simulation.initializeLocationWidthAndHeight()
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.config.localView == False:
+                    self.handleMouseClickEvent(event.pos)
             
             if not self.paused:
                 self.simulation.update()
                 self.gameDisplay.fill(self.config.black)
                 if self.simulation.getNumLivingEntities() != 0:
-                    if self.config.localView:
-                        self.drawAreaAroundEntity(self.simulation.livingEntities[0])
+                    if self.config.localView and self.selectedEntity != None:
+                        self.drawAreaAroundSelectedEntity()
                     else:
                         self.drawEnvironment()
 
                     if self.debug:
                         self.displayStats()
+            
+            self.drawTextAlerts()
+            
+            # if selected entity is no longer alive, deselect it
+            if self.selectedEntity != None and not self.simulation.environment.isEntityPresent(self.selectedEntity):
+                self.selectedEntity = None
+                
+                # if local view, switch back to global view
+                if self.config.localView:
+                    self.config.localView = False
 
             pygame.display.update()
             if (self.config.limitTickSpeed):
