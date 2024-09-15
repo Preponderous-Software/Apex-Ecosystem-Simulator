@@ -59,7 +59,7 @@ class ReproduceActionHandler:
         entity.removeEnergy(self.energyCost)
         mate.removeEnergy(self.energyCost)
 
-        name = "child " + str(self.childCount)
+        name = entity.getName()
         child = type(entity)(name)
         targetLocation = self.getRandomDirection(grid, location)
         if targetLocation == -1 or self.isLocationImpassible(targetLocation):

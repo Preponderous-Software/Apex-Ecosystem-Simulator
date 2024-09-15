@@ -15,6 +15,9 @@ from entity.wolf import Wolf
 
 from entity.livingEntity import LivingEntity
 
+from ui.textAlertDrawTool import TextAlertDrawTool
+from ui.textAlertFactory import TextAlertFactory
+
 # @author Daniel McCoy Stephenson
 # @since July 31st, 2022
 class Apex:
@@ -29,6 +32,10 @@ class Apex:
         self.simCount = 0
         self.initializeSimulation()
         self.tickLengths = []
+        self.textAlerts = []
+        self.textAlertFactory = TextAlertFactory()
+        self.textAlertDrawTool = TextAlertDrawTool()
+        self.selectedEntity = None
     
     def initializeGameDisplay(self):
         if self.config.fullscreen:
@@ -57,7 +64,14 @@ class Apex:
         for locationId in self.simulation.environment.getGrid().getLocations():
             location = self.simulation.environment.getGrid().getLocations()[locationId]
             self.drawLocation(location, location.getX() * self.simulation.locationWidth - 1, location.getY() * self.simulation.locationHeight - 1, self.simulation.locationWidth + 2, self.simulation.locationHeight + 2)
-
+        
+    def drawTextAlerts(self):
+        for textAlert in self.textAlerts:
+            self.textAlertDrawTool.drawTextAlert(textAlert, self.graphik)
+            textAlert.duration -= 1
+            if textAlert.duration == 0:
+                self.textAlerts.remove(textAlert)
+                
     # Returns the color that a location should be displayed as.
     def getColorOfLocation(self, location):
         if location == -1:
@@ -161,9 +175,9 @@ class Apex:
             self.drawRow(nextLocation, grid, xpos, ypos, width, height)
             nextLocation = grid.getDown(nextLocation)
 
-    # Draws the immediate area around an entity.
-    def drawAreaAroundEntity(self, entity):
-        locationID = entity.getLocationID()
+    # Draws the immediate area around the selected entity.
+    def drawAreaAroundSelectedEntity(self):
+        locationID = self.selectedEntity.getLocationID()
         grid = self.simulation.environment.getGrid()
         location = grid.getLocation(locationID)
         x, y = self.gameDisplay.get_size()
@@ -292,6 +306,48 @@ class Apex:
                 self.config.eyesEnabled = False
             else:
                 self.config.eyesEnabled = True
+    
+    def retrieveLocationAtMousePosition(self, pos):
+        x, y = pos
+        grid = self.simulation.environment.getGrid()
+        locationWidth = self.simulation.locationWidth
+        locationHeight = self.simulation.locationHeight
+        locationX = x // locationWidth
+        locationY = y // locationHeight
+        location = grid.getLocationByCoordinates(locationX, locationY)
+        return location
+                
+    def handleMouseClickEvent(self, pos):
+        location = self.retrieveLocationAtMousePosition(pos)
+        if location != -1:
+            self.printLocationInfoToConsole(location)
+            self.createTextAlertForLocationInfo(location)
+            pygame.display.update()
+            if location.getNumEntities() > 0:
+                topEntity = location.getEntities()[list(location.getEntities().keys())[-1]]
+                if isinstance(topEntity, LivingEntity):
+                    self.selectedEntity = topEntity
+                else:
+                    self.selectedEntity = None
+                
+    
+    def createTextAlertForLocationInfo(self, location):
+        newAlert = self.textAlertFactory.createTextAlertForLocationInfo(location, self.simulation, self.config)
+        self.textAlerts.append(newAlert)
+
+    def printLocationInfoToConsole(self, location):
+        if location != -1:
+            print("")
+            print("=== Location (" + str(location.getX()) + ", " + str(location.getY()) + ") ===")
+            print("Number of entities: " + str(location.getNumEntities()))
+            entityNames = []
+            for entityId in location.getEntities():
+                entity = location.getEntities()[entityId]
+                entityNames.append(entity.getName())
+            # print occurrences
+            for entityName in set(entityNames):
+                print(entityName + ": " + str(entityNames.count(entityName)))
+            print("")
 
     # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
     def restartSimulation(self):
@@ -334,18 +390,30 @@ class Apex:
                         self.restartSimulation()
                 elif event.type == pygame.VIDEORESIZE:
                     self.simulation.initializeLocationWidthAndHeight()
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.config.localView == False:
+                    self.handleMouseClickEvent(event.pos)
             
             if not self.paused:
                 self.simulation.update()
                 self.gameDisplay.fill(self.config.black)
                 if self.simulation.getNumLivingEntities() != 0:
-                    if self.config.localView:
-                        self.drawAreaAroundEntity(self.simulation.livingEntities[0])
+                    if self.config.localView and self.selectedEntity != None:
+                        self.drawAreaAroundSelectedEntity()
                     else:
                         self.drawEnvironment()
 
                     if self.debug:
                         self.displayStats()
+            
+            self.drawTextAlerts()
+            
+            # if selected entity is no longer alive, deselect it
+            if self.selectedEntity != None and not self.simulation.environment.isEntityPresent(self.selectedEntity):
+                self.selectedEntity = None
+                
+                # if local view, switch back to global view
+                if self.config.localView:
+                    self.config.localView = False
 
             pygame.display.update()
             if (self.config.limitTickSpeed):

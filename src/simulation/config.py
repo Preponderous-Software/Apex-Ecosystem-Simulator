@@ -49,7 +49,7 @@ class Config:
         self.localView = False
         self.highlightOldestEntity = False
         self.highlightColor = (255, 255, 0)
-        self.localViewSize = 2
+        self.localViewSize = 4
         self.fullscreen = False
         self.muted = False
         self.eyesEnabled = True
