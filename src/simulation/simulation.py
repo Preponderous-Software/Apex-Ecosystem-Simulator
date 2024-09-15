@@ -94,6 +94,8 @@ class Simulation:
                 self.soundService.playDeathSoundEffect()
         if type(entity) is Excrement:
             self.excrementIds.remove(entity.getID())
+        if type(entity) is BerryBush:
+            self.berryBushIds.remove(entity.getID())
         
     def generateMap(self):        
         for i in range(self.config.numWaterEntities):
@@ -157,15 +159,15 @@ class Simulation:
         return len(self.excrementIds)
 
     def performExcrementCheck(self, excrement):
-            if (self.numTicks - excrement.getTick()) > self.config.grassGrowTime:
-                locationID = excrement.getLocationID()
-                grid = self.environment.getGrid()
-                location = grid.getLocation(locationID)
-                
-                self.removeEntity(excrement)
-                grass = Grass()
-                location.addEntity(grass)
-                self.addEntity(grass)
+        if (self.numTicks - excrement.getTick()) > self.config.grassGrowTime:
+            locationID = excrement.getLocationID()
+            grid = self.environment.getGrid()
+            location = grid.getLocation(locationID)
+            
+            self.removeEntity(excrement)
+            grass = Grass()
+            location.addEntity(grass)
+            self.addEntity(grass)
 
     def growGrass(self):
         for excrementId in self.excrementIds:
@@ -185,7 +187,11 @@ class Simulation:
             location = grid.getLocation(locationID)
             
             # if location does not have more than 10 berries, add a berry
-            if len(location.getEntitiesOfType(Berries)) < 10:
+            numBerries = 0
+            for entity in location.getEntities():
+                if type(entity) is Berries:
+                    numBerries += 1
+            if numBerries < 10:
                 berries = Berries()
                 location.addEntity(berries)
                 self.addEntity(berries)
