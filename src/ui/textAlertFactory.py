@@ -1,4 +1,4 @@
-from ui.multiLineTextAlert import MultiLineTextAlert
+from ui.textAlert import TextAlert
 
 class TextAlertFactory:
 
@@ -6,7 +6,7 @@ class TextAlertFactory:
         x = location.getX() * simulation.locationWidth
         y = location.getY() * simulation.locationHeight
         numEntities = location.getNumEntities()
-        newAlert = MultiLineTextAlert(x + 20, y + 100, 20, config.black, 10) 
+        newAlert = TextAlert(x + 20, y + 100, 20, config.black, 10) 
         newAlert.addLine("Location (" + str(location.getX()) + ", " + str(location.getY()) + ")")
         newAlert.addLine("Number of entities: " + str(numEntities))
         

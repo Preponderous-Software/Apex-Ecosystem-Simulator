@@ -1,6 +1,6 @@
 # This file contains the TextAlert class, which is used to display text alerts on the screen.
 
-class MultiLineTextAlert:
+class TextAlert:
     def __init__(self, x, y, size, color, duration):
         self.x = x
         self.y = y
