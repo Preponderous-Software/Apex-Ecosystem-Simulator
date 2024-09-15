@@ -53,7 +53,7 @@ class Config:
         self.fullscreen = False
         self.muted = False
         self.eyesEnabled = True
-        self.berryBushGrowTime = 50
+        self.berryBushGrowTime = 300
     
     def randomizeGridSize(self):
         self.gridSize = random.randrange(self.minGridSize, self.maxGridSize)
