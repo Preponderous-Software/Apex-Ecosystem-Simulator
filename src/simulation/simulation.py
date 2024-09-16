@@ -1,5 +1,4 @@
 import random
-import pygame
 from actionhandler.eatActionHandler import EatActionHandler
 from actionhandler.excreteActionHandler import ExcreteActionHandler
 from actionhandler.moveActionHandler import MoveActionHandler
@@ -181,21 +180,32 @@ class Simulation:
             self.performBerryBushCheck(berryBush)
     
     def performBerryBushCheck(self, berryBush):
-        if (berryBush.getTick() % self.config.berryBushGrowTime) == 0 and berryBush.getEnergy() > 10:
-            locationID = berryBush.getLocationID()
-            grid = self.environment.getGrid()
-            location = grid.getLocation(locationID)
-            
-            # if location does not have more than 10 berries, add a berry
-            numBerries = 0
-            for entity in location.getEntities():
-                if type(entity) is Berries:
-                    numBerries += 1
-            if numBerries < 10:
-                berries = Berries()
-                location.addEntity(berries)
-                self.addEntity(berries)
-                berryBush.energy -= 1
+        if (berryBush.getTick() % self.config.berryBushGrowTime) != 0:
+            return
+        
+        if berryBush.getEnergy() < 10:
+            return
+        
+        locationID = berryBush.getLocationID()
+        grid = self.environment.getGrid()
+        location = grid.getLocation(locationID)
+        
+        numBerries = self.countBerriesInLocation(location)
+        if numBerries >= 10:
+            return
+        
+        berries = Berries()
+        location.addEntity(berries)
+        self.addEntity(berries)
+        berryBush.energy = berryBush.getEnergy() // 2
+    
+    def countBerriesInLocation(self, location):
+        count = 0
+        for entityId in location.getEntities():
+            entity = self.environment.getEntity(entityId)
+            if type(entity) is Berries:
+                count += 1
+        return count
             
     def initiateEntityActions(self):
         for entityId in self.livingEntityIds:
