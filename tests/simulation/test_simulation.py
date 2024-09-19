@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 from entity.berries import Berries
 from entity.berryBush import BerryBush
@@ -110,29 +110,155 @@ def test_addEntity_BerryBush():
     assert berryBush.getID() not in testSim.excrementIds
     assert berryBush.getID() in testSim.berryBushIds
 
-# def test_generateMap():
-#     assert False
+@patch("src.simulation.simulation.Water")
+@patch("src.simulation.simulation.Rock")
+@patch("src.simulation.simulation.Grass")
+@patch("src.simulation.simulation.Berries")
+@patch("src.simulation.simulation.BerryBush")
+@patch("src.simulation.simulation.Chicken")
+@patch("src.simulation.simulation.Pig")
+@patch("src.simulation.simulation.Wolf")
+@patch("src.simulation.simulation.Cow")
+@patch("src.simulation.simulation.Fox")
+@patch("src.simulation.simulation.Rabbit")
+def test_generateMap(mock_rabbit, mock_fox, mock_cow, mock_wolf, mock_pig, mock_chicken, mock_berryBush, mock_berries, mock_grass, mock_rock, mock_water):
+    # prepare
+    testSim = getTestSimulation()
+    testSim.config = MagicMock()
+    testSim.config.numWaterEntities = 1
+    testSim.config.numRockEntities = 1
+    testSim.config.numGrassEntities = 1
+    testSim.config.numBerriesEntities = 1
+    testSim.config.numBerryBushEntities = 1
+    testSim.config.numChickensToStart = 1
+    testSim.config.numPigsToStart = 1
+    testSim.config.numWolvesToStart = 1
+    testSim.config.numCowsToStart = 1
+    testSim.config.numFoxesToStart = 1
+    testSim.config.numRabbitsToStart = 1
+    testSim.addEntity = MagicMock()
     
-# def test_placeEntities():
-#     assert False
-
-# def test_getNumberOfEntitiesOfType():
-#     assert False
-
-# def test_getNumberOfLivingEntitiesOfType():
-#     assert False
+    # execute
+    testSim.generateMap()
     
-# def test_getNumLivingEntities():
-#     assert False
+    # assert
+    mock_water.assert_called_once()
+    mock_rock.assert_called_once()
+    mock_grass.assert_called_once()
+    mock_berries.assert_called_once()
+    mock_berryBush.assert_called_once()
+    mock_chicken.assert_called_once_with("Chicken")
+    mock_pig.assert_called_once_with("Pig")
+    mock_wolf.assert_called_once_with("Wolf")
+    mock_cow.assert_called_once_with("Cow")
+    mock_fox.assert_called_once_with("Fox")
+    mock_rabbit.assert_called_once_with("Rabbit")
+    
+def test_placeEntities():
+    # prepare
+    testSim = getTestSimulation()
+    grass1 = Grass()
+    grass2 = Grass()
+    testSim.entities = {1: grass1, 2: grass2}
+    testSim.environment = MagicMock()
+    testSim.environment.addEntity = MagicMock()
+    
+    # execute
+    testSim.placeEntities()
+    
+    # assert
+    testSim.environment.addEntity.assert_has_calls(
+        [call(grass1), call(grass2)]
+    )
 
-# def test_getNumExcrement():
-#     assert False
+def test_getNumberOfEntitiesOfType():
+    # prepare
+    testSim = getTestSimulation()
+    grass1 = Grass()
+    grass2 = Grass()
+    testSim.entities = {1: grass1, 2: grass2}
+    
+    # execute
+    result = testSim.getNumberOfEntitiesOfType(Grass)
+    
+    # assert
+    assert result == 2
 
-# def test_cleanup():
-#     assert False
+def test_getNumberOfLivingEntitiesOfType():
+    # prepare
+    testSim = getTestSimulation()
+    chicken1 = Chicken("test chicken")
+    chicken2 = Chicken("test chicken")
+    testSim.entities = {1: chicken1, 2: chicken2}
+    testSim.livingEntityIds = [1, 2]
+    
+    # execute
+    result = testSim.getNumberOfLivingEntitiesOfType(Chicken)
+    
+    # assert
+    assert result == 2
+    
+def test_getNumLivingEntities():
+    # prepare
+    testSim = getTestSimulation()
+    chicken1 = Chicken("test chicken")
+    chicken2 = Chicken("test chicken")
+    testSim.entities = {1: chicken1, 2: chicken2}
+    testSim.livingEntityIds = [1, 2]
+    
+    # execute
+    result = testSim.getNumLivingEntities()
+    
+    # assert
+    assert result == 2
 
-# def test_update():
-#     assert False
+def test_getNumExcrement():
+    # prepare
+    testSim = getTestSimulation()
+    excrement1 = Excrement(1)
+    excrement2 = Excrement(2)
+    testSim.entities = {1: excrement1, 2: excrement2}
+    testSim.excrementIds = [1, 2]
+    
+    # execute
+    result = testSim.getNumExcrement()
+    
+    # assert
+    assert result == 2
+
+@patch("src.simulation.simulation.print")
+def test_cleanup(print):
+    # prepare
+    testSim = getTestSimulation()
+    testSim.environment = MagicMock()
+    testSim.environment.printInfo = MagicMock()
+    testSim.numTicks = 10
+    
+    # execute
+    testSim.cleanup()
+    
+    # assert
+    print.assert_has_calls(
+        [call("---"), call("State of environment:"), call("Length of simulation:", 10, "ticks"), call("---")]
+    )
+    testSim.environment.printInfo.assert_called_once()
+
+def test_update():
+    # prepare
+    testSim = getTestSimulation()
+    testSim.initiateEntityActions = MagicMock()
+    testSim.decreaseEnergyForLivingEntities = MagicMock()
+    testSim.growGrass = MagicMock()
+    testSim.growBerries = MagicMock()
+    
+    # execute
+    testSim.update()
+    
+    # assert
+    testSim.initiateEntityActions.assert_called_once()
+    testSim.decreaseEnergyForLivingEntities.assert_called_once()
+    testSim.growGrass.assert_called_once()
+    testSim.growBerries.assert_called_once()
 
 # private method tests -------------------------------------------------------
 def test_removeEntityFromLocation():
