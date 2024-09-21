@@ -146,7 +146,7 @@ class Simulation:
         self.growGrass()
 
         # make berries grow
-        self.growBerries()            
+        self.growBerries()
 
     # private methods --------------------------------------------------------
     def removeEntityFromLocation(self, entity: Entity):
@@ -227,7 +227,7 @@ class Simulation:
     def countBerriesInLocation(self, location):
         count = 0
         for entityId in location.getEntities():
-            entity = self.environment.getEntity(entityId)
+            entity = location.getEntity(entityId)
             if type(entity) is Berries:
                 count += 1
         return count

@@ -573,8 +573,6 @@ def test_countBerriesInLocation():
     location = Location(1, 1)
     berries = Berries()
     location.addEntity(berries)
-    testSim.environment.getEntity = MagicMock()
-    testSim.environment.getEntity.return_value = berries
     
     # execute
     result = testSim.countBerriesInLocation(location)
