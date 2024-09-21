@@ -52,14 +52,14 @@ def test_initializeLocationWidthAndHeight():
     assert testSim.locationWidth == 108
     assert testSim.locationHeight == 72
 
-def test_addEntity_Grass():
+def test_addEntityToTrackedEntities_Grass():
     # prepare
     testSim = getTestSimulation()
     grass = MagicMock()
     grass.getID.return_value = 1
     
     # execute
-    testSim.addEntity(grass)
+    testSim.addEntityToTrackedEntities(grass)
     
     # assert
     assert testSim.entities[1] == grass
@@ -67,13 +67,13 @@ def test_addEntity_Grass():
     assert 1 not in testSim.excrementIds
     assert 1 not in testSim.berryBushIds
 
-def test_addEntity_Chicken():
+def test_addEntityToTrackedEntities_Chicken():
     # prepare
     testSim = getTestSimulation()
     chicken = Chicken("test chicken")
     
     # execute
-    testSim.addEntity(chicken)
+    testSim.addEntityToTrackedEntities(chicken)
     
     # assert
     assert testSim.entities[chicken.getID()] == chicken
@@ -88,7 +88,7 @@ def test_addEntity_Excrement():
     excrement = Excrement(tick)
     
     # execute
-    testSim.addEntity(excrement)
+    testSim.addEntityToTrackedEntities(excrement)
     
     # assert
     assert testSim.entities[excrement.getID()] == excrement
@@ -102,7 +102,7 @@ def test_addEntity_BerryBush():
     berryBush = BerryBush()
     
     # execute
-    testSim.addEntity(berryBush)
+    testSim.addEntityToTrackedEntities(berryBush)
     
     # assert
     assert testSim.entities[berryBush.getID()] == berryBush
@@ -121,7 +121,7 @@ def test_addEntity_BerryBush():
 @patch("src.simulation.simulation.Cow")
 @patch("src.simulation.simulation.Fox")
 @patch("src.simulation.simulation.Rabbit")
-def test_generateMap(mock_rabbit, mock_fox, mock_cow, mock_wolf, mock_pig, mock_chicken, mock_berryBush, mock_berries, mock_grass, mock_rock, mock_water):
+def test_generateInitialEntities(mock_rabbit, mock_fox, mock_cow, mock_wolf, mock_pig, mock_chicken, mock_berryBush, mock_berries, mock_grass, mock_rock, mock_water):
     # prepare
     testSim = getTestSimulation()
     testSim.config = MagicMock()
@@ -136,10 +136,10 @@ def test_generateMap(mock_rabbit, mock_fox, mock_cow, mock_wolf, mock_pig, mock_
     testSim.config.numCowsToStart = 1
     testSim.config.numFoxesToStart = 1
     testSim.config.numRabbitsToStart = 1
-    testSim.addEntity = MagicMock()
+    testSim.addEntityToTrackedEntities = MagicMock()
     
     # execute
-    testSim.generateMap()
+    testSim.generateInitialEntities()
     
     # assert
     mock_water.assert_called_once()
@@ -154,7 +154,7 @@ def test_generateMap(mock_rabbit, mock_fox, mock_cow, mock_wolf, mock_pig, mock_
     mock_fox.assert_called_once_with("Fox")
     mock_rabbit.assert_called_once_with("Rabbit")
     
-def test_placeEntities():
+def test_placeInitialEntitiesInEnvironment():
     # prepare
     testSim = getTestSimulation()
     grass1 = Grass()
@@ -164,7 +164,7 @@ def test_placeEntities():
     testSim.environment.addEntity = MagicMock()
     
     # execute
-    testSim.placeEntities()
+    testSim.placeInitialEntitiesInEnvironment()
     
     # assert
     testSim.environment.addEntity.assert_has_calls(
@@ -412,7 +412,7 @@ def test_performExcrementCheck_NoAction():
     testSim.shouldExcrementTurnIntoGrass = MagicMock()
     testSim.shouldExcrementTurnIntoGrass.return_value = False
     testSim.removeEntity = MagicMock()
-    testSim.addEntity = MagicMock()
+    testSim.addEntityToTrackedEntities = MagicMock()
     
     # execute
     testSim.performExcrementCheck(excrement)
@@ -420,7 +420,7 @@ def test_performExcrementCheck_NoAction():
     # assert
     testSim.shouldExcrementTurnIntoGrass.assert_called_once_with(excrement)
     testSim.removeEntity.assert_not_called()
-    testSim.addEntity.assert_not_called()
+    testSim.addEntityToTrackedEntities.assert_not_called()
 
 def test_performExcrementCheck_StateChange():
     # prepare
@@ -431,7 +431,7 @@ def test_performExcrementCheck_StateChange():
     testSim.shouldExcrementTurnIntoGrass = MagicMock
     testSim.shouldExcrementTurnIntoGrass.return_value = True
     testSim.removeEntity = MagicMock()
-    testSim.addEntity = MagicMock()
+    testSim.addEntityToTrackedEntities = MagicMock()
     testSim.environment.getGrid().getLocation = MagicMock()
     testSim.environment.getGrid().getLocation.return_value = MagicMock()
     
@@ -439,7 +439,7 @@ def test_performExcrementCheck_StateChange():
     testSim.performExcrementCheck(excrement)
     
     # assert
-    testSim.addEntity.assert_called_once()
+    testSim.addEntityToTrackedEntities.assert_called_once()
 
 def test_growGrass():
     # prepare
@@ -540,13 +540,13 @@ def test_performBerryBushCheck_tooManyBerries():
     testSim.environment.getGrid().getLocation = MagicMock()
     testSim.countBerriesInLocation = MagicMock()
     testSim.countBerriesInLocation.return_value = 10
-    testSim.addEntity = MagicMock()
+    testSim.addEntityToTrackedEntities = MagicMock()
     
     # execute
     testSim.performBerryBushCheck(berryBush)
     
     # assert
-    testSim.addEntity.assert_not_called()
+    testSim.addEntityToTrackedEntities.assert_not_called()
 
 def test_performBerryBushCheck_Success():
     # prepare
@@ -559,13 +559,13 @@ def test_performBerryBushCheck_Success():
     testSim.environment.getGrid().getLocation.return_value = MagicMock()
     testSim.countBerriesInLocation = MagicMock()
     testSim.countBerriesInLocation.return_value = 9
-    testSim.addEntity = MagicMock()
+    testSim.addEntityToTrackedEntities = MagicMock()
     
     # execute
     testSim.performBerryBushCheck(berryBush)
     
     # assert
-    testSim.addEntity.assert_called_once()
+    testSim.addEntityToTrackedEntities.assert_called_once()
 
 def test_countBerriesInLocation():
     # prepare
@@ -657,7 +657,7 @@ def test_initiateEntityActions_EnergyNeedsMet_Excrete():
     # assert
     testSim.moveActionHandler.initiateMoveAction.assert_called_once_with(chicken)
     testSim.eatActionHandler.initiateEatAction.assert_not_called()
-    testSim.excreteActionHandler.initiateExcreteAction.assert_called_once_with(chicken, testSim.addEntity, testSim.numTicks)
+    testSim.excreteActionHandler.initiateExcreteAction.assert_called_once_with(chicken, testSim.addEntityToTrackedEntities, testSim.numTicks)
     testSim.reproduceActionHandler.initiateReproduceAction.assert_not_called()
     
 def test_initiateEntityActions_EnergyNeedsMet_Reproduce():
@@ -688,7 +688,7 @@ def test_initiateEntityActions_EnergyNeedsMet_Reproduce():
     testSim.moveActionHandler.initiateMoveAction.assert_called_once_with(chicken)
     testSim.eatActionHandler.initiateEatAction.assert_not_called()
     testSim.excreteActionHandler.initiateExcreteAction.assert_not_called()
-    testSim.reproduceActionHandler.initiateReproduceAction.assert_called_once_with(chicken, testSim.addEntity)
+    testSim.reproduceActionHandler.initiateReproduceAction.assert_called_once_with(chicken, testSim.addEntityToTrackedEntities)
 
 def test_initiateEntityActions_EnergyNeedsMet_ExcreteAndReproduce():
     # prepare
@@ -717,8 +717,8 @@ def test_initiateEntityActions_EnergyNeedsMet_ExcreteAndReproduce():
     # assert
     testSim.moveActionHandler.initiateMoveAction.assert_called_once_with(chicken)
     testSim.eatActionHandler.initiateEatAction.assert_not_called()
-    testSim.excreteActionHandler.initiateExcreteAction.assert_called_once_with(chicken, testSim.addEntity, testSim.numTicks)
-    testSim.reproduceActionHandler.initiateReproduceAction.assert_called_once_with(chicken, testSim.addEntity)
+    testSim.excreteActionHandler.initiateExcreteAction.assert_called_once_with(chicken, testSim.addEntityToTrackedEntities, testSim.numTicks)
+    testSim.reproduceActionHandler.initiateReproduceAction.assert_called_once_with(chicken, testSim.addEntityToTrackedEntities)
 
 def test_decreaseEnergyForLivingEntities():
     # prepare

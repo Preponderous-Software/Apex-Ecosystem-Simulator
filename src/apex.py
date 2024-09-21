@@ -47,8 +47,8 @@ class Apex:
     def initializeSimulation(self):
         name = "Simulation " + str(self.simCount)
         self.simulation = Simulation(name, self.config, self.gameDisplay)
-        self.simulation.generateMap()
-        self.simulation.placeEntities()
+        self.simulation.generateInitialEntities()
+        self.simulation.placeInitialEntitiesInEnvironment()
         self.simulation.environment.printInfo()
         self.simCount += 1
         self.initializeCaption()
@@ -236,27 +236,27 @@ class Apex:
         if key == pygame.K_c:
             chicken = Chicken("player-created-chicken")
             self.simulation.environment.addEntity(chicken)
-            self.simulation.addEntity(chicken)
+            self.simulation.addEntityToTrackedEntities(chicken)
         if key == pygame.K_p:
             pig = Pig("player-created-pig")
             self.simulation.environment.addEntity(pig)
-            self.simulation.addEntity(pig)
+            self.simulation.addEntityToTrackedEntities(pig)
         if key == pygame.K_k:
             cow = Cow("player-created-cow")
             self.simulation.environment.addEntity(cow)
-            self.simulation.addEntity(cow)
+            self.simulation.addEntityToTrackedEntities(cow)
         if key == pygame.K_w:
             wolf = Wolf("player-created-wolf")
             self.simulation.environment.addEntity(wolf)
-            self.simulation.addEntity(wolf)
+            self.simulation.addEntityToTrackedEntities(wolf)
         if key == pygame.K_f:
             fox = Fox("player-created-fox")
             self.simulation.environment.addEntity(fox)
-            self.simulation.addEntity(fox)
+            self.simulation.addEntityToTrackedEntities(fox)
         if key == pygame.K_b:
             rabbit = Rabbit("player-created-rabbit")
             self.simulation.environment.addEntity(rabbit)
-            self.simulation.addEntity(rabbit)
+            self.simulation.addEntityToTrackedEntities(rabbit)
         if key == pygame.K_RIGHTBRACKET:
             if self.config.tickSpeed < self.config.maxTickSpeed:
                 self.config.tickSpeed += 1

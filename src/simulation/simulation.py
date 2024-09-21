@@ -58,7 +58,7 @@ class Simulation:
         self.locationWidth = x/self.environment.getGrid().getRows()
         self.locationHeight = y/self.environment.getGrid().getColumns()
     
-    def addEntity(self, entity: Entity):
+    def addEntityToTrackedEntities(self, entity: Entity):
         self.entities[entity.getID()] = entity
         if isinstance(entity, LivingEntity):
             self.livingEntityIds.append(entity.getID())
@@ -67,41 +67,41 @@ class Simulation:
         if type(entity) is BerryBush:
             self.berryBushIds.append(entity.getID())
             
-    def generateMap(self):        
+    def generateInitialEntities(self):        
         for i in range(self.config.numWaterEntities):
-            self.addEntity(Water())
+            self.addEntityToTrackedEntities(Water())
         
         for i in range(self.config.numRockEntities):
-            self.addEntity(Rock())
+            self.addEntityToTrackedEntities(Rock())
             
         for i in range(self.config.numGrassEntities):
-            self.addEntity(Grass())
+            self.addEntityToTrackedEntities(Grass())
             
         for i in range(self.config.numBerriesEntities):
-            self.addEntity(Berries())
+            self.addEntityToTrackedEntities(Berries())
             
         for i in range(self.config.numBerryBushEntities):
-            self.addEntity(BerryBush())
+            self.addEntityToTrackedEntities(BerryBush())
 
         for i in range(self.config.numChickensToStart):
-            self.addEntity(Chicken("Chicken"))
+            self.addEntityToTrackedEntities(Chicken("Chicken"))
 
         for i in range(self.config.numPigsToStart):
-            self.addEntity(Pig("Pig"))
+            self.addEntityToTrackedEntities(Pig("Pig"))
 
         for i in range(self.config.numWolvesToStart):
-            self.addEntity(Wolf("Wolf"))
+            self.addEntityToTrackedEntities(Wolf("Wolf"))
         
         for i in range (self.config.numCowsToStart):
-            self.addEntity(Cow("Cow"))
+            self.addEntityToTrackedEntities(Cow("Cow"))
         
         for i in range(self.config.numFoxesToStart):
-            self.addEntity(Fox("Fox"))
+            self.addEntityToTrackedEntities(Fox("Fox"))
 
         for i in range(self.config.numRabbitsToStart):
-            self.addEntity(Rabbit("Rabbit"))
+            self.addEntityToTrackedEntities(Rabbit("Rabbit"))
     
-    def placeEntities(self):
+    def placeInitialEntitiesInEnvironment(self):
         for entityId in self.entities:
             entity = self.entities[entityId]
             self.environment.addEntity(entity)
@@ -189,7 +189,7 @@ class Simulation:
             self.removeEntity(excrement)
             grass = Grass()
             location.addEntity(grass)
-            self.addEntity(grass)
+            self.addEntityToTrackedEntities(grass)
 
     def growGrass(self):
         for excrementId in self.excrementIds:
@@ -221,7 +221,7 @@ class Simulation:
         
         berries = Berries()
         location.addEntity(berries)
-        self.addEntity(berries)
+        self.addEntityToTrackedEntities(berries)
         berryBush.energy = berryBush.getEnergy() // 2
 
     def countBerriesInLocation(self, location):
@@ -240,9 +240,9 @@ class Simulation:
                 self.eatActionHandler.initiateEatAction(entity, self.removeEntity)
             else:
                 if self.shouldEntityExcrete():
-                    self.excreteActionHandler.initiateExcreteAction(entity, self.addEntity, self.numTicks)
+                    self.excreteActionHandler.initiateExcreteAction(entity, self.addEntityToTrackedEntities, self.numTicks)
                 if self.shouldEntityReproduce():
-                    self.reproduceActionHandler.initiateReproduceAction(entity, self.addEntity)
+                    self.reproduceActionHandler.initiateReproduceAction(entity, self.addEntityToTrackedEntities)
 
     def decreaseEnergyForLivingEntities(self):
         for entityId in self.livingEntityIds:
