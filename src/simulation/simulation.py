@@ -146,13 +146,7 @@ class Simulation:
         self.growGrass()
 
         # make berries grow
-        self.growBerries()
-        
-        # 10% chance for berry bushes to gain energy
-        for berryBushId in self.berryBushIds:
-            berryBush = self.entities[berryBushId]
-            if random.randrange(0, 100) < 10:
-                berryBush.energy += 1
+        self.growBerries()            
 
     # private methods --------------------------------------------------------
     def removeEntityFromLocation(self, entity: Entity):
@@ -187,7 +181,7 @@ class Simulation:
             self.berryBushIds.remove(entity.getID())
 
     def performExcrementCheck(self, excrement):
-        if (self.numTicks - excrement.getTick()) > self.config.grassGrowTime:
+        if self.shouldExcrementTurnIntoGrass(excrement):
             locationID = excrement.getLocationID()
             grid = self.environment.getGrid()
             location = grid.getLocation(locationID)
@@ -205,6 +199,8 @@ class Simulation:
     def growBerries(self):
         for berryBushId in self.berryBushIds:
             berryBush = self.entities[berryBushId]
+            if self.shouldBerryBushGainEnergy():
+                berryBush.energy += 1
             berryBush.incrementTick()
             self.performBerryBushCheck(berryBush)
 
@@ -243,9 +239,9 @@ class Simulation:
             if entity.needsEnergy():
                 self.eatActionHandler.initiateEatAction(entity, self.removeEntity)
             else:
-                if random.randrange(0, 100) < (self.config.chanceToExcrete*100):
+                if self.shouldEntityExcrete():
                     self.excreteActionHandler.initiateExcreteAction(entity, self.addEntity, self.numTicks)
-                if random.randrange(0, 100) < (self.config.chanceToReproduce*100):
+                if self.shouldEntityReproduce():
                     self.reproduceActionHandler.initiateReproduceAction(entity, self.addEntity)
 
     def decreaseEnergyForLivingEntities(self):
@@ -254,3 +250,15 @@ class Simulation:
             entity.removeEnergy(1)
             if entity.getEnergy() <= 0:
                 self.removeEntity(entity)
+                
+    def shouldExcrementTurnIntoGrass(self, excrement):
+        return (self.numTicks - excrement.getTick()) > self.config.grassGrowTime
+
+    def shouldBerryBushGainEnergy(self):
+        return random.randrange(0, 100) < 10
+
+    def shouldEntityExcrete(self):
+        return random.randrange(0, 100) < (self.config.chanceToExcrete*100)
+    
+    def shouldEntityReproduce(self):
+        return random.randrange(0, 100) < (self.config.chanceToReproduce*100)
