@@ -10,11 +10,11 @@ class MainMenuScreen:
     def __init__(self, graphik: Graphik):
         self.graphik = graphik
         self.running = True
-        self.nextScreen = ScreenType.SIMULATION_SCREEN
+        self.nextScreen = ScreenType.SETUP_SCREEN
         self.changeScreen = False
 
-    def switchToSimulationScreen(self):
-        self.nextScreen = ScreenType.SIMULATION_SCREEN
+    def switchToSetupScreen(self):
+        self.nextScreen = ScreenType.SETUP_SCREEN
         self.changeScreen = True
 
     def quitApplication(self):
@@ -48,7 +48,7 @@ class MainMenuScreen:
             (0, 0, 0),
             30,
             "create new simulation",
-            self.switchToSimulationScreen,
+            self.switchToSetupScreen,
         )
         ypos = ypos + height + margin
         self.graphik.drawButton(
@@ -78,7 +78,7 @@ class MainMenuScreen:
                 )
 
     def handleKeyDownEvent(self, key):
-        self.switchToSimulationScreen()
+        self.switchToSetupScreen()
 
     def run(self):
         while not self.changeScreen:
