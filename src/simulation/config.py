@@ -33,8 +33,8 @@ class Config:
         self.calculateValues()
     
     def setStaticValues(self):
-        self.displayWidth = 640
-        self.displayHeight = 480
+        self.displayWidth = 1280
+        self.displayHeight = 720
         self.tickSpeed = 30
         self.maxTickSpeed = 60
         self.black = (0,0,0)
