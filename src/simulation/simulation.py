@@ -32,7 +32,7 @@ class Simulation:
         self.__gameDisplay = gameDisplay
         self.__soundService = SoundService()
         
-        self.environment = Environment(name, self.__config.gridSize)
+        self.environment = Environment(name, self.getConfig().gridSize)
 
         self.__moveActionHandler = MoveActionHandler(self.environment)
         self.__eatActionHandler = EatActionHandler(self.environment)
@@ -50,8 +50,62 @@ class Simulation:
         self.initializeLocationWidthAndHeight()
     
     # public methods ---------------------------------------------------------
+    def getConfig(self):
+        return self.__config
+    
+    def setConfig(self, config):
+        self.__config = config
+    
+    def getGameDisplay(self):
+        return self.__gameDisplay
+    
+    def setGameDisplay(self, gameDisplay):
+        self.__gameDisplay = gameDisplay
+    
+    def getExcrementIds(self):
+        return self.__excrementIds
+    
+    def setExcrementIds(self, excrementIds):
+        self.__excrementIds = excrementIds
+    
+    def getBerryBushIds(self):
+        return self.__berryBushIds
+    
+    def setBerryBushIds(self, berryBushIds):
+        self.__berryBushIds = berryBushIds
+    
+    def getSoundService(self):
+        return self.__soundService
+    
+    def setSoundService(self, soundService):
+        self.__soundService = soundService
+    
+    def getMoveActionHandler(self):
+        return self.__moveActionHandler
+    
+    def setMoveActionHandler(self, moveActionHandler):
+        self.__moveActionHandler = moveActionHandler
+        
+    def getEatActionHandler(self):
+        return self.__eatActionHandler
+    
+    def setEatActionHandler(self, eatActionHandler):
+        self.__eatActionHandler = eatActionHandler
+        
+    def getExcreteActionHandler(self):
+        return self.__excreteActionHandler
+    
+    def setExcreteActionHandler(self, excreteActionHandler):
+        self.__excreteActionHandler = excreteActionHandler
+        
+    def getReproduceActionHandler(self):
+        return self.__reproduceActionHandler
+    
+    def setReproduceActionHandler(self, reproduceActionHandler):
+        self.__reproduceActionHandler = reproduceActionHandler
+    
     def initializeLocationWidthAndHeight(self):
-        x, y = self.__gameDisplay.get_size()
+        x, y = self.getGameDisplay().get_size()
         self.locationWidth = x/self.environment.getGrid().getRows()
         self.locationHeight = y/self.environment.getGrid().getColumns()
     
@@ -65,37 +119,37 @@ class Simulation:
             self.__berryBushIds.append(entity.getID())
             
     def generateInitialEntities(self):        
-        for i in range(self.__config.numWaterEntities):
+        for i in range(self.getConfig().numWaterEntities):
             self.addEntityToTrackedEntities(Water())
         
-        for i in range(self.__config.numRockEntities):
+        for i in range(self.getConfig().numRockEntities):
             self.addEntityToTrackedEntities(Rock())
             
-        for i in range(self.__config.numGrassEntities):
+        for i in range(self.getConfig().numGrassEntities):
             self.addEntityToTrackedEntities(Grass())
             
-        for i in range(self.__config.numBerriesEntities):
+        for i in range(self.getConfig().numBerriesEntities):
             self.addEntityToTrackedEntities(Berries())
             
-        for i in range(self.__config.numBerryBushEntities):
+        for i in range(self.getConfig().numBerryBushEntities):
             self.addEntityToTrackedEntities(BerryBush())
 
-        for i in range(self.__config.numChickensToStart):
+        for i in range(self.getConfig().numChickensToStart):
             self.addEntityToTrackedEntities(Chicken("Chicken"))
 
-        for i in range(self.__config.numPigsToStart):
+        for i in range(self.getConfig().numPigsToStart):
             self.addEntityToTrackedEntities(Pig("Pig"))
 
-        for i in range(self.__config.numWolvesToStart):
+        for i in range(self.getConfig().numWolvesToStart):
             self.addEntityToTrackedEntities(Wolf("Wolf"))
         
-        for i in range (self.__config.numCowsToStart):
+        for i in range (self.getConfig().numCowsToStart):
             self.addEntityToTrackedEntities(Cow("Cow"))
         
-        for i in range(self.__config.numFoxesToStart):
+        for i in range(self.getConfig().numFoxesToStart):
             self.addEntityToTrackedEntities(Fox("Fox"))
 
-        for i in range(self.__config.numRabbitsToStart):
+        for i in range(self.getConfig().numRabbitsToStart):
             self.addEntityToTrackedEntities(Rabbit("Rabbit"))
     
     def placeInitialEntitiesInEnvironment(self):
@@ -134,75 +188,75 @@ class Simulation:
     
     def update(self):
         # initiate entity actions
-        self.__initiateEntityActions()
+        self.initiateEntityActions()
         
         # decrease energy for living entities
-        self.__decreaseEnergyForLivingEntities()
+        self.decreaseEnergyForLivingEntities()
         
         # make grass grow
-        self.__growGrass()
+        self.growGrass()
 
         # make berries grow
-        self.__growBerries()
+        self.growBerries()
 
     # private methods --------------------------------------------------------
-    def __removeEntityFromLocation(self, entity: Entity):
+    def removeEntityFromLocation(self, entity: Entity):
         locationID = entity.getLocationID()
         grid = self.environment.getGrid()
         location = grid.getLocation(locationID)
         if location.isEntityPresent(entity):
             location.removeEntity(entity)
             
-    def __printDeathInfo(self, entity, oldestLivingEntity):
+    def printDeathInfo(self, entity, oldestLivingEntity):
             toPrint = entity.getName() + " has died."
             if len(self.livingEntityIds) > 0:
                 if entity.getID() == oldestLivingEntity.getID():
                     toPrint += " They were the oldest living entity."
             print(toPrint)
             
-    def __removeEntity(self, entity: Entity):
+    def removeEntity(self, entity: Entity):
         if len(self.livingEntityIds) > 0:
             oldestLivingEntityId = self.livingEntityIds[0]
             oldestLivingEntity = self.entities[oldestLivingEntityId]
 
         del self.entities[entity.getID()]
-        self.__removeEntityFromLocation(entity)
+        self.removeEntityFromLocation(entity)
         if isinstance(entity, LivingEntity):
             self.livingEntityIds.remove(entity.getID())
-            self.__printDeathInfo(entity, oldestLivingEntity)
-            if not self.__config.muted:
+            self.printDeathInfo(entity, oldestLivingEntity)
+            if not self.getConfig().muted:
                 self.__soundService.playDeathSoundEffect()
         if type(entity) is Excrement:
             self.__excrementIds.remove(entity.getID())
         if type(entity) is BerryBush:
             self.__berryBushIds.remove(entity.getID())
 
-    def __performExcrementCheck(self, excrement):
-        if self.__shouldExcrementTurnIntoGrass(excrement):
+    def performExcrementCheck(self, excrement):
+        if self.shouldExcrementTurnIntoGrass(excrement):
             locationID = excrement.getLocationID()
             grid = self.environment.getGrid()
             location = grid.getLocation(locationID)
             
-            self.__removeEntity(excrement)
+            self.removeEntity(excrement)
             grass = Grass()
             location.addEntity(grass)
             self.addEntityToTrackedEntities(grass)
 
-    def __growGrass(self):
+    def growGrass(self):
         for excrementId in self.__excrementIds:
             excrement = self.entities[excrementId]
-            self.__performExcrementCheck(excrement)
+            self.performExcrementCheck(excrement)
 
-    def __growBerries(self):
+    def growBerries(self):
         for berryBushId in self.__berryBushIds:
             berryBush = self.entities[berryBushId]
-            if self.__shouldBerryBushGainEnergy():
+            if self.shouldBerryBushGainEnergy():
                 berryBush.energy += 1
             berryBush.incrementTick()
-            self.__performBerryBushCheck(berryBush)
+            self.performBerryBushCheck(berryBush)
 
-    def __performBerryBushCheck(self, berryBush):
-        if (berryBush.getTick() % self.__config.berryBushGrowTime) != 0:
+    def performBerryBushCheck(self, berryBush):
+        if (berryBush.getTick() % self.getConfig().berryBushGrowTime) != 0:
             return
         
         if berryBush.getEnergy() < 10:
@@ -212,7 +266,7 @@ class Simulation:
         grid = self.environment.getGrid()
         location = grid.getLocation(locationID)
         
-        numBerries = self.__countBerriesInLocation(location)
+        numBerries = self.countBerriesInLocation(location)
         if numBerries >= 10:
             return
         
@@ -221,7 +275,7 @@ class Simulation:
         self.addEntityToTrackedEntities(berries)
         berryBush.energy = berryBush.getEnergy() // 2
 
-    def __countBerriesInLocation(self, location):
+    def countBerriesInLocation(self, location):
         count = 0
         for entityId in location.getEntities():
             entity = location.getEntity(entityId)
@@ -229,33 +283,33 @@ class Simulation:
                 count += 1
         return count
 
-    def __initiateEntityActions(self):
+    def initiateEntityActions(self):
         for entityId in self.livingEntityIds:
             entity = self.entities[entityId]
             self.__moveActionHandler.initiateMoveAction(entity)
             if entity.needsEnergy():
-                self.__eatActionHandler.initiateEatAction(entity, self.__removeEntity)
+                self.__eatActionHandler.initiateEatAction(entity, self.removeEntity)
             else:
-                if self.__shouldEntityExcrete():
+                if self.shouldEntityExcrete():
                     self.__excreteActionHandler.initiateExcreteAction(entity, self.addEntityToTrackedEntities, self.numTicks)
-                if self.__shouldEntityReproduce():
+                if self.shouldEntityReproduce():
                     self.__reproduceActionHandler.initiateReproduceAction(entity, self.addEntityToTrackedEntities)
 
-    def __decreaseEnergyForLivingEntities(self):
+    def decreaseEnergyForLivingEntities(self):
         for entityId in self.livingEntityIds:
             entity = self.entities[entityId]
             entity.removeEnergy(1)
             if entity.getEnergy() <= 0:
-                self.__removeEntity(entity)
+                self.removeEntity(entity)
                 
-    def __shouldExcrementTurnIntoGrass(self, excrement):
-        return (self.numTicks - excrement.getTick()) > self.__config.grassGrowTime
+    def shouldExcrementTurnIntoGrass(self, excrement):
+        return (self.numTicks - excrement.getTick()) > self.getConfig().grassGrowTime
 
-    def __shouldBerryBushGainEnergy(self):
+    def shouldBerryBushGainEnergy(self):
         return random.randrange(0, 100) < 10
 
-    def __shouldEntityExcrete(self):
-        return random.randrange(0, 100) < (self.__config.chanceToExcrete*100)
+    def shouldEntityExcrete(self):
+        return random.randrange(0, 100) < (self.getConfig().chanceToExcrete*100)
     
-    def __shouldEntityReproduce(self):
-        return random.randrange(0, 100) < (self.__config.chanceToReproduce*100)
+    def shouldEntityReproduce(self):
+        return random.randrange(0, 100) < (self.getConfig().chanceToReproduce*100)

@@ -22,7 +22,7 @@ class SimulationScreen:
     # constructors -----------------------------------------------------------
     def __init__(self, graphik: Graphik, config: Config):
         self.__graphik = graphik
-        self.__config = config
+        self.getConfig() = config
         self.__nextScreen = ScreenType.NONE
         self.__changeScreen = False
         self.__paused = False
@@ -45,14 +45,14 @@ class SimulationScreen:
                     self.__handleKeyDownEvent(event.key)
                 elif event.type == pygame.VIDEORESIZE:
                     self.simulation.initializeLocationWidthAndHeight()
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.__config.localView == False:
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.getConfig().localView == False:
                     self.__handleMouseClickEvent(event.pos)
             
             if not self.__paused:
                 self.simulation.update()
-                self.__graphik.gameDisplay.fill(self.__config.black)
+                self.__graphik.gameDisplay.fill(self.getConfig().black)
                 if self.simulation.getNumLivingEntities() != 0:
-                    if self.__config.localView and self.__selectedEntity != None:
+                    if self.getConfig().localView and self.__selectedEntity != None:
                         self.__drawAreaAroundSelectedEntity()
                     else:
                         self.__drawEnvironment()
@@ -67,29 +67,29 @@ class SimulationScreen:
                 self.__selectedEntity = None
                 
                 # if local view, switch back to global view
-                if self.__config.localView:
-                    self.__config.localView = False
+                if self.getConfig().localView:
+                    self.getConfig().localView = False
 
             self.__drawVersion()
             pygame.display.update()
-            if (self.__config.limitTickSpeed):
-                time.sleep((self.__config.maxTickSpeed - self.__config.tickSpeed)/self.__config.maxTickSpeed)
+            if (self.getConfig().limitTickSpeed):
+                time.sleep((self.getConfig().maxTickSpeed - self.getConfig().tickSpeed)/self.getConfig().maxTickSpeed)
             
             if not self.__paused:
                 self.simulation.numTicks += 1
             
             if self.__paused:
                 x, y = self.__graphik.gameDisplay.get_size()
-                self.__graphik.drawText("PAUSED", x/2, y/2, 50, self.__config.black)
+                self.__graphik.drawText("PAUSED", x/2, y/2, 50, self.getConfig().black)
 
-            if (self.__config.endSimulationUponAllLivingEntitiesDying):
+            if (self.getConfig().endSimulationUponAllLivingEntitiesDying):
                 if self.simulation.getNumLivingEntities() == 0:
                     time.sleep(1)
                     self.simulation.cleanup()
-                    if self.__config.randomizeGridSizeUponRestart:
-                        self.__config.randomizeGridSize()
-                        self.__config.randomizeGrassGrowTime()
-                        self.__config.calculateValues()
+                    if self.getConfig().randomizeGridSizeUponRestart:
+                        self.getConfig().randomizeGridSize()
+                        self.getConfig().randomizeGrassGrowTime()
+                        self.getConfig().calculateValues()
                     self.__nextScreen = ScreenType.SETUP_SCREEN
                     self.__changeScreen = True
                     if self.__paused:
@@ -101,7 +101,7 @@ class SimulationScreen:
     
     def initializeSimulation(self):
         name = "Simulation"
-        self.simulation = Simulation(name, self.__config, self.__graphik.gameDisplay)
+        self.simulation = Simulation(name, self.getConfig(), self.__graphik.gameDisplay)
         self.simulation.generateInitialEntities()
         self.simulation.placeInitialEntitiesInEnvironment()
         self.simulation.environment.printInfo()
@@ -110,7 +110,7 @@ class SimulationScreen:
     # private methods --------------------------------------------------------
     def __initializeCaption(self):
         caption = "Apex - " + self.simulation.name + " - " + str(self.simulation.environment.getGrid().getColumns()) + "x" + str(self.simulation.environment.getGrid().getRows())
-        if self.__config.muted:
+        if self.getConfig().muted:
             caption += " (muted)"
         pygame.display.set_caption(caption)
 
@@ -138,7 +138,7 @@ class SimulationScreen:
     def __drawLocation(self, location, xPos, yPos, width, height):
         color = self.__getColorOfLocation(location)
         self.__graphik.drawRectangle(xPos, yPos, width, height, color)
-        if self.__config.eyesEnabled and location != -1 and self.__locationContainsLivingEntity(location):
+        if self.getConfig().eyesEnabled and location != -1 and self.__locationContainsLivingEntity(location):
             eyeSizeFactor = 0.25
             pupilSizeFactor = 0.5
             self.__drawEyes(xPos, yPos, width, height, eyeSizeFactor, pupilSizeFactor)
@@ -146,16 +146,16 @@ class SimulationScreen:
     # Returns the color that a location should be displayed as.
     def __getColorOfLocation(self, location):
         if location == -1:
-            color = self.__config.black
+            color = self.getConfig().black
         else:
-            color = self.__config.brown
+            color = self.getConfig().brown
             if location.getNumEntities() > 0:
                 topEntityId = list(location.getEntities().keys())[-1]
                 topEntity = location.getEntities()[topEntityId]
                 oldestLivingEntityId = self.simulation.livingEntityIds[0]
                 oldestLivingEntity = self.simulation.entities[oldestLivingEntityId]
-                if self.__config.highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
-                    color = self.__config.highlightColor
+                if self.getConfig().highlightOldestEntity and topEntity.getID() == oldestLivingEntity.getID():
+                    color = self.getConfig().highlightColor
                 else:
                     color = topEntity.getColor()
         return color
@@ -173,26 +173,26 @@ class SimulationScreen:
         leftEyeYPos = yPos + height/4
         leftEyeWidth = width*eyeSizeFactor
         leftEyeHeight = height*eyeSizeFactor
-        self.__graphik.drawRectangle(leftEyeXPos, leftEyeYPos, leftEyeWidth, leftEyeHeight, self.__config.white)
+        self.__graphik.drawRectangle(leftEyeXPos, leftEyeYPos, leftEyeWidth, leftEyeHeight, self.getConfig().white)
         
         rightEyeXPos = xPos + width/2
         rightEyeYPos = yPos + height/4
         rightEyeWidth = width*eyeSizeFactor
         rightEyeHeight = height*eyeSizeFactor
-        self.__graphik.drawRectangle(rightEyeXPos, rightEyeYPos, rightEyeWidth, rightEyeHeight, self.__config.white)
+        self.__graphik.drawRectangle(rightEyeXPos, rightEyeYPos, rightEyeWidth, rightEyeHeight, self.getConfig().white)
         
         # draw pupils            
         leftPupilXPos = leftEyeXPos + leftEyeWidth/4
         leftPupilYPos = leftEyeYPos + leftEyeHeight/4
         leftPupilWidth = leftEyeWidth*pupilSizeFactor
         leftPupilHeight = leftEyeHeight*pupilSizeFactor
-        self.__graphik.drawRectangle(leftPupilXPos, leftPupilYPos, leftPupilWidth, leftPupilHeight, self.__config.black)
+        self.__graphik.drawRectangle(leftPupilXPos, leftPupilYPos, leftPupilWidth, leftPupilHeight, self.getConfig().black)
         
         rightPupilXPos = rightEyeXPos + rightEyeWidth/4
         rightPupilYPos = rightEyeYPos + rightEyeHeight/4
         rightPupilWidth = rightEyeWidth*pupilSizeFactor
         rightPupilHeight = rightEyeHeight*pupilSizeFactor
-        self.__graphik.drawRectangle(rightPupilXPos, rightPupilYPos, rightPupilWidth, rightPupilHeight, self.__config.black)
+        self.__graphik.drawRectangle(rightPupilXPos, rightPupilYPos, rightPupilWidth, rightPupilHeight, self.getConfig().black)
 
     # Draws the immediate area around the selected entity.
     def __drawAreaAroundSelectedEntity(self):
@@ -200,10 +200,10 @@ class SimulationScreen:
         grid = self.simulation.environment.getGrid()
         location = grid.getLocation(locationID)
         x, y = self.gameDisplay.get_size()
-        width = x/(self.__config.localViewSize*2 + 1)
-        height = y/(self.__config.localViewSize*2 + 1)
-        xpos = width*self.__config.localViewSize
-        ypos = height*self.__config.localViewSize
+        width = x/(self.getConfig().localViewSize*2 + 1)
+        height = y/(self.getConfig().localViewSize*2 + 1)
+        xpos = width*self.getConfig().localViewSize
+        ypos = height*self.getConfig().localViewSize
         yBackup = ypos
         self.__drawRow(location, grid, xpos, ypos, width, height)
         self.__drawRowsAboveLocation(location, grid, xpos, ypos, width, height)
@@ -264,8 +264,8 @@ class SimulationScreen:
         startingX = 100
         startingY = 10
         text = []
-        if self.__config.limitTickSpeed:
-            self.__addStatToText(text, "Tick Speed:", str(self.__config.tickSpeed))
+        if self.getConfig().limitTickSpeed:
+            self.__addStatToText(text, "Tick Speed:", str(self.getConfig().tickSpeed))
         self.__addStatToText(text, "Num Ticks:", str(self.simulation.numTicks))
         self.__addStatToText(text, "Entities:", str(len(self.simulation.entities)))
         self.__addStatToText(text, "Living Entities:", str(self.simulation.getNumLivingEntities()))
@@ -278,10 +278,10 @@ class SimulationScreen:
         self.__addStatToText(text, "Foxes:", str(self.simulation.getNumberOfLivingEntitiesOfType(Fox)))
         self.__addStatToText(text, "Rabbits:", str(self.simulation.getNumberOfLivingEntitiesOfType(Rabbit)))
 
-        buffer = self.__config.textSize
+        buffer = self.getConfig().textSize
 
         for i in range(0, len(text)):
-            self.__graphik.drawText(text[i], startingX, startingY + buffer*i, self.__config.textSize, self.__config.black)
+            self.__graphik.drawText(text[i], startingX, startingY + buffer*i, self.getConfig().textSize, self.getConfig().black)
 
     def __addStatToText(self, text, key, value):
         text.append(key)
@@ -326,54 +326,54 @@ class SimulationScreen:
             self.simulation.environment.addEntity(rabbit)
             self.simulation.addEntityToTrackedEntities(rabbit)
         if key == pygame.K_RIGHTBRACKET:
-            if self.__config.tickSpeed < self.__config.maxTickSpeed:
-                self.__config.tickSpeed += 1
+            if self.getConfig().tickSpeed < self.getConfig().maxTickSpeed:
+                self.getConfig().tickSpeed += 1
         if key == pygame.K_LEFTBRACKET:
-            if self.__config.tickSpeed > 1:
-                self.__config.tickSpeed -= 1
+            if self.getConfig().tickSpeed > 1:
+                self.getConfig().tickSpeed -= 1
         if key == pygame.K_l:
-            if self.__config.limitTickSpeed:
-                self.__config.limitTickSpeed = False
+            if self.getConfig().limitTickSpeed:
+                self.getConfig().limitTickSpeed = False
             else:
-                self.__config.limitTickSpeed = True
+                self.getConfig().limitTickSpeed = True
         if key == pygame.K_SPACE or key == pygame.K_ESCAPE:
             if self.__paused:
                 self.__paused = False
             else:
                 self.__paused = True
         if key == pygame.K_v:
-            if self.__config.localView:
-                self.__config.localView = False
+            if self.getConfig().localView:
+                self.getConfig().localView = False
             else:
-                self.__config.localView = True
+                self.getConfig().localView = True
         if key == pygame.K_h:
-            if self.__config.highlightOldestEntity:
-                self.__config.highlightOldestEntity = False
+            if self.getConfig().highlightOldestEntity:
+                self.getConfig().highlightOldestEntity = False
             else:
-                self.__config.highlightOldestEntity = True
+                self.getConfig().highlightOldestEntity = True
         if key == pygame.K_UP:
-            if self.__config.localViewSize < self.__config.maxLocalViewSize:
-                self.__config.localViewSize += 1
+            if self.getConfig().localViewSize < self.getConfig().maxLocalViewSize:
+                self.getConfig().localViewSize += 1
         if key == pygame.K_DOWN:
-            if self.__config.localViewSize > 1:
-                self.__config.localViewSize -= 1
+            if self.getConfig().localViewSize > 1:
+                self.getConfig().localViewSize -= 1
         if key == pygame.K_F11:
-            if self.__config.fullscreen:
-                self.__config.fullscreen = False
+            if self.getConfig().fullscreen:
+                self.getConfig().fullscreen = False
             else:
-                self.__config.fullscreen = True
+                self.getConfig().fullscreen = True
             self.initializeGameDisplay()
         if key == pygame.K_m:
-            if self.__config.muted:
-                self.__config.muted = False
+            if self.getConfig().muted:
+                self.getConfig().muted = False
             else:
-                self.__config.muted = True
+                self.getConfig().muted = True
             self.__initializeCaption()
         if key == pygame.K_e:
-            if self.__config.eyesEnabled:
-                self.__config.eyesEnabled = False
+            if self.getConfig().eyesEnabled:
+                self.getConfig().eyesEnabled = False
             else:
-                self.__config.eyesEnabled = True
+                self.getConfig().eyesEnabled = True
 
     def __retrieveLocationAtMousePosition(self, pos):
         x, y = pos
@@ -399,7 +399,7 @@ class SimulationScreen:
                     self.__selectedEntity = None
 
     def __createTextAlertForLocationInfo(self, location):
-        newAlert = self.__textAlertFactory.createTextAlertForLocationInfo(location, self.simulation, self.__config)
+        newAlert = self.__textAlertFactory.createTextAlertForLocationInfo(location, self.simulation, self.getConfig())
         self.__textAlerts.append(newAlert)
 
     def __printLocationInfoToConsole(self, location):
