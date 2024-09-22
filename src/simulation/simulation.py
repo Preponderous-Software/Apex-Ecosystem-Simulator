@@ -28,16 +28,11 @@ from entity.rock import Rock
 class Simulation:
     # constructors ------------------------------------------------------------
     def __init__(self, name, config, gameDisplay):
-        self.name = name
-        self.environment = Environment(name, self.__config.gridSize)
-        self.entities = dict()
-        self.livingEntityIds = []
-        self.running = True
-        self.numTicks = 0
-        
         self.__config = config
         self.__gameDisplay = gameDisplay
         self.__soundService = SoundService()
+        
+        self.environment = Environment(name, self.__config.gridSize)
 
         self.__moveActionHandler = MoveActionHandler(self.environment)
         self.__eatActionHandler = EatActionHandler(self.environment)
@@ -45,6 +40,12 @@ class Simulation:
         self.__reproduceActionHandler = ReproduceActionHandler(self.environment, self.__soundService, config)
         self.__excrementIds = []
         self.__berryBushIds = []
+        
+        self.name = name
+        self.entities = dict()
+        self.livingEntityIds = []
+        self.running = True
+        self.numTicks = 0
 
         self.initializeLocationWidthAndHeight()
     

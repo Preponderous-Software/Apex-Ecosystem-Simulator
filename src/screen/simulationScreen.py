@@ -5,6 +5,7 @@ import pygame
 from entity.chicken import Chicken
 from entity.cow import Cow
 from entity.fox import Fox
+from entity.grass import Grass
 from entity.livingEntity import LivingEntity
 from entity.pig import Pig
 from entity.rabbit import Rabbit
