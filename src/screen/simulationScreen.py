@@ -198,7 +198,7 @@ class SimulationScreen:
         locationID = self.__selectedEntity.getLocationID()
         grid = self.simulation.environment.getGrid()
         location = grid.getLocation(locationID)
-        x, y = self.gameDisplay.get_size()
+        x, y = self.__graphik.gameDisplay.get_size()
         width = x/(self.__config.localViewSize*2 + 1)
         height = y/(self.__config.localViewSize*2 + 1)
         xpos = width*self.__config.localViewSize
