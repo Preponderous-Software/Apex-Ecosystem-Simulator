@@ -47,7 +47,7 @@ class MainMenuScreen:
             backgroundColor,
             (0, 0, 0),
             30,
-            "create new simulation",
+            "create new sim",
             self.switchToSetupScreen,
         )
         ypos = ypos + height + margin
