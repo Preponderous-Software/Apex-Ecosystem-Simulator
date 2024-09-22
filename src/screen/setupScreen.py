@@ -142,7 +142,7 @@ class SetupScreen:
     def increaseGrassGrowTime(self):
         self.config.grassGrowTime += 10
         if self.config.grassGrowTime > 1000:
-            self.config.grassGrowTime = 100
+            self.config.grassGrowTime = 1000
 
     def drawVersion(self):
         if os.path.isfile("version.txt"):
