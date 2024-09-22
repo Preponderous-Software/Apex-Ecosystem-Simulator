@@ -33,8 +33,8 @@ class Config:
         self.calculateValues()
     
     def setStaticValues(self):
-        self.displayWidth = 400
-        self.displayHeight = 400
+        self.displayWidth = 1280
+        self.displayHeight = 720
         self.tickSpeed = 30
         self.maxTickSpeed = 60
         self.black = (0,0,0)
@@ -53,6 +53,7 @@ class Config:
         self.fullscreen = False
         self.muted = False
         self.eyesEnabled = True
+        self.berryBushGrowTime = 300
     
     def randomizeGridSize(self):
         self.gridSize = random.randrange(self.minGridSize, self.maxGridSize)
@@ -72,3 +73,5 @@ class Config:
         self.numFoxesToStart = ceil(self.gridSize*self.livingEntityFactor*self.foxFactor)
         self.numRabbitsToStart = ceil(self.gridSize*self.livingEntityFactor*self.rabbitFactor)
         self.maxLocalViewSize = self.maxGridSize/4
+        self.numBerriesEntities = ceil(self.gridSize*self.gridSize*0.1)
+        self.numBerryBushEntities = ceil(self.gridSize*self.gridSize*0.01)

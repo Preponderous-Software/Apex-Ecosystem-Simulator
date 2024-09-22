@@ -37,14 +37,14 @@ class Location(object):
             self.entities[entity.getID()] = entity
             entity.setLocationID(self.getID())
         else:
-            print("Warning: An entity was already present when attempting to add it to a location.")
+            print("Warning: An entity with name " + entity.getName() + " was already present when attempting to add it to a location with coordinates (" + str(self.getX()) + ", " + str(self.getY()) + ").")
     
     # Removes an entity from this location.
     def removeEntity(self, entity: Entity):
         if self.isEntityPresent(entity):
             del self.entities[entity.getID()]
         else:
-            print("Warning: An entity was not present when attempting to remove it from a location.")
+            print("Warning: An entity with name " + entity.getName() + " was not present when attempting to remove it from a location with coordinates (" + str(self.getX()) + ", " + str(self.getY()) + ").")
     
     # Checks if an entity is present in this location.
     def isEntityPresent(self, entity: Entity):
@@ -57,6 +57,6 @@ class Location(object):
     # Returns an entity in this location matching the given ID.
     def getEntity(self, id):
         if not id in self.entities:
-            print("Warning: An entity was not present when attempting to retrieve it from a location.")
+            print("Warning: An entity with id " + str(id) + " was not present when attempting to retrieve it from a location with coordinates (" + str(self.getX()) + ", " + str(self.getY()) + ").")
             return None
         return self.entities[id]

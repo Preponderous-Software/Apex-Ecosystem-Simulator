@@ -1,7 +1,7 @@
 # Apex
 This game allows you to manage a virtual environment containing entities that depend on each other as sources of energy. A food chain arises from the configuration of various entities and their specified diets.
 
-<img src="pics/screenshot.PNG" alt="screenshot" width="400"/>
+<img src="pics/screenshot4.PNG" alt="screenshot" width="720"/>
 
 ## Types of Living Entities
 - Chicken
