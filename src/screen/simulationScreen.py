@@ -26,7 +26,6 @@ class SimulationScreen:
         self.__nextScreen = ScreenType.NONE
         self.__changeScreen = False
         self.__paused = False
-        self.__initializeSimulation()
         self.__debug = False
         self.__textAlerts = []
         self.__textAlertFactory = TextAlertFactory()
@@ -86,14 +85,21 @@ class SimulationScreen:
             if (self.__config.endSimulationUponAllLivingEntitiesDying):
                 if self.simulation.getNumLivingEntities() == 0:
                     time.sleep(1)
-                    if (self.__config.autoRestart):
-                        self.__restartSimulation()
+                    self.simulation.cleanup()
+                    if self.__config.randomizeGridSizeUponRestart:
+                        self.__config.randomizeGridSize()
+                        self.__config.randomizeGrassGrowTime()
+                        self.__config.calculateValues()
+                    self.__nextScreen = ScreenType.SETUP_SCREEN
+                    self.__changeScreen = True
+                    if self.__paused:
+                        self.__paused = False
+
         
         self.__changeScreen = False
         return self.__nextScreen
-
-    # private methods --------------------------------------------------------
-    def __initializeSimulation(self):
+    
+    def initializeSimulation(self):
         name = "Simulation"
         self.simulation = Simulation(name, self.__config, self.__graphik.gameDisplay)
         self.simulation.generateInitialEntities()
@@ -101,6 +107,7 @@ class SimulationScreen:
         self.simulation.environment.printInfo()
         self.__initializeCaption()
 
+    # private methods --------------------------------------------------------
     def __initializeCaption(self):
         caption = "Apex - " + self.simulation.name + " - " + str(self.simulation.environment.getGrid().getColumns()) + "x" + str(self.simulation.environment.getGrid().getRows())
         if self.__config.muted:
@@ -408,15 +415,3 @@ class SimulationScreen:
             for entityName in set(entityNames):
                 print(entityName + ": " + str(entityNames.count(entityName)))
             print("")
-
-    # Prints some stuff to the screen and restarts the simulation. Utilizes initializeSimulation()
-    def __restartSimulation(self):
-        self.simulation.cleanup()
-        self.tickLengths.append(self.simulation.numTicks)
-        if self.__config.randomizeGridSizeUponRestart:
-            self.__config.randomizeGridSize()
-            self.__config.randomizeGrassGrowTime()
-            self.__config.calculateValues()
-        self.__initializeSimulation()
-        if self.__paused:
-            self.__paused = False
