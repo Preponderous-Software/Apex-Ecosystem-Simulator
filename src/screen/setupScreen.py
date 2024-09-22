@@ -73,6 +73,8 @@ class SetupScreen:
         self.drawIntegerConfigOptionSetter(x, y, "gridSize", self.config.gridSize, self.decreaseGridSize, self.increaseGridSize)
         
         self.drawIntegerConfigOptionSetter(x, y - 100, "grassFactor", self.config.grassFactor, self.decreaseGrassFactor, self.increaseGrassFactor)
+        
+        self.drawIntegerConfigOptionSetter(x, y - 200, "grassGrowTime", self.config.grassGrowTime, self.decreaseGrassGrowTime, self.increaseGrassGrowTime)
     
     def drawIntegerConfigOptionSetter(self, x, y, configOptionName, configOptionValue, decreaseFunction, increaseFunction):
         # given x and y, draw text and buttons next to the text
@@ -131,6 +133,16 @@ class SetupScreen:
         self.config.grassFactor += 1
         if self.config.grassFactor > 10:
             self.config.grassFactor = 10
+
+    def decreaseGrassGrowTime(self):
+        self.config.grassGrowTime -= 10
+        if self.config.grassGrowTime < 10:
+            self.config.grassGrowTime = 10
+            
+    def increaseGrassGrowTime(self):
+        self.config.grassGrowTime += 10
+        if self.config.grassGrowTime > 1000:
+            self.config.grassGrowTime = 100
 
     def drawVersion(self):
         if os.path.isfile("version.txt"):
