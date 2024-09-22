@@ -23,7 +23,7 @@ class SimulationScreen:
     def __init__(self, graphik: Graphik, config: Config):
         self.__graphik = graphik
         self.__config = config
-        self.__nextScreen = ScreenType.NONE
+        self.__nextScreen = ScreenType.RESULTS_SCREEN
         self.__changeScreen = False
         self.__paused = False
         self.__debug = False
@@ -90,7 +90,7 @@ class SimulationScreen:
                         self.__config.randomizeGridSize()
                         self.__config.randomizeGrassGrowTime()
                         self.__config.calculateValues()
-                    self.__nextScreen = ScreenType.SETUP_SCREEN
+                    self.__nextScreen = ScreenType.RESULTS_SCREEN
                     self.__changeScreen = True
                     if self.__paused:
                         self.__paused = False

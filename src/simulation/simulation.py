@@ -198,6 +198,15 @@ class Simulation:
 
         # make berries grow
         self.growBerries()
+    
+    def getNumEntities(self):
+        return len(self.entities)
+    
+    def getNumTicks(self):
+        return self.numTicks
+    
+    def getGridSize(self):
+        return self.getConfig().gridSize
 
     # private methods --------------------------------------------------------
     def removeEntityFromLocation(self, entity: Entity):

@@ -1,6 +1,7 @@
 import pygame
 from lib.graphiklib.graphik import Graphik
 from screen.mainMenuScreen import MainMenuScreen
+from screen.resultsScreen import ResultsScreen
 from screen.screenType import ScreenType
 from screen.setupScreen import SetupScreen
 from screen.simulationScreen import SimulationScreen
@@ -20,6 +21,7 @@ class Apex:
         self.mainMenuScreen = MainMenuScreen(self.graphik)
         self.simulationScreen = SimulationScreen(self.graphik, self.config)
         self.setupScreen = SetupScreen(self.graphik, self.config)
+        self.resultsScreen = ResultsScreen(self.graphik)
         self.currentScreen = self.mainMenuScreen
 
     # public methods ---------------------------------------------------------
@@ -35,6 +37,9 @@ class Apex:
                 self.config.calculateValues()
                 self.simulationScreen.initializeSimulation()
                 self.currentScreen = self.simulationScreen
+            elif result == ScreenType.RESULTS_SCREEN:
+                self.currentScreen = self.resultsScreen
+                self.resultsScreen.initializeWithSimulation(self.simulationScreen.simulation)
             elif result == ScreenType.NONE:
                 self.__quitApplication()
             else:
