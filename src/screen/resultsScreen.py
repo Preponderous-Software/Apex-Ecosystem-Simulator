@@ -33,20 +33,46 @@ class ResultsScreen:
 
         # display size of simulation
         ypos = y / 3
+        simulationSizeText = "simulation size: " + str(self.simulation.getGridSize()) + "x" + str(self.simulation.getGridSize())
         self.graphik.drawText(
-            "simulation size: " + str(self.simulation.getGridSize()), xpos, ypos, 32, (255, 255, 255)
+            simulationSizeText, xpos, ypos, 32, (255, 255, 255)
+        )
+        
+        # display number of ticks
+        ypos = y / 3 + 50
+        lengthOfSimulationText = "length of simulation: " + str(self.simulation.getNumTicks()) + " ticks"
+        self.graphik.drawText(
+            lengthOfSimulationText, xpos, ypos, 32, (255, 255, 255)
+        )
+        
+        # display number of entities at start of simulation
+        ypos = y / 3 + 100
+        self.graphik.drawText(
+            "entities at start: " + str(self.simulation.getNumEntitiesAtStart()), xpos, ypos, 32, (255, 255, 255)
         )
         
         # display number of entities at end of simulation
-        ypos = y / 3 + 50
+        ypos = y / 3 + 150
         self.graphik.drawText(
             "entities at end: " + str(self.simulation.getNumEntities()), xpos, ypos, 32, (255, 255, 255)
         )
         
-        # display number of ticks
-        ypos = y / 3 + 100
+        # display number of living entities at start of simulation
+        ypos = y / 3 + 200
         self.graphik.drawText(
-            "ticks: " + str(self.simulation.getNumTicks()), xpos, ypos, 32, (255, 255, 255)
+            "living at start: " + str(self.simulation.getNumLivingEntitiesAtStart()), xpos, ypos, 32, (255, 255, 255)
+        )
+        
+        # display number of born entities
+        ypos = y / 3 + 250
+        self.graphik.drawText(
+            "born: " + str(self.simulation.getNumDeaths() - self.simulation.getNumLivingEntitiesAtStart()), xpos, ypos, 32, (255, 255, 255)
+        )
+        
+        # display number of entities that died
+        ypos = y / 3 + 300
+        self.graphik.drawText(
+            "deaths: " + str(self.simulation.getNumDeaths()), xpos, ypos, 32, (255, 255, 255)
         )
         
         # display text "press any key to return to setup"
