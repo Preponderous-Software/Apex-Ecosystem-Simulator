@@ -69,12 +69,17 @@ class SetupScreen:
             "start simulation",
             self.switchToSimulationScreen,
         )
-    
+        
+        y = y / 2
         self.drawIntegerConfigOptionSetter(x, y, "gridSize", self.config.gridSize, self.decreaseGridSize, self.increaseGridSize)
-        
-        self.drawIntegerConfigOptionSetter(x, y - 150, "grassFactor", self.config.grassFactor, self.decreaseGrassFactor, self.increaseGrassFactor)
-        
-        self.drawIntegerConfigOptionSetter(x, y - 300, "grassGrowTime", self.config.grassGrowTime, self.decreaseGrassGrowTime, self.increaseGrassGrowTime)
+        y += 150
+        self.drawIntegerConfigOptionSetter(x, y, "waterFactor", self.config.waterFactor, self.decreaseWaterFactor, self.increaseWaterFactor)
+        y += 150
+        self.drawIntegerConfigOptionSetter(x, y, "rockFactor", self.config.rockFactor, self.decreaseRockFactor, self.increaseRockFactor)
+        y += 150
+        self.drawIntegerConfigOptionSetter(x, y, "grassFactor", self.config.grassFactor, self.decreaseGrassFactor, self.increaseGrassFactor)
+        y += 150
+        self.drawIntegerConfigOptionSetter(x, y, "grassGrowTime", self.config.grassGrowTime, self.decreaseGrassGrowTime, self.increaseGrassGrowTime)
     
     def drawIntegerConfigOptionSetter(self, x, y, configOptionName, configOptionValue, decreaseFunction, increaseFunction):
         # given x and y, draw text and buttons next to the text
@@ -124,6 +129,26 @@ class SetupScreen:
         if self.config.gridSize > 64:
             self.config.gridSize = 64
     
+    def decreaseWaterFactor(self):
+        self.config.waterFactor -= 1
+        if self.config.waterFactor < 1:
+            self.config.waterFactor = 1
+        
+    def increaseWaterFactor(self):
+        self.config.waterFactor += 1
+        if self.config.waterFactor > 5:
+            self.config.waterFactor = 5
+    
+    def decreaseRockFactor(self):
+        self.config.rockFactor -= 1
+        if self.config.rockFactor < 1:
+            self.config.rockFactor = 1
+            
+    def increaseRockFactor(self):
+        self.config.rockFactor += 1
+        if self.config.rockFactor > 5:
+            self.config.rockFactor = 5
+    
     def decreaseGrassFactor(self):
         self.config.grassFactor -= 1
         if self.config.grassFactor < 1:
@@ -131,8 +156,8 @@ class SetupScreen:
             
     def increaseGrassFactor(self):
         self.config.grassFactor += 1
-        if self.config.grassFactor > 10:
-            self.config.grassFactor = 10
+        if self.config.grassFactor > 5:
+            self.config.grassFactor = 5
 
     def decreaseGrassGrowTime(self):
         self.config.grassGrowTime -= 10
