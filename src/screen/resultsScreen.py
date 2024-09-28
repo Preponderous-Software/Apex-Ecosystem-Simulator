@@ -63,14 +63,8 @@ class ResultsScreen:
             "living at start: " + str(self.simulation.getNumLivingEntitiesAtStart()), xpos, ypos, 32, (255, 255, 255)
         )
         
-        # display number of born entities
-        ypos = y / 3 + 250
-        self.graphik.drawText(
-            "born: " + str(self.simulation.getNumDeaths() - self.simulation.getNumLivingEntitiesAtStart()), xpos, ypos, 32, (255, 255, 255)
-        )
-        
         # display number of entities that died
-        ypos = y / 3 + 300
+        ypos = y / 3 + 250
         self.graphik.drawText(
             "deaths: " + str(self.simulation.getNumDeaths()), xpos, ypos, 32, (255, 255, 255)
         )
