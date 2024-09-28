@@ -80,6 +80,25 @@ class SetupScreen:
         self.drawIntegerConfigOptionSetter(x, y, "grassFactor", self.config.grassFactor, self.decreaseGrassFactor, self.increaseGrassFactor)
         y += 150
         self.drawIntegerConfigOptionSetter(x, y, "grassGrowTime", self.config.grassGrowTime, self.decreaseGrassGrowTime, self.increaseGrassGrowTime)
+        
+        randomizeButtonWidth = 200
+        randomizeButtonHeight = 50
+        randomizeButtonX = 0
+        randomizeButtonY = 0
+        self.graphik.drawButton(
+            randomizeButtonX,
+            randomizeButtonY,
+            randomizeButtonWidth,
+            randomizeButtonHeight,
+            backgroundColor,
+            (0, 0, 0),
+            30,
+            "randomize",
+            self.randomizeConfig,
+        )
+        
+    def randomizeConfig(self):
+        self.config = Config()
     
     def drawIntegerConfigOptionSetter(self, x, y, configOptionName, configOptionValue, decreaseFunction, increaseFunction):
         # given x and y, draw text and buttons next to the text
