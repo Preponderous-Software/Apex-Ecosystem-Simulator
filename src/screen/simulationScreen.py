@@ -299,7 +299,7 @@ class SimulationScreen:
             self.simulation.running = False
         if key == pygame.K_r:
             self.simulation.cleanup()
-            self.__nextScreen = ScreenType.SETUP_SCREEN
+            self.__nextScreen = ScreenType.RESULTS_SCREEN
             self.__changeScreen = True
         if key == pygame.K_c:
             chicken = Chicken("player-created-chicken")
