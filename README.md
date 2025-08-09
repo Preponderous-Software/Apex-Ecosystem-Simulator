@@ -67,3 +67,14 @@ This project makes use of [graphik](https://github.com/Preponderous-Software/gra
 ## Sounds
 - Pop sound source: https://mixkit.co/free-sound-effects/pop/
 - Death sound source: https://soundbible.com/1454-Pain.html
+
+## 📄 License
+
+This project is licensed under the **Preponderous Non-Commercial License (Preponderous-NC)**.  
+It is free to use, modify, and self-host for **non-commercial** purposes, but **commercial use requires a separate license**.
+
+> **Disclaimer:** *Preponderous Software is not a legal entity.*  
+> All rights to works published under this license are reserved by the copyright holder, **Daniel McCoy Stephenson**.
+
+Full license text:  
+[https://github.com/Preponderous-Software/preponderous-nc-license/blob/main/LICENSE.md](https://github.com/Preponderous-Software/preponderous-nc-license/blob/main/LICENSE.md)
