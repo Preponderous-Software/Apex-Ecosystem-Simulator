@@ -1,5 +1,6 @@
 import random
 
+from actionhandler.actionHandler import ActionHandler
 from lib.pyenvlib.entity import Entity
 from lib.pyenvlib.grid import Grid
 from lib.pyenvlib.location import Location
@@ -7,50 +8,41 @@ from lib.pyenvlib.location import Location
 
 # @author Daniel McCoy Stephenson
 # @since July 26th, 2022
-class MoveActionHandler:
+class MoveActionHandler(ActionHandler):
     def __init__(self, environment):
-        self.environment = environment
+        super().__init__(environment)
         self.debug = False
         self.energyCost = 1
 
-    def chooseRandomDirection(self, grid: Grid, location: Location):
-        direction = random.randrange(0, 4)
-        if direction == 0:
-            return grid.getUp(location)
-        elif direction == 1:
-            return grid.getRight(location)
-        elif direction == 2:
-            return grid.getDown(location)
-        elif direction == 3:
-            return grid.getLeft(location)
-        
-    def searchForFood(self, entity, grid: Grid, location: Location):
-        # search current location
+    def countEdibleEntities(self, entity, location: Location):
+        count = 0
         for eid in location.getEntities():
-            targetEntity = location.getEntities()[eid]
-            if entity.canEat(targetEntity):
-                return location
-        
-        # search nearby locations
+            if entity.canEat(location.getEntities()[eid]):
+                count += 1
+        return count
+
+    def searchForFood(self, entity, grid: Grid, location: Location):
+        # optimal foraging theory (RESEARCH.md): don't abandon a patch that already has food.
+        if self.countEdibleEntities(entity, location) > 0:
+            return location
+
+        # search nearby locations and prefer the richest patch found within the search budget,
+        # rather than settling for the first patch with any food at all.
+        bestLocation = -1
+        bestFoodCount = 0
         attempts = 0
-        while attempts < random.randrange(1, 5):
-            searchLocation = self.chooseRandomDirection(grid, location)
+        maxAttempts = random.randrange(1, 5)
+        while attempts < maxAttempts:
+            searchLocation = self.getRandomAdjacentLocation(grid, location)
+            attempts += 1
             if searchLocation == -1:
                 continue
-            for e in searchLocation.getEntities():
-                if entity.canEat(e):
-                    return searchLocation
-            attempts += 1
-        return -1
-    
-    def isLocationImpassible(self, location: Location):
-        # search current location
-        for eid in location.getEntities():
-            entity = location.getEntities()[eid]
-            if entity.isSolid():
-                return True
-        return False
-        
+            foodCount = self.countEdibleEntities(entity, searchLocation)
+            if foodCount > bestFoodCount:
+                bestFoodCount = foodCount
+                bestLocation = searchLocation
+        return bestLocation
+
     def initiateMoveAction(self, entity: Entity):
         # get location
         locationID = entity.getLocationID()
@@ -66,7 +58,7 @@ class MoveActionHandler:
         if newLocation == -1 or self.isLocationImpassible(newLocation):
             # no food found
             for i in range(0, 10):
-                newLocation = self.chooseRandomDirection(grid, location)
+                newLocation = self.getRandomAdjacentLocation(grid, location)
 
                 if (newLocation == -1 or self.isLocationImpassible(newLocation)):
                     continue

@@ -49,6 +49,8 @@ The text mode is ideal for:
 
 Each of these attempt to gain energy and reproduce. At the bottom of the food chain is Grass, which chickens, pigs, cows and rabbits are able to eat.
 
+Berry bushes are a second food source. A bush that has accumulated enough energy periodically grows Berries on its own location, up to a cap. Chickens, pigs and rabbits eat berries; pigs can also eat the bush itself. Cows eat grass only.
+
 If there is no grass, everything collapses. 
 
 ## How does grass respawn?
@@ -61,10 +63,11 @@ The following keyboard controls are available in **Pygame GUI Mode**:
 
 Key | Action
 ------------ | -------------
-space / esc | pause/unpause
+space / escape | pause/unpause
 ? / F1 | toggle in-game help overlay
 m | mute/unmute
 h | highlight oldest living entity
+e | toggle entity eyes
 v | toggle view (global/local)
 up | increase view distance (in local view)
 down | decrease view distance (in local view)
@@ -107,6 +110,9 @@ q | quit
 
 At this time, the user can pause/unpause, toggle the tick speed limit, increase/decrease the tick speed, manually spawn living entities, restart the simulation, enter debug mode and quit the application.
 
+## Research
+See [RESEARCH.md](RESEARCH.md) for the ecological and artificial-life research this simulator's mechanics are grounded in, and how to use it when designing new features.
+
 ## Support
 You can find the support discord server [here](https://discord.gg/49J4RHQxhy).
 
@@ -131,3 +137,14 @@ This project makes use of [graphik](https://github.com/Preponderous-Software/gra
 ## Sounds
 - Pop sound source: https://mixkit.co/free-sound-effects/pop/
 - Death sound source: https://soundbible.com/1454-Pain.html
+
+## 📄 License
+
+This project is licensed under the **Preponderous Non-Commercial License (Preponderous-NC)**.  
+It is free to use, modify, and self-host for **non-commercial** purposes, but **commercial use requires a separate license**.
+
+> **Disclaimer:** *Preponderous Software is not a legal entity.*  
+> All rights to works published under this license are reserved by the copyright holder, **Daniel McCoy Stephenson**.
+
+Full license text:  
+[https://github.com/Preponderous-Software/preponderous-nc-license/blob/main/LICENSE.md](https://github.com/Preponderous-Software/preponderous-nc-license/blob/main/LICENSE.md)
