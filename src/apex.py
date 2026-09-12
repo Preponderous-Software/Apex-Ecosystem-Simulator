@@ -5,6 +5,7 @@ from screen.resultsScreen import ResultsScreen
 from screen.screenType import ScreenType
 from screen.setupScreen import SetupScreen
 from screen.simulationScreen import SimulationScreen
+from service.usageReportingService import UsageReportingService
 from simulation.config import Config
 
 # @author Daniel McCoy Stephenson
@@ -13,6 +14,8 @@ class Apex:
     # constructors -----------------------------------------------------------
     def __init__(self):
         pygame.init()
+        self.usageReporting = UsageReportingService()
+        self.usageReporting.reportStartup()
         self.config = Config()
         self.__initializeGameDisplay()
         pygame.display.set_icon(pygame.image.load('src/media/icon/icon.PNG'))
@@ -36,6 +39,7 @@ class Apex:
             elif result == ScreenType.SIMULATION_SCREEN:
                 self.config.calculateValues()
                 self.simulationScreen.initializeSimulation()
+                self.usageReporting.reportSimulationStarted()
                 self.currentScreen = self.simulationScreen
             elif result == ScreenType.RESULTS_SCREEN:
                 self.currentScreen = self.resultsScreen
@@ -55,6 +59,7 @@ class Apex:
 
     # Shuts down the application.
     def __quitApplication(self):
+        self.usageReporting.close()
         pygame.quit()
         quit()
 
