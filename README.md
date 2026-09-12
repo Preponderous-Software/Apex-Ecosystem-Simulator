@@ -46,6 +46,21 @@ q | quit
 
 At this time, the user can pause/unpause, toggle the tick speed limit, increase/decrease the tick speed, manually spawn living entities, restart the simulation, enter debug mode and quit the application.
 
+## Usage reporting
+Apex reports that it was used to [trace](https://github.com/Stephenson-Software/trace) at `trace.danielstephenson.dev`: a `startup` event when the game starts, carrying only the program name (`apex`) and the version from `version.txt`, and a `simulation-started` event when a simulation begins. Nothing about you, your machine, or the simulation's contents is sent. The reporting happens on a background thread, never blocks the game, and is dropped silently if the service is unreachable.
+
+Reporting is on by default. The first run creates a `settings.json` next to `version.txt` and prints a one-line notice; to turn reporting off, edit that file:
+
+```json
+{
+    "usage_reporting": {
+        "enabled": false
+    }
+}
+```
+
+The `usage_reporting.endpoint` and `usage_reporting.key` entries in the same block select where reports go and the key they are sent with.
+
 ## Research
 See [RESEARCH.md](RESEARCH.md) for the ecological and artificial-life research this simulator's mechanics are grounded in, and how to use it when designing new features.
 
